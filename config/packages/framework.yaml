@@ -1,5 +1,11 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
+    http_client:
+        default_options:
+            headers:
+                'Authorization': 'qf6CaZXGcTkqk1jkNyg6VaWujkJyOSmnPv41ZSx5ZKWB1kKdkMNaO1ip'
+                'X-Auth-Token': 'a6c8d6df34f64da0a3d3bbe5beed6ea7'
+
     secret: '%env(APP_SECRET)%'
     #csrf_protection: true
     http_method_override: false

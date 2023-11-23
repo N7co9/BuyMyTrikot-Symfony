@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  database:
+    image: 'mysql:8'
+    command: --max_connections=20000
+    environment:
+      MYSQL_ROOT_PASSWORD: xyz12345
+      MYSQL_DATABASE: BuyMyTrikots-Symfony
+    ports:
+      - '3337:3306'

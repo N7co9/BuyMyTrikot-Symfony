@@ -1,0 +1,6 @@
+Nicht direkt Doctrine Repository nutzen, sondern eigenes Repository bauen welches das Doctrine Repository injected.
+
+Datenbank normalisierung!
+
+Alle Formeln erklären.
+

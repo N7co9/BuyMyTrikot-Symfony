@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <title>BuyMyTrikots || Shut up, Play on!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/assets/logo.jpg">
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body class="">
+<!-- Header Section -->
+{% include 'partials/header.html.twig' %}
+
+{% block body %}
+    <!-- Product List Goes Here -->
+{% endblock %}
+
+</body>
+{% include 'partials/footer.html.twig' %}
+</html>
