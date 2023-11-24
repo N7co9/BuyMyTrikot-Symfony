@@ -7,14 +7,23 @@
         </div>
         <!-- Navigation: Vertically Stacked -->
         <nav class="flex flex-col space-y-8 h-full mt-8">
-            <button class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Register</button>
-            <button class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Login</button>
-            <button class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Shopping Cart</button>
+            <a href="{{ path('app_register') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Register</a>
+            <a href="{{ path('app_login') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Login</a>
+            <a href="{{ path('app_shopping_cart') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Shopping Cart</a>
         </nav>
     </div>
+    <div class="flex space-x-5">
+        <!-- User Greeting -->
+        {% if user %}
+            <div class="text-gray-900 bg-gray-100 rounded-lg px-4 py-2">
+                Nice to have you here, {{ user }}
+            </div>
+            <a href="{{ path('app_logout') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg">Logout</a>
+        {% endif %}
+    </div>
     <div class="flex justify-center w-full"> <!-- Add flex container with full width -->
-        <form action="" method="POST" class="w-1/2"> <!-- Set form width to 50% of its parent -->
-            <input type="text" class="p-4 rounded-2xl border-2 border-gray-200 text-center w-full" name="search" placeholder="Search for team..." id="search"> <!-- Set input width to full width of form -->
+        <form action="{{ path('search_redirect') }}" method="GET" class="w-1/2"> <!-- Set form width to 50% of its parent -->
+            <input type="text" class="p-4 rounded-2xl border-2 border-gray-200 text-center w-full" name="query" placeholder="Search for team..." id="search"> <!-- Set input width to full width of form -->
         </form>
     </div>
     <div>

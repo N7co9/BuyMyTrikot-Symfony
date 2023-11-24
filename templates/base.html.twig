@@ -15,7 +15,9 @@
 </head>
 <body class="">
 <!-- Header Section -->
-{% include 'partials/header.html.twig' %}
+{% block header %}
+    {% include 'partials/header.html.twig' %}
+{% endblock %}
 
 {% block body %}
     <!-- Product List Goes Here -->

@@ -15,7 +15,7 @@ class ItemRepository
     {
 
     }
-    public function getItems(string $teamID) : array
+    public function getItems(int $teamID) : array
         // returns a list of ItemDTOs from team/teamID.
     {
         $fbArray = $this->footballApiHandling->requestPlayerDataFromTeam($teamID);

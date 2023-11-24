@@ -2,7 +2,7 @@
 
 namespace App\Model\DTO;
 
-class ItemDTO
+class hp_item
 {
     public string $id = '';
     public float $price = 0.00;

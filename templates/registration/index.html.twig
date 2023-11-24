@@ -1,14 +1,120 @@
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Registration Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #b3d4fc, #192f6a); /* Updated gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 35px; /* Increased padding for more space */
+            max-width: 400px; /* Wider form */
+            width: 100%;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 25px; /* Increased margin for less cramped look */
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px; /* Increased space between label and input */
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 12px; /* Slightly larger padding for input */
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #192f6a; /* Darker button color */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 15px; /* Increased margin above button */
+        }
+        button:hover {
+            background-color: #465881; /* Changed hover color */
+        }
+        .alternative-signin {
+            margin-top: 25px;
+            margin-bottom: 50px;
+        }
+        .alternative-signin a {
+            text-decoration: none;
+            color: #192f6a; /* Matching link color */
+            font-weight: bold;
+        }
+        .alternative-signin img {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            margin-right: 10px;
+            margin-left: 25px;
+        }
+        .signin-link {
+            margin-top: 25px;
+            font-size: 0.9em;
+        }
+        .signin-link a {
+            color: #192f6a; /* Matching link color */
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 style="color: #333;">Register</h2>
+    <form method="post" action="{{ path('app_register') }}">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}">
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <button type="submit">Register</button>
+    </form>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Controller/RegistrationController.php'|file_link(0) }}">src/Controller/RegistrationController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/templates/registration/index.html.twig'|file_link(0) }}">templates/registration/index.html.twig</a></code></li>
+    <ul style="color: red;">
+        {% for error in errors %}
+            <li>{{ error.message }}</li>
+        {% endfor %}
     </ul>
+
+
+    <div class="alternative-signin">
+        <p>Or sign in with:</p>
+        <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub">GitHub</a>
+        <a href="#"><img src="https://static-00.iconduck.com/assets.00/google-icon-2048x2048-czn3g8x8.png" alt="Google">Google</a>
+    </div>
+
+    <p class="signin-link">Already have an account? <a href="login.html">Sign in here</a></p>
+    <p class="signin-link">Back to the Homepage? <a href="{{ path('app_homepage') }}">Click here</a></p>
 </div>
+</body>
+</html>

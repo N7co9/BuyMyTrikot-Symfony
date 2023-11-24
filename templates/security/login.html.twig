@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #004d40, #003300); /* Dark green gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 35px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #192f6a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #465881;
+        }
+        .signin-link {
+            margin-top: 25px;
+            font-size: 0.9em;
+        }
+        .signin-link a {
+            color: #192f6a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 style="color: #333;">Login</h2>
+    <form method="post" action="{{ path('app_login') }}">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <button type="submit">Login</button>
+    </form>
+
+
+        {% if response.type == 'Error' %}
+            <p style="color: red;">{{ response.message }}</p>
+        {% else %}
+            <p style="color: green;">{{ response.message }}</p>
+        {% endif %}
+    <p class="signin-link">Don't have an account? <a href="{{ path('app_register') }}">Register here</a></p>
+    <p class="signin-link">Back to the Homepage? <a href="{{ path('app_homepage') }}">Click here</a></p>
+</div>
+</body>
+</html>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        {% if redirect %}
+        setTimeout(function() {
+            window.location.href = "{{ path('app_homepage') }}";
+        }, 3000); // Redirect after 3 seconds
+        {% endif %}
+    });
+</script>
