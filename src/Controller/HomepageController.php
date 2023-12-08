@@ -2,17 +2,16 @@
 
 namespace App\Controller;
 
-use App\Model\Repository\ItemRepository;
+use App\Service\API\FootballData\ItemsTransferService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomepageController extends AbstractController
 {
     public function __construct(
-        private ItemRepository $repository,
+       private ItemsTransferService $service,
     )
     {
     }
@@ -27,11 +26,15 @@ class HomepageController extends AbstractController
     }
 
     #[Route('/home/browse/{slug}', name: 'app_browse')]
-    public function browse(int $slug, Request $request): Response
+    public function browse(string $slug, Request $request): Response
     {
         $session = $request->getSession();
-        $items = $this->repository->getItems($slug);
-
+        try {
+            $items = $this->service->itemTransfer($slug);
+        }catch (\Exception $e)
+        {
+            return $this->render('exceptions/404.html.twig');
+        }
         return $this->render('homepage/index.html.twig', [
             'items' => $items,
             'user' => $session->get('user') ?? ''

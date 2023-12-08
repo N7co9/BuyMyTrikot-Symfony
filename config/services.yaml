@@ -6,6 +6,11 @@
 parameters:
 
 services:
+    App\Service\API\FootballData\ItemsTransferService:
+        arguments:
+            $itemRepository: '@App\Model\Repository\ItemRepository'
+            $entityManager: '@doctrine.orm.entity_manager'
+            $client: '@http_client'
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

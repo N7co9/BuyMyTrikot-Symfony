@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\ItemRepository;
+use App\Model\Repository\ShoppingCartRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ItemRepository::class)]
+#[ORM\Entity(repositoryClass: ShoppingCartRepository::class)]
 class ShoppingCart
 {
     #[ORM\Id]
@@ -27,6 +27,23 @@ class ShoppingCart
 
     #[ORM\Column]
     private ?int $item_id = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    #[ORM\Column]
+    private ?int $user_id = null;
+
+    public function getUserId(): ?int
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(?int $user_id): void
+    {
+        $this->user_id = $user_id;
+    }
 
     public function getItemId(): ?int
     {

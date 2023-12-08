@@ -3,9 +3,9 @@
 namespace App\Service\Validation;
 
 use App\Model\DTO\ResponseDTO;
-use App\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Model\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class UserLoginValidation
 {

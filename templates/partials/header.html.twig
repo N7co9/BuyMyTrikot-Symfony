@@ -9,7 +9,7 @@
         <nav class="flex flex-col space-y-8 h-full mt-8">
             <a href="{{ path('app_register') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Register</a>
             <a href="{{ path('app_login') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Login</a>
-            <a href="{{ path('app_shopping_cart') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Shopping Cart</a>
+            <a href="{% if user %}{{ path('app_shopping_cart') }}{% endif %} {% if not user %}{{ path('app_login') }}{% endif %}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg w-full text-center">Shopping Cart</a>
         </nav>
     </div>
     <div class="flex space-x-5">

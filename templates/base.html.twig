@@ -9,20 +9,29 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
 </head>
-<body class="">
-<!-- Header Section -->
-{% block header %}
-    {% include 'partials/header.html.twig' %}
-{% endblock %}
+<body>
 
-{% block body %}
-    <!-- Product List Goes Here -->
-{% endblock %}
+<div class="content-wrapper" style="display: flex;">
+    <!-- Main content area -->
+    <div class="main-content" style="flex-grow: 1;">
 
+        {% block header %}
+            {% include 'partials/header.html.twig' %}
+        {% endblock %}
+
+        {% block body %}
+            <!-- Product List Goes Here -->
+        {% endblock %}
+
+        {% include 'partials/footer.html.twig' %}
+
+    </div> <!-- /.main-content -->
+
+</div> <!-- /.content-wrapper -->
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 </body>
-{% include 'partials/footer.html.twig' %}
 </html>

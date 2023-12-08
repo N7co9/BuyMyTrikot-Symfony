@@ -2,7 +2,7 @@
 
 namespace App\Model\DTO;
 
-class hp_item
+class ItemDTO
 {
     public string $id = '';
     public float $price = 0.00;
@@ -15,4 +15,8 @@ class hp_item
     public string $clubFounded = '';
     public string $clubWebsite = '';
     public string $clubEmblem = '';
+    public int $team_id = 0;
+    public int $quantity = 0;
+    public string $user_id = '';
+    public int $item_id = 0;
 }

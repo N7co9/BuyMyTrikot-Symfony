@@ -24,9 +24,11 @@
                                     <p class="relative text-lg font-semibold text-white">$ {{ item.price }}</p>
                                 </div>
                             </div>
+                            {% if user %}
                             <div class="mt-6">
-                                <a href="#" class="relative flex items-center justify-center rounded-md border border-transparent bg-gray-100 px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200">Add to bag</a>
+                                <a href="{{ path('app_shopping_cart_manage', {'slug': 'add', 'id': item.itemId}) }}" class="relative flex items-center justify-center rounded-md border border-transparent bg-gray-100 px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200">Add to bag</a>
                             </div>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
