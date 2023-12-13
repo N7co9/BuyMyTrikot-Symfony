@@ -4,7 +4,6 @@ namespace App\Service\Mapping;
 
 use App\Entity\User;
 use App\Model\DTO\ItemDTO;
-use App\Model\DTO\sc_item;
 use App\Model\DTO\UserDTO;
 use Symfony\Component\HttpFoundation\Request;
 

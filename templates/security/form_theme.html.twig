@@ -1,0 +1,27 @@
+{% block form_row %}
+    <div style="margin-bottom: 25px; text-align: left;">
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block label %}
+    <label {{ block('widget_attributes') }} style="display: block; margin-bottom: 10px; font-weight: bold; color: #333;">
+        {{ label|trans }}
+    </label>
+{% endblock %}
+
+{% block email_widget %}
+    <input type="email" {{ block('widget_attributes') }} style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box;">
+{% endblock %}
+
+{% block password_widget %}
+    <input type="password" {{ block('widget_attributes') }} style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box;">
+{% endblock %}
+
+{% block submit_widget %}
+    <button type="submit" {{ block('button_attributes') }} style="width: 100%; padding: 12px; background-color: #192f6a; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1em; margin-top: 15px;">
+        {{ label|default('Login') }}
+    </button>
+{% endblock %}

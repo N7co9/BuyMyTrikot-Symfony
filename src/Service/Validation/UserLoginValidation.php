@@ -15,14 +15,10 @@ class UserLoginValidation
     {
     }
 
-    public function authenticate(Request $request, SessionInterface $session): ResponseDTO
+    public function authenticate(array $formData, SessionInterface $session): ResponseDTO
     {
-        if ($request->getMethod() !== 'POST') {
-            return new ResponseDTO('', '');
-        }
-
-        $email = $request->get('email', '');
-        $plainPassword = $request->get('password', '');
+        $email = $formData['email'];
+        $plainPassword = $formData['password'];
 
         if (empty($email) || empty($plainPassword)) {
             return new ResponseDTO('Email or password cannot be empty', 'Error');
@@ -37,7 +33,7 @@ class UserLoginValidation
         if (!password_verify($plainPassword, $user->getPassword())) {
             return new ResponseDTO('Invalid credentials', 'Error');
         }
-        $session->set('user', $request->get('email'));
+        $session->set('user', $email);
         return new ResponseDTO('Login successful!', 'OK');
     }
 

@@ -6,7 +6,8 @@
 parameters:
 
 services:
-    App\Service\API\FootballData\ItemsTransferService:
+    App\Service\API\ItemsTransferService:
+        class: 'App\Service\API\ItemsTransferService'
         arguments:
             $itemRepository: '@App\Model\Repository\ItemRepository'
             $entityManager: '@doctrine.orm.entity_manager'

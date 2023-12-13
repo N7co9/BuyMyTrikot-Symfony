@@ -9,7 +9,7 @@
          convertDeprecationsToExceptions="false"
 >
     <php>
-        <env name="DATABASE" value="user_test" force="true"/>
+        <env name="DATABASE" value="BuyMyTrikots-Symfony_test" force="true"/>
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
@@ -25,6 +25,10 @@
     </testsuites>
 
     <coverage processUncoveredFiles="true">
+        <exclude>
+            <directory suffix=".php">src/Entity</directory>
+            <directory suffix=".php">src/Service/API</directory>
+        </exclude>
         <include>
             <directory suffix=".php">src</directory>
         </include>

@@ -11,7 +11,6 @@
     {% endblock %}
 </head>
 <body>
-
 <div class="content-wrapper" style="display: flex;">
     <!-- Main content area -->
     <div class="main-content" style="flex-grow: 1;">
@@ -23,9 +22,6 @@
         {% block body %}
             <!-- Product List Goes Here -->
         {% endblock %}
-
-        {% include 'partials/footer.html.twig' %}
-
     </div> <!-- /.main-content -->
 
 </div> <!-- /.content-wrapper -->
@@ -34,4 +30,8 @@
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
 </body>
+
+{% block footer %}
+    {% include 'partials/footer.html.twig' %}
+{% endblock %}
 </html>

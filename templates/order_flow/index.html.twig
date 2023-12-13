@@ -31,28 +31,28 @@
                                 name</label>
                             <div class="mt-1" >
                                 <input type="text" id="first-name" name="first-name" autocomplete="given-name"
-                                       class="{% if response %}{% if response.firstName%} ring-red-700 border-red-700{% endif %} {% endif %}block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                       class="{% if response is defined and response.firstName is defined %} ring-red-700 border-red-700{% endif %} block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                         <div>
                             <label for="last-name" class="block text-sm font-medium text-gray-700">Last name</label>
                             <div class="mt-1">
                                 <input type="text" id="last-name" name="last-name" autocomplete="family-name"
-                                       class="{% if response %}{% if response.lastName%} ring-red-700 border-red-700{% endif %} {% endif %}block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                       class="{% if response is defined and response.lastName is defined %} ring-red-700 border-red-700{% endif %} block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                         <div class="sm:col-span-2">
                             <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
                             <div class="mt-1">
                                 <input type="text" name="address" id="address" autocomplete="street-address"
-                                       class="{% if response %}{% if response.address%} ring-red-700 border-red-700{% endif %} {% endif %}block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                       class="{% if response is defined and response.address is defined %} ring-red-700 border-red-700{% endif %} block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                         <div>
                             <label for="city" class="block text-sm font-medium text-gray-700">City</label>
                             <div class="mt-1">
                                 <input type="text" name="city" id="city" autocomplete="address-level2"
-                                       class="{% if response %}{% if response.city%} ring-red-700 border-red-700{% endif %} {% endif %}block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                       class="{% if response is defined and response.city is defined %} ring-red-700 border-red-700{% endif %} block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                         <div>
@@ -69,7 +69,7 @@
                                 Province</label>
                             <div class="mt-1">
                                 <input type="text" name="region" id="region" autocomplete="address-level1"
-                                       class="{% if response %}{% if response.region%} ring-red-700 border-red-700{% endif %} {% endif %}block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                       class="{% if response is defined and response.region is defined %} ring-red-700 border-red-700{% endif %} block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                         <div>
@@ -77,14 +77,14 @@
                                 code</label>
                             <div class="mt-1">
                                 <input type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
-                                       class="{% if response %}{% if response.zip%} ring-red-700 border-red-700{% endif %} {% endif %}block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                       class="{% if response is defined and response.zip is defined %} ring-red-700 border-red-700{% endif %} block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                         <div class="sm:col-span-2">
                             <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
                             <div class="mt-1">
                                 <input type="text" name="phone" id="phone" autocomplete="tel"
-                                       class="{% if response %}{% if response.phoneNumber%} ring-red-700 border-red-700{% endif %} {% endif %}block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                       class="{% if response is defined and response.phoneNumber is defined %} ring-red-700 border-red-700{% endif %} block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                     </div>

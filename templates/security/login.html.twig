@@ -1,6 +1,39 @@
-{# templates/security/login.html.twig #}
-{{ form_start(form) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.password) }}
-    {{ form_row(form.submit) }}
-{{ form_end(form) }}
+{% form_theme form 'security/form_theme.html.twig' %}
+
+{% extends 'base.html.twig' %}
+
+{% block header %}
+    {# Intentionally left empty to not include the header #}
+{% endblock %}
+
+{% block body %}
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: linear-gradient(to bottom left, #adebad, #00bcd4);">
+        <div style="background-color: white; border-radius: 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); padding: 35px; max-width: 400px; width: 100%; text-align: center;">
+            <h2 style="color: #333;">Login</h2>
+            {{ form_start(form) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.password) }}
+            <div style="margin-top: 15px;">
+                {{ form_row(form.submit) }}
+            </div>
+            {{ form_end(form) }}
+
+            {% if response.message is defined and response.message %}
+                <div style="color: red; margin-top: 10px;">
+                    {{ response.message }}
+                </div>
+            {% endif %}
+
+            <div style="margin-top: 20px;">
+                New here?   <a href="{{ path('app_register') }}" style="color: #192f6a; text-decoration: none;">Create an account</a>
+            </div>
+            <div style="margin-top: 10px;">
+                Wrong turn?  <a href="{{ path('app_homepage') }}" style="color: #192f6a; text-decoration: none;">Go back to the homepage</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {# Intentionally left empty to not include the footer #}
+{% endblock %}

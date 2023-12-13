@@ -1,0 +1,12 @@
+# config_test.yml
+
+doctrine:
+  dbal:
+    default_connection: default
+    connections:
+      default:
+        dbname: BuyMyTrikots-Symfony_test
+        host: localhost
+        user: root
+        password: xyz12345
+        driver: pdo_mysql

@@ -23,9 +23,13 @@ class OrderFlowValidation
 
     private function validateFirstName($firstName): ?ResponseDTO
     {
+        if (empty($firstName) || !is_string($firstName)) {
+            return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
+        }
+
         $firstName = $this->trim($firstName);
         if (strlen($firstName) >= 30 || strlen($firstName) <= 2 ||
-            !preg_match('/^[a-zA-Z\s-]+$/', $firstName)) {
+            !preg_match('/^[\p{L}\s-]+$/u', $firstName)) {
             return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
         }
         return null;
@@ -33,9 +37,13 @@ class OrderFlowValidation
 
     private function validateLastName($lastName): ?ResponseDTO
     {
+        if (empty($lastName) || !is_string($lastName)) {
+            return new ResponseDTO('Last name cannot be empty and must be a string.', 'Error');
+        }
+
         $lastName = $this->trim($lastName);
         if (strlen($lastName) >= 30 || strlen($lastName) <= 2 ||
-            !preg_match('/^[a-zA-Z\s-]+$/', $lastName)) {
+            !preg_match('/^[\p{L}\s-]+$/u', $lastName)) {
             return new ResponseDTO('Oops, your last name doesn\'t look right!', 'Error');
         }
         return null;
@@ -43,6 +51,10 @@ class OrderFlowValidation
 
     private function validateCity($city): ?ResponseDTO
     {
+        if (empty($city) || !is_string($city)) {
+            return new ResponseDTO('City cannot be empty and must be a string.', 'Error');
+        }
+
         $city = $this->trim($city);
         if (strlen($city) >= 20 || strlen($city) <= 2 ||
             !preg_match('/^[a-zA-Z\s-]+$/', $city)) {
@@ -53,6 +65,10 @@ class OrderFlowValidation
 
     private function validateState($state): ?ResponseDTO
     {
+        if (empty($state) || !is_string($state)) {
+            return new ResponseDTO('State cannot be empty and must be a string.', 'Error');
+        }
+
         $state = $this->trim($state);
         if (strlen($state) >= 20 || strlen($state) <= 2 ||
             !preg_match('/^[a-zA-Z\s-]+$/', $state)) {
@@ -63,6 +79,10 @@ class OrderFlowValidation
 
     private function validatePhoneNumber($phoneNumber): ?ResponseDTO
     {
+        if (empty($phoneNumber) || !is_string($phoneNumber)) {
+            return new ResponseDTO('Phone number cannot be empty and must be a string.', 'Error');
+        }
+
         $phoneNumber = $this->trim($phoneNumber);
 
         // Basic international phone number format (e.g., +1234567890, 00441234567890)
@@ -74,9 +94,12 @@ class OrderFlowValidation
         return null;
     }
 
-
     private function validateZip($zip): ?ResponseDTO
     {
+        if (empty($zip) || !is_string($zip)) {
+            return new ResponseDTO('Zip code cannot be empty and must be a string.', 'Error');
+        }
+
         $zip = $this->trim($zip);
         if (!preg_match('/^\d{4,6}$/', $zip)) {
             return new ResponseDTO('Oops, your Postcode doesn\'t look right!', 'Error');
@@ -86,9 +109,13 @@ class OrderFlowValidation
 
     private function validateAddress($address): ?ResponseDTO
     {
+        if (empty($address) || !is_string($address)) {
+            return new ResponseDTO('Address cannot be empty and must be a string.', 'Error');
+        }
+
         $address = $this->trim($address);
         if (strlen($address) >= 20 || strlen($address) <= 2 ||
-            !preg_match('/^[a-zA-Z\s-]+$/', $address)) {
+            !preg_match('/^[a-zA-Z0-9\s.-]+$/', $address)) {
             return new ResponseDTO('Oops, your Address doesn\'t look right!', 'Error');
         }
         return null;

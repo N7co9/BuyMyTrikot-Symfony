@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\API\FootballData\ItemsTransferService;
+use App\Service\API\ItemsTransferService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

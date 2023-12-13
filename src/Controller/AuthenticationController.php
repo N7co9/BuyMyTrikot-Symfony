@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-
+use App\Entity\User;
+use App\Form\LoginFormType;
 use App\Service\Validation\UserLoginValidation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,27 +14,29 @@ use Symfony\Component\Routing\Annotation\Route;
 class AuthenticationController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login')]
-    public function login(UserLoginValidation $loginValidation, Request $request, SessionInterface $session): Response
+    public function login(UserLoginValidation $loginValidation, Request $request,
+                          SessionInterface $session  ): Response
     {
-        $response = $loginValidation->authenticate($request, $session);
-        if ($response->getType() === 'OK') {
-            // Pass a flag to the template
-            return $this->render('security/login.html.twig', [
-                'response' => $response,
-                'redirect' => true
-            ]);
-        }
+        $form = $this->createForm(LoginFormType::class);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $response = $loginValidation->authenticate($formData, $session);
+            if ($response->getType() === 'OK') {
+                return $this->redirectToRoute('app_homepage');
+            }
+        }
         return $this->render('security/login.html.twig', [
-            'response' => $response,
-            'redirect' => false
+            'form' => $form->createView(),
+            'response' => $response ?? ''
         ]);
     }
+
     #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(Request $request): Response
+    public function logout(): void
     {
-        $session = $request->getSession();
-        $session->clear();
-        return $this->redirectToRoute('app_homepage');
+        // The logout logic is handled by Symfony, this method can be empty.
+        // You can redirect to the homepage or another page if you want.
     }
 }

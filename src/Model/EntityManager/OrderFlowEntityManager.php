@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class OrderFlowEntityManager
 {
+    public array $errors = [];
     public function persistOrder(
         Request                $request,
         EntityManagerInterface $entityManager,
@@ -36,11 +37,11 @@ class OrderFlowEntityManager
             $order->setDue($request->get('totalCost'));
 
             $responseFromValidation = $validation->validate($order);
-            $errors = array_filter($responseFromValidation, function ($response) {
+            $this->errors = array_filter($responseFromValidation, function ($response) {
                 return $response !== null;
             });
 
-            if (empty($errors)) {
+            if (empty($this->errors)) {
                 // No errors, proceed with persisting the order
                 $entityManager->persist($order);
                 $entityManager->flush();
@@ -48,6 +49,6 @@ class OrderFlowEntityManager
             }
         }
         // Return the validation errors
-        return $errors;
+        return $this->errors;
     }
 }
