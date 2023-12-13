@@ -2,13 +2,12 @@
 
 namespace App\Tests\Service\Validation;
 
+use App\Components\Authentication\Business\Validation\UserLoginValidation;
 use App\Entity\User;
-use App\Model\DTO\UserDTO;
-use App\Service\Validation\UserLoginValidation;
-use App\Model\DTO\ResponseDTO;
-use App\Model\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Global\Persistence\DTO\ResponseDTO;
+use App\Global\Persistence\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class UserLoginValidationTest extends TestCase
 {

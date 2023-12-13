@@ -2,11 +2,11 @@
 
 namespace App\Tests\Service\Mapping;
 use App\Entity\User;
-use App\Service\Mapping\Mapper;
-use App\Model\DTO\ItemDTO;
-use App\Model\DTO\UserDTO;
-use Symfony\Component\HttpFoundation\Request;
+use App\Global\Persistence\DTO\ItemDTO;
+use App\Global\Persistence\DTO\UserDTO;
+use App\Global\Persistence\Mapping\Mapper;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class MapperTest extends TestCase
 {

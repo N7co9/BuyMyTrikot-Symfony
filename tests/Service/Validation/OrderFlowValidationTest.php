@@ -2,9 +2,9 @@
 
 namespace App\Tests\Service\Validation;
 
-use App\Service\Validation\OrderFlowValidation;
-use App\Model\DTO\ResponseDTO;
+use App\Components\Orderflow\Business\Validation\OrderFlowValidation;
 use App\Entity\Orders;
+use App\Global\Persistence\DTO\ResponseDTO;
 use PHPUnit\Framework\TestCase;
 
 class OrderFlowValidationTest extends TestCase

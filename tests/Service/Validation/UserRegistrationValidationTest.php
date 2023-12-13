@@ -2,8 +2,8 @@
 
 namespace App\Tests\Service\Validation;
 
-use App\Service\Validation\UserRegistrationValidation;
-use App\Model\DTO\UserDTO;
+use App\Components\Registration\Business\Validation\UserRegistrationValidation;
+use App\Global\Persistence\DTO\UserDTO;
 use PHPUnit\Framework\TestCase;
 
 class UserRegistrationValidationTest extends TestCase

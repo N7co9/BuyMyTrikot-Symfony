@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Model\Repository\UserRepository;
+use App\Global\Persistence\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;

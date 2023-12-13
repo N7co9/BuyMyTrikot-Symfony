@@ -2,12 +2,12 @@
 
 namespace App\Tests\Model\EntityManager;
 
+use App\Components\Orderflow\Business\Validation\OrderFlowValidation;
+use App\Components\Orderflow\Persistence\OrderFlowEntityManager;
+use App\Components\Orderflow\Persistence\OrdersRepository;
+use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\Orders;
-use App\Model\DTO\ResponseDTO;
-use App\Model\Repository\OrdersRepository;
-use App\Model\Repository\ShoppingCartRepository;
-use App\Service\Validation\OrderFlowValidation;
-use App\Model\EntityManager\OrderFlowEntityManager;
+use App\Global\Persistence\DTO\ResponseDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
