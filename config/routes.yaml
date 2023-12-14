@@ -1,5 +1,15 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+Authentication_controllers:
+    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Communication'
+    type: annotation
+Homepage_controllers:
+    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Homepage/Communication'
+    type: annotation
+Orderflow_controllers:
+    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication'
+    type: annotation
+Registration_controllers:
+    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Communication'
+    type: annotation
+ShoppingCart_controllers:
+    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Communication'
+    type: annotation

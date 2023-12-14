@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Model\Repository\ShoppingCartRepository;
+use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ShoppingCartRepository::class)]

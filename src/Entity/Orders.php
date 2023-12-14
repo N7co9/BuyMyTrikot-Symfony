@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Model\Repository\OrdersRepository;
+use App\Components\Orderflow\Persistence\OrdersRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrdersRepository::class)]

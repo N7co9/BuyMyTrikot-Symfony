@@ -7,7 +7,7 @@ parameters:
 
 services:
     App\Service\API\ItemsTransferService:
-        class: 'App\Service\API\ItemsTransferService'
+        class: 'App\Global\Persistence\API\ItemsTransferService'
         arguments:
             $itemRepository: '@App\Model\Repository\ItemRepository'
             $entityManager: '@doctrine.orm.entity_manager'
