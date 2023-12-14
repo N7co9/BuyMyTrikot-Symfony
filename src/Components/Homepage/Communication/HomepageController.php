@@ -33,7 +33,7 @@ class HomepageController extends AbstractController
             $items = $this->service->itemTransfer($slug);
         }catch (\Exception $e)
         {
-            return $this->render('');
+            return $this->render('exceptions/404.html.twig');
         }
         return $this->render('homepage/index.html.twig', [
             'items' => $items,

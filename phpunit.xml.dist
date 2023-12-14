@@ -27,7 +27,7 @@
     <coverage processUncoveredFiles="true">
         <exclude>
             <directory suffix=".php">src/Entity</directory>
-            <directory suffix=".php">src/Service/API</directory>
+            <directory suffix=".php">src/Global/Persistence/API</directory>
         </exclude>
         <include>
             <directory suffix=".php">src</directory>

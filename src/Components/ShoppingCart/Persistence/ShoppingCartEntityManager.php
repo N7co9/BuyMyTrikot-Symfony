@@ -58,4 +58,15 @@ class ShoppingCartEntityManager
         }
         $entityManager->flush();
     }
+    public function removeAllItemsFromUser(string $email, EntityManagerInterface $entityManager, ShoppingCartRepository $cartRepository, UserRepository $userRepository): void
+    {
+        $userId = $userRepository->findOneByEmail($email);
+        $shoppingCarts = $cartRepository->findByUserId($userId->getId());
+
+        foreach ($shoppingCarts as $shoppingCart) {
+            $entityManager->remove($shoppingCart);
+        }
+
+        $entityManager->flush();
+    }
 }

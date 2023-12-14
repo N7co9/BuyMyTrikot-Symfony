@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AuthenticationController extends AbstractController
 {
+    public string $flag;
     #[Route(path: '/login', name: 'app_login')]
     public function login(UserLoginValidation $loginValidation, Request $request,
                           SessionInterface $session  ): Response
@@ -36,7 +37,5 @@ class AuthenticationController extends AbstractController
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
-        // The logout logic is handled by Symfony, this method can be empty.
-        // You can redirect to the homepage or another page if you want.
     }
 }

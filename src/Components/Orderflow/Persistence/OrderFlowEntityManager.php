@@ -3,8 +3,10 @@
 namespace App\Components\Orderflow\Persistence;
 
 use App\Components\Orderflow\Business\Validation\OrderFlowValidation;
+use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\Orders;
+use App\Global\Persistence\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,6 +18,8 @@ class OrderFlowEntityManager
         EntityManagerInterface $entityManager,
         OrderFlowValidation $validation,
         ShoppingCartRepository $cartRepository,
+        ShoppingCartEntityManager $cartEntityManager,
+        UserRepository $userRepository,
         string $email,
     ): ?array
     {
@@ -45,6 +49,7 @@ class OrderFlowEntityManager
                 // No errors, proceed with persisting the order
                 $entityManager->persist($order);
                 $entityManager->flush();
+                $cartEntityManager->removeAllItemsFromUser($email,$entityManager, $cartRepository, $userRepository);
                 return null; // Explicitly return null to indicate success
             }
         }
