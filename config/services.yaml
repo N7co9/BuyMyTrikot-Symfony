@@ -12,6 +12,9 @@ services:
             $itemRepository: '@App\Model\Repository\ItemRepository'
             $entityManager: '@doctrine.orm.entity_manager'
             $client: '@http_client'
+    security.authentication.manager:
+        class: Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface
+        public: false
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
