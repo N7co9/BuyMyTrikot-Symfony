@@ -16,7 +16,7 @@
         <!-- User Greeting -->
         {% if user %}
             <div class="text-gray-900 bg-gray-100 rounded-lg px-4 py-2">
-                Nice to have you here, {{ user }}
+                Nice to have you here, {{ user.email }}
             </div>
             <a href="{{ path('app_logout') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-900 px-4 py-2 rounded-lg">Logout</a>
         {% endif %}

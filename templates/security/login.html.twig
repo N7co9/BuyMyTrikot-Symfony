@@ -1,5 +1,3 @@
-{% form_theme form 'security/form_theme.html.twig' %}
-
 {% extends 'base.html.twig' %}
 
 {% block header %}
@@ -7,33 +5,38 @@
 {% endblock %}
 
 {% block body %}
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: linear-gradient(to bottom left, #adebad, #00bcd4);">
-        <div style="background-color: white; border-radius: 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); padding: 35px; max-width: 400px; width: 100%; text-align: center;">
-            <h2 style="color: #333;">Login</h2>
-            {{ form_start(form) }}
-            {{ form_row(form.email) }}
-            {{ form_row(form.password) }}
-            <div style="margin-top: 15px;">
-                {{ form_row(form.submit) }}
-            </div>
-            {{ form_end(form) }}
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(to bottom right, #98FB98, #87CEEB);">
+        <form action="{{ path('app_login') }}" method="post" style="width: 400px; padding: 30px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); background-color: #fff;">
+            <h1 style="text-align: center; font-size: 32px; margin-bottom: 20px;">Login</h1>
 
-            {% if response.message is defined and response.message %}
-                <div style="color: red; margin-top: 10px;">
-                    {{ response.message }}
-                </div>
+            <div style="margin-bottom: 20px;">
+                <label for="username" style="display: block; font-weight: bold;">Email:</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 10px;">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label for="password" style="display: block; font-weight: bold;">Password:</label>
+                <input type="password" id="password" name="_password" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 10px;">
+            </div>
+
+            {% if error %}
+                <div style="color: red; margin-bottom: 15px; text-align: center;">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
 
-            <div style="margin-top: 20px;">
-                New here?   <a href="{{ path('app_register') }}" style="color: #192f6a; text-decoration: none;">Create an account</a>
+            <div style="margin-bottom: 15px; text-align: center;">
+                <a href="{{ path('app_homepage') }}" style="text-decoration: none; color: #007bff; margin-right: 10px;">Go to Homepage</a>
+                <a href="{{ path('app_register') }}" style="text-decoration: none; color: #007bff; margin-left: 10px;">Register</a>
             </div>
-            <div style="margin-top: 10px;">
-                Wrong turn?  <a href="{{ path('app_homepage') }}" style="color: #192f6a; text-decoration: none;">Go back to the homepage</a>
-            </div>
-        </div>
-    </div>
-{% endblock %}
 
-{% block footer %}
-    {# Intentionally left empty to not include the footer #}
+            <input type="hidden" name="_target_path" value="/home">
+
+            <div style="text-align: center;">
+                <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 10px 30px; border-radius: 5px; cursor: pointer; font-weight: bold;">Login</button>
+            </div>
+        </form>
+    </div>
+
+    {% block footer %}
+        {# Intentionally left empty to not include the footer #}
+    {% endblock %}
 {% endblock %}
