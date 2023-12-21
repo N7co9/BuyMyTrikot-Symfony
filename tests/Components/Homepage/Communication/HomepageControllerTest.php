@@ -3,6 +3,7 @@
 namespace App\Tests\Components\Homepage\Communication;
 
 use App\Entity\User;
+use App\Global\Persistence\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Stopwatch\Section;
@@ -28,14 +29,10 @@ class HomepageControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $expectedReturn = new User();
-        $expectedReturn->setPassword('Xyz12345*');
-        $expectedReturn->setPassword('DoesThisWork@questionMark.com');
+        $userRepo = static::getContainer()->get(UserRepository::class);
+        $user = $userRepo->findOneByEmail('test@lol.com');
+        $client->loginUser($user);
 
-        $securityMock = $this->createMock(Security::class);
-        $securityMock->method('getUser')->willReturn($expectedReturn);
-
-        $client->getContainer()->set('security.helper', $securityMock);
         $client->request('GET', '/home/');
 
         self::assertStringContainsString('Nice to have you here', $client->getResponse()->getContent());

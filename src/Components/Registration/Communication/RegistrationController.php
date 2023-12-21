@@ -23,7 +23,9 @@ class RegistrationController extends AbstractController
     public function register(Request $request): Response
     {
         if ($request->getMethod() === 'POST' ) {
-            $userDTO = $this->mapper->mapRequest2DTO($request);
+
+            $userDTO = $this->mapRequestToUserDto($request);
+
 
             $errors = $this->userRegistrationValidation->validate($userDTO);
 
@@ -36,5 +38,16 @@ class RegistrationController extends AbstractController
             'user' => $userDTO ?? new UserDTO(),
             'errors' => $errors ?? []
         ]);
+    }
+
+    public function mapRequestToUserDto(Request $request): UserDTO
+    {
+        $userDTO = new UserDTO();
+
+        $userDTO->email = $request->get('email', '');
+        $userDTO->username = $request->get('username', '');
+        $userDTO->password = $request->get('password', '');
+
+        return $userDTO;
     }
 }

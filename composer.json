@@ -77,6 +77,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "phpunit" : [
+            "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html coverage"
         ]
     },
     "conflict": {

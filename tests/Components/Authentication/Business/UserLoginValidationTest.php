@@ -17,13 +17,8 @@ class UserLoginValidationTest extends TestCase
 
     protected function setUp(): void
     {
-        // Create a mock UserRepository
         $this->userRepository = $this->createMock(UserRepository::class);
-
-        // Create a mock SessionInterface
         $this->session = $this->createMock(SessionInterface::class);
-
-        // Instantiate the UserLoginValidation class with mock dependencies
         $this->userLoginValidation = new UserLoginValidation($this->userRepository);
     }
 

@@ -32,10 +32,10 @@ class ShoppingCartController extends AbstractController
 
     #[Route('/shopping/cart/{slug}', name: 'app_shopping_cart_manage')]
     public function manage(string                 $slug, ShoppingCartEntityManager $manager, Request $request,
-                           UserRepository         $userRepository, SessionInterface $session, EntityManagerInterface $entityManager,
+                           UserRepository         $userRepository, Security $security, EntityManagerInterface $entityManager,
                            ShoppingCartRepository $cartRepository, ItemRepository $itemRepository): Response
     {
-        $manager->manage($slug, $request, $userRepository, $session, $entityManager, $cartRepository, $itemRepository);
+        $manager->manage($slug, $request, $userRepository, $security, $entityManager, $cartRepository, $itemRepository);
         return $this->redirectToRoute('app_shopping_cart');
     }
 }

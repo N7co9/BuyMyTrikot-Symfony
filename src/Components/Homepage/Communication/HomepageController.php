@@ -18,12 +18,11 @@ class HomepageController extends AbstractController
     }
 
     #[Route('/home/', name: 'app_homepage')]
-    public function index(Request $request, Security $security): Response
+    public function index(): Response
     {
-        $user = $security->getUser();
         return $this->render('base.html.twig' ,[
-            'user' => $user
-            ]);
+            'user' => $this->getUser()
+        ]);
     }
 
     #[Route('/home/browse/{slug}', name: 'app_browse')]
@@ -49,4 +48,5 @@ class HomepageController extends AbstractController
         // Redirect to the browse route with the search query as a slug
         return $this->redirectToRoute('app_browse', ['slug' => $searchQuery]);
     }
+
 }

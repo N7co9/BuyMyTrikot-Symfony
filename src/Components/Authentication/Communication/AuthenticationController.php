@@ -19,10 +19,4 @@ class AuthenticationController extends AbstractController
             'error' => $error,
         ]);
     }
-
-    #[Route('/logout', name: 'app_logout')]
-    public function logout()
-    {
-        // Controller action for logging out (handled automatically by Symfony)
-    }
 }

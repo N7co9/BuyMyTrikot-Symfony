@@ -21,10 +21,6 @@ class ShoppingCartControllerTest extends WebTestCase
 
     public function setUp() : void
     {
-        $this->userRepository = $this->createMock(UserRepository::class);
-        $this->cartRepository = $this->createMock(ShoppingCartRepository::class);
-        $this->session = $this->createMock(SessionInterface::class);
-        $this->cartController = $this->createMock(ShoppingCartController::class);
     }
     public function testIndexNoUser(): void
     {
@@ -33,7 +29,6 @@ class ShoppingCartControllerTest extends WebTestCase
 
         // Send a GET request to the shopping cart route
         $client->request('GET', '/shopping/cart');
-
         self::assertStringContainsString('(500 Internal Server Error)', $client->getResponse()->getContent());
     }
 
@@ -41,19 +36,28 @@ class ShoppingCartControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $user = new User();
-        $user->setPassword('Xyz12345*');
-        $user->setEmail('test@lol.com');
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByEmail('test@lol.com');
 
-        $securityMock = $this->createMock(Security::class);
-        $securityMock->method('getUser')->willReturn($user);
-
-        $client->getContainer()->set('security.helper', $securityMock);
+        $client->loginUser($testUser);
 
         $client->request('GET', '/shopping/cart');
 
-
         self::assertStringNotContainsString('(500 Internal Server Error)', $client->getResponse()->getContent());
         self::assertResponseIsSuccessful();
+    }
+
+    public function testManage() : void
+    {
+        $client = static::createClient();
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByEmail('test@lol.com');
+
+        $client->loginUser($testUser);
+
+        $client->request('GET', '/shopping/cart/add?id=44');
+
+        self::assertResponseRedirects('/shopping/cart');
     }
 }

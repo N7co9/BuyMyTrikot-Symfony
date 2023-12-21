@@ -6,26 +6,27 @@ use App\Entity\ShoppingCart;
 use App\Global\Persistence\Repository\ItemRepository;
 use App\Global\Persistence\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ShoppingCartEntityManager
 {
+
     public function manage(
         string                 $slug,
         Request                $request,
         UserRepository         $userRepository,
-        SessionInterface       $session,
+        Security               $security,
         EntityManagerInterface $entityManager,
         ShoppingCartRepository $cartRepository,
         ItemRepository         $itemRepository
     ): void
     {
-        $userEmail = $session->get('user');
+        $userEmail = $security->getUser()->getUserIdentifier();
         $user = $userRepository->findOneByEmail($userEmail);
         if (!$user) {
-            // Handle the case where no user is found
-            return;
+            throw new \RuntimeException('User not authenticated');
         }
 
         $itemId = $request->get('id');
@@ -39,9 +40,9 @@ class ShoppingCartEntityManager
                 $shoppingCart->setItemId($itemId);
                 $shoppingCart->setQuantity(1);
                 $shoppingCart->setUserId($user->getId());
-                $shoppingCart->setName($itemToBeAdded->getName());
-                $shoppingCart->setPrice($itemToBeAdded->getPrice());
-                $shoppingCart->setThumbnail($itemToBeAdded->getThumbnail());
+                $shoppingCart->setName($itemToBeAdded->getName() ?? '');
+                $shoppingCart->setPrice($itemToBeAdded->getPrice() ?? 0.00);
+                $shoppingCart->setThumbnail($itemToBeAdded->getThumbnail() ?? '');
 
                 $entityManager->persist($shoppingCart);
             } elseif ($cart !== null) {

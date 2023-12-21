@@ -15,7 +15,7 @@ security:
         main:
             lazy: true
             logout:
-                path: app_logout  # This is the route that triggers the logout
+                path: app_logout
                 target: app_homepage  # This is where the user will be redirected after logout
             form_login:
                 # "app_login" is the name of the route created previously
