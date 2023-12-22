@@ -7,7 +7,7 @@ use App\Global\Persistence\DTO\ResponseDTO;
 
 class OrderFlowValidation
 {
-    public function validate(Orders $order): array
+    public function validate(Orders $order): ?array
     {
         $responses = [
             'firstName' => $this->validateFirstName($order->getFirstName()),

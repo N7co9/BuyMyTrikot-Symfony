@@ -3,6 +3,7 @@
 namespace App\Tests\Components\ShoppingCart\Persistence;
 
 use App\Entity\ShoppingCart;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ShoppingCartRepositoryTest extends KernelTestCase
@@ -12,21 +13,27 @@ class ShoppingCartRepositoryTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $kernel = self::bootKernel();
-
-        // Get the entity manager
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
 
         // Get the UserRepository
         $this->cartRepository = $this->entityManager
             ->getRepository(ShoppingCart::Class);
+
+        $connection = $this->entityManager->getConnection();
+        $connection->insert('shopping_cart', [
+            'id' => 1,
+            'item_id' => 1,
+            'quantity' => 1,
+            'user_id' => 1,
+            'price' => 1,
+            'name' => 'eins',
+            'thumbnail' => 'zwei',
+        ]);
     }
 
     public function testFindOneByUserIdAndItemId()
     {
-        $res = $this->cartRepository->findOneByUserIdAndItemId(1, 999);
+        $res = $this->cartRepository->findOneByUserIdAndItemId(1, 1);
 
         self::assertNotEmpty($res);
         self::assertSame(1, $res->getId());
@@ -45,13 +52,25 @@ class ShoppingCartRepositoryTest extends KernelTestCase
         $res = $this->cartRepository->getTotal(1);
 
         self::assertNotEmpty($res);
-        self::assertSame(109.67, $res['total']);
+        self::assertSame(6.140000000000001, $res['total']);
     }
 
     public function testFindCartItemsByEmail()
     {
         $res = $this->cartRepository->findCartItemsByEmail('test@lol.com');
 
-        self::assertSame(999, $res[0]['id']);
+        self::assertSame(1, $res[0]['id']);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $connection = $this->entityManager->getConnection();
+
+        $connection->executeQuery('DELETE FROM shopping_cart');
+        $connection->executeQuery('ALTER TABLE shopping_cart AUTO_INCREMENT=0');
+
+        $connection->close();
     }
 }

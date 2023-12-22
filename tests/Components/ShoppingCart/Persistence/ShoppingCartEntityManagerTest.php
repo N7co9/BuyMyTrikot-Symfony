@@ -2,298 +2,126 @@
 
 namespace App\Tests\Components\ShoppingCart\Persistence;
 
-use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
-use App\Entity\Items;
-use App\Entity\ShoppingCart;
-use http\Exception\RuntimeException;
-use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\User;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
+use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
+use App\Entity\ShoppingCart;
 use App\Global\Persistence\Repository\UserRepository;
-use App\Global\Persistence\Repository\ItemRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class ShoppingCartEntityManagerTest extends TestCase
+class ShoppingCartEntityManagerTest extends WebTestCase
 {
-    public function testNoUser()
+    private $entityManager;
+    private $cartRepository;
+    private $userRepository;
+
+    protected function setUp(): void
     {
-        $slug = 'add';
-        $request = $this->createMock(Request::class);
-        $userRepository = $this->createMock(UserRepository::class);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $cartRepository = $this->createMock(ShoppingCartRepository::class);
-        $itemRepository = $this->createMock(ItemRepository::class);
-        $security = $this->createMock(Security::class);
-        $shoppingCartManager = new ShoppingCartEntityManager();
+        $this->client = static::createClient();
 
-        $user = new User();
-        $user->setEmail('test@test.com');
+        $this->userRepository = self::getContainer()->get(UserRepository::class);
+        $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $this->cartRepository = self::getContainer()->get(ShoppingCartRepository::class);
 
-        $security->method('getUser')
-            ->willReturn($user);
-
-        $this->expectExceptionMessage('User not authenticated');
-
-        $shoppingCartManager->manage(
-            $slug,
-            $request,
-            $userRepository,
-            $security,
-            $entityManager,
-            $cartRepository,
-            $itemRepository
-        );
-    }
-    public function testManageAddItemToCartEmptyCart()
-    {
-        $slug = 'add';
-        $request = $this->createMock(Request::class);
-        $userRepository = $this->createMock(UserRepository::class);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $cartRepository = $this->createMock(ShoppingCartRepository::class);
-        $itemRepository = $this->createMock(ItemRepository::class);
-        $security = $this->createMock(Security::class);
-
-
-        $entityManager->expects($this->once())->method('persist');
-        $entityManager->expects($this->once())->method('flush');
-
-        $user = new User();
-        $user->setEmail('test@lol.com');
-        $user->setPassword('Xyz12345*');
-
-        $security->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user);
-
-        $userRepository->expects($this->once())->method('findOneByEmail')->willReturn($user);
-
-        $itemId = 1337;
-        $request->expects($this->once())->method('get')->with('id')->willReturn($itemId);
-
-        $cartRepository->expects($this->once())
-            ->method('findOneByUserIdAndItemId')
-            ->with($user->getId(), $itemId)
-            ->willReturn(null);
-
-        $itemToBeAdded = new Items();
-
-        $itemRepository->expects($this->once())
-            ->method('findOneByItemId')
-            ->with($itemId)
-            ->willReturn($itemToBeAdded);
-
-        $shoppingCartManager = new ShoppingCartEntityManager();
-        $shoppingCartManager->manage(
-            $slug,
-            $request,
-            $userRepository,
-            $security,
-            $entityManager,
-            $cartRepository,
-            $itemRepository
-        );
+        parent::setUp();
     }
 
-    public function testManageAddItemToCartNotEmptyCart()
+    public function testPersistNew()
     {
-        $slug = 'add';
-        $request = $this->createMock(Request::class);
-        $userRepository = $this->createMock(UserRepository::class);
-        $security = $this->createMock(Security::class);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $cartRepository = $this->createMock(ShoppingCartRepository::class);
-        $itemRepository = $this->createMock(ItemRepository::class);
-
-        $entityManager->expects($this->once())->method('persist');
-        $entityManager->expects($this->once())->method('flush');
-
-        $user = new User();
-        $user->setEmail('test@lol.com');
-        $user->setPassword('Xyz12345*');
-
-        $security->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user);
-
-        $userRepository->expects($this->once())->method('findOneByEmail')->willReturn($user);
-
-        $itemId = 1337;
-        $request->expects($this->once())->method('get')->with('id')->willReturn($itemId);
+        $userRepo = static::getContainer()->get(UserRepository::class);
+        $user = $userRepo->findOneByEmail('test@lol.com');
+        $this->client->loginUser($user);
 
         $cart = new ShoppingCart();
-        $cart->setItemId(1337);
+        $cart->setId(100);
+        $cart->setItemId('69');
+        $cart->setQuantity('69');
+        $cart->setUserId(1);
+        $cart->setPrice(69.420);
+        $cart->setName('name');
+        $cart->setThumbnail('thumbnail');
+
+        $manager = new ShoppingCartEntityManager($this->userRepository, $this->entityManager, $this->cartRepository);
+        $manager->persist($cart);
+
+
+
+        $resultsUWU = $this->cartRepository->findByUserId(1);
+        self::assertSame('thumbnail', $resultsUWU[0]->getThumbnail());
+        self::assertSame(69, $resultsUWU[0]->getItemId());
+
+    }
+    public function testPersistRemove()
+    {
+        $userRepo = static::getContainer()->get(UserRepository::class);
+        $user = $userRepo->findOneByEmail('test@lol.com');
+        $this->client->loginUser($user);
+
+        $cart = new ShoppingCart();
+        $cart->setId(100);
+        $cart->setItemId('69');
         $cart->setQuantity(1);
+        $cart->setUserId(1);
+        $cart->setPrice(69.420);
+        $cart->setName('name');
+        $cart->setThumbnail('thumbnail');
 
-        $cartRepository->expects($this->once())
-            ->method('findOneByUserIdAndItemId')
-            ->with($user->getId(), $itemId)
-            ->willReturn($cart);
+        $manager = new ShoppingCartEntityManager($this->userRepository, $this->entityManager, $this->cartRepository);
+        $manager->persist($cart);
 
-        $itemToBeAdded = new Items();
+        $cart->setQuantity(0);
+        $manager->persist($cart);
 
-        $itemRepository->expects($this->once())
-            ->method('findOneByItemId')
-            ->with($itemId)
-            ->willReturn($itemToBeAdded);
-
-        $shoppingCartManager = new ShoppingCartEntityManager();
-        $shoppingCartManager->manage(
-            $slug,
-            $request,
-            $userRepository,
-            $security,
-            $entityManager,
-            $cartRepository,
-            $itemRepository
-        );
+        $resultsUWU = $this->cartRepository->findByUserId(1);
+        self::assertEmpty($resultsUWU);
     }
 
-    public function testManageRemoveCartQuantityOver1()
+    public function testRemoeAllItemsFromUser()
     {
-        $slug = 'remove';
-        $request = $this->createMock(Request::class);
-        $userRepository = $this->createMock(UserRepository::class);
-        $security = $this->createMock(Security::class);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $cartRepository = $this->createMock(ShoppingCartRepository::class);
-        $itemRepository = $this->createMock(ItemRepository::class);
-
-        $entityManager->expects($this->once())->method('persist');
-        $entityManager->expects($this->once())->method('flush');
-
-        $user = new User();
-        $user->setEmail('test@lol.com');
-        $user->setPassword('Xyz12345*');
-
-        $security->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user);
-
-        $userRepository->expects($this->once())->method('findOneByEmail')->willReturn($user);
-
-        $itemId = 1337;
-        $request->expects($this->once())->method('get')->with('id')->willReturn($itemId);
+        $userRepo = static::getContainer()->get(UserRepository::class);
+        $user = $userRepo->findOneByEmail('test@lol.com');
+        $this->client->loginUser($user);
 
         $cart = new ShoppingCart();
-        $cart->setItemId(1337);
-        $cart->setQuantity(3);
-
-        $cartRepository->expects($this->once())
-            ->method('findOneByUserIdAndItemId')
-            ->with($user->getId(), $itemId)
-            ->willReturn($cart);
-
-        $itemToBeAdded = new Items();
-
-        $itemRepository->expects($this->once())
-            ->method('findOneByItemId')
-            ->with($itemId)
-            ->willReturn($itemToBeAdded);
-
-        $shoppingCartManager = new ShoppingCartEntityManager();
-        $shoppingCartManager->manage(
-            $slug,
-            $request,
-            $userRepository,
-            $security,
-            $entityManager,
-            $cartRepository,
-            $itemRepository
-        );
-    }
-
-    public function testManageRemoveCartQuantity1()
-    {
-        $slug = 'remove';
-        $request = $this->createMock(Request::class);
-        $userRepository = $this->createMock(UserRepository::class);
-        $security = $this->createMock(Security::class);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $cartRepository = $this->createMock(ShoppingCartRepository::class);
-        $itemRepository = $this->createMock(ItemRepository::class);
-
-        $entityManager->expects($this->once())->method('remove');
-        $entityManager->expects($this->once())->method('flush');
-
-        $user = new User();
-        $user->setEmail('test@lol.com');
-        $user->setPassword('Xyz12345*');
-
-        $security->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user);
-
-        $userRepository->expects($this->once())->method('findOneByEmail')->willReturn($user);
-
-        $itemId = 1337;
-        $request->expects($this->once())->method('get')->with('id')->willReturn($itemId);
-
-        $cart = new ShoppingCart();
-        $cart->setItemId(1337);
+        $cart->setId(100);
+        $cart->setItemId('69');
         $cart->setQuantity(1);
+        $cart->setUserId(1);
+        $cart->setPrice(69.420);
+        $cart->setName('name');
+        $cart->setThumbnail('thumbnail');
 
-        $cartRepository->expects($this->once())
-            ->method('findOneByUserIdAndItemId')
-            ->with($user->getId(), $itemId)
-            ->willReturn($cart);
+        $manager = new ShoppingCartEntityManager($this->userRepository, $this->entityManager, $this->cartRepository);
+        $manager->persist($cart);
 
-        $itemToBeAdded = new Items();
+        $cart = new ShoppingCart();
+        $cart->setId(111);
+        $cart->setItemId('111');
+        $cart->setQuantity(1);
+        $cart->setUserId(1);
+        $cart->setPrice(69.420);
+        $cart->setName('name');
+        $cart->setThumbnail('thumbnail');
 
-        $itemRepository->expects($this->once())
-            ->method('findOneByItemId')
-            ->with($itemId)
-            ->willReturn($itemToBeAdded);
+        $manager->persist($cart);
 
-        $shoppingCartManager = new ShoppingCartEntityManager();
-        $shoppingCartManager->manage(
-            $slug,
-            $request,
-            $userRepository,
-            $security,
-            $entityManager,
-            $cartRepository,
-            $itemRepository
-        );
+        $manager->removeAllItemsFromUser('test@lol.com',$this->entityManager, $this->cartRepository, $this->userRepository);
+
+        $resultsUWU = $this->cartRepository->findByUserId(1);
+        self::assertEmpty($resultsUWU);
     }
-
-    public function testRemoveAllItemsFromUser()
+    protected function tearDown(): void
     {
-        $email = 'test@lol.com';
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $userRepository = $this->createMock(UserRepository::class);
-        $cartRepository = $this->createMock(ShoppingCartRepository::class);
+        parent::tearDown();
 
-        $user = new User();
-        $user->id = 1;
+        $connection = $this->entityManager->getConnection();
 
-        $userRepository->expects($this->once())
-            ->method('findOneByEmail')
-            ->with($email)
-            ->willReturn($user);
+        $connection->executeQuery('DELETE FROM shopping_cart');
+        $connection->executeQuery('ALTER TABLE shopping_cart AUTO_INCREMENT=0');
 
-        $shoppingCart1 = new ShoppingCart();
-        $shoppingCart1->setId(1);
-
-        $shoppingCart2 = new ShoppingCart();
-        $shoppingCart2->setId(2);
-
-        $shoppingCarts = [$shoppingCart1, $shoppingCart2];
-
-        $cartRepository->expects($this->once())
-            ->method('findByUserId')
-            ->with($user->getId())
-            ->willReturn($shoppingCarts);
-
-        $entityManager->expects($this->exactly(2))
-            ->method('remove');
-
-        $entityManager->expects($this->once())->method('flush');
-
-        $shoppingCartManager = new ShoppingCartEntityManager();
-        $shoppingCartManager->removeAllItemsFromUser($email, $entityManager, $cartRepository, $userRepository);
+        $connection->close();
     }
 }

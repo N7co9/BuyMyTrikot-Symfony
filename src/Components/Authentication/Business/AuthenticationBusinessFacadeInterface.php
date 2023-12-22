@@ -2,9 +2,17 @@
 
 namespace App\Components\Authentication\Business;
 
+use App\Global\Persistence\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 interface AuthenticationBusinessFacadeInterface
 {
-    public function authenticate(array $formData, SessionInterface $session);
+    /**
+     * Authenticate a user.
+     *
+     * @param array $formData
+     * @param SessionInterface $session
+     * @return ResponseDTO|null
+     */
+    public function authenticate(array $formData, SessionInterface $session): ?ResponseDTO;
 }

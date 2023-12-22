@@ -2,57 +2,44 @@
 
 namespace App\Components\Orderflow\Communication;
 
+use App\Components\Orderflow\Business\OrderFlowBusinessFacade;
+use App\Components\Orderflow\Business\OrderFlowBusinessFacadeInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Components\Orderflow\Business\Validation\OrderFlowValidation;
-use App\Components\Orderflow\Persistence\OrderFlowEntityManager;
-use App\Components\Orderflow\Persistence\OrdersRepository;
-use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
-use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
-use App\Global\Persistence\Repository\ItemRepository;
-use App\Global\Persistence\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
+
 
 class OrderFlowController extends AbstractController
 {
-    public function __construct(public ?Array $response = [], public ?Array $total = [])
+    public function __construct(
+        private Security                         $security,
+        private OrderFlowBusinessFacadeInterface $facade,
+        public ?array                            $response = [],
+        public ?array                            $total = []
+    )
     {
     }
 
     #[Route('/order/flow', name: 'app_order_flow')]
-    public function index(
-        ShoppingCartRepository $cartRepository,
-        UserRepository $userRepository,
-        Security $security,
-        OrderFlowEntityManager $flowEntityManager,
-        Request $request,
-        EntityManagerInterface $entityManager,
-        OrderFlowValidation $validation,
-        ShoppingCartEntityManager $cartEntityManager,
-    ): Response {
-        $user = $security->getUser();
-
+    public function index(Request $request
+    ): Response
+    {
+        $user = $this->getUser();
         if (!$user) {
             throw $this->createNotFoundException('User not authenticated.');
         }
 
-        $email = $user->getUserIdentifier();
-        $user = $userRepository->findOneByEmail($email);
+        $email = $this->facade->getUserIdentifier($this->security);
+        $userID = $this->facade->getUserID($this->security);
+        $itemsInCart = $this->facade->getItemsInCart($userID);
+        $total = $this->facade->getTotal($userID);
 
-        $userID = $user->getId();
-        $itemsInCart = $cartRepository->findByUserId($userID);
-        $total = $cartRepository->getTotal($userID);
 
-        $response = null;
-        if ($request->isMethod('POST')) {
-            $response = $flowEntityManager->persistOrder($request, $entityManager, $validation, $cartRepository, $cartEntityManager, $userRepository, $email);
-
-            if ($response === null) {
-                return $this->redirectToRoute('app_order_flow_thankyou');
-            }
+        $response = $this->facade->createOrderFlow($request, $email);
+        if ($response === null) {
+            return $this->redirectToRoute('app_order_flow_thankyou');
         }
 
         return $this->render('order_flow/index.html.twig', [
@@ -64,24 +51,20 @@ class OrderFlowController extends AbstractController
     }
 
     #[Route('/order/flow/thankyou', name: 'app_order_flow_thankyou')]
-    public function success(OrdersRepository $repository, Security $security, ItemRepository $itemRepository): Response
+    public function success(): Response
     {
-        $user = $security->getUser();
+        $user = $this->getUser();
 
         if (!$user) {
-            // Handle the case where the user is not authenticated. Possibly redirect or throw an exception.
             throw $this->createNotFoundException('User not authenticated.');
         }
-
-        $email = $user->getUserIdentifier();
-        $mostRecentOrder = $repository->findMostRecentOrderByEmail($email);
+        $email = $this->facade->getUserIdentifier($this->security);
+        $mostRecentOrder = $this->facade->getMostRecentOrder($email);
 
         if (!$mostRecentOrder) {
-            // Handle the case where no order is found for the user. Possibly redirect or throw an exception.
             throw $this->createNotFoundException('Order not found.');
         }
-
-        $items = $itemRepository->findItemsByArrayOfIds($mostRecentOrder->getItems());
+        $items = $this->facade->findItemsByArrayOfIds($mostRecentOrder->getItems());
 
         return $this->render('thank_you/index.html.twig', [
             'items' => $items,

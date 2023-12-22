@@ -4,19 +4,27 @@ namespace App\Tests\Components\Registration\Business;
 
 use App\Components\Registration\Business\RegistrationBusinessFacade;
 use App\Components\Registration\Business\Validation\UserRegistrationValidation;
+use App\Components\Registration\Persistence\UserEntityManager;
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\DTO\UserDTO;
+use App\Global\Persistence\Mapping\Mapper;
+use Cassandra\Map;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 class RegistrationBusinessFacadeTest extends TestCase
 {
     private RegistrationBusinessFacade $registrationBusinessFacade;
     private UserRegistrationValidation $registrationValidation;
+    private Mapper $mapper;
+    private UserEntityManager $entityManager;
 
     protected function setUp(): void
     {
+        $this->mapper = $this->createMock(Mapper::class);
+        $this->entityManager = $this->createMock(UserEntityManager::class);
         $this->registrationValidation = $this->createMock(UserRegistrationValidation::class);
-        $this->registrationBusinessFacade = new RegistrationBusinessFacade($this->registrationValidation);
+        $this->registrationBusinessFacade = new RegistrationBusinessFacade($this->registrationValidation, $this->mapper, $this->entityManager);
     }
 
     public function testValidateUserWithValidData(): void

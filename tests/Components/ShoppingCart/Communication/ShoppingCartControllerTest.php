@@ -4,8 +4,11 @@ namespace App\Tests\Components\ShoppingCart\Communication;
 namespace App\Tests\Components\ShoppingCart\Communication;
 
 
+use App\Components\Orderflow\Persistence\OrderFlowEntityManager;
+use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacade;
 use App\Components\ShoppingCart\Communication\ShoppingCartController;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
+use App\Entity\ShoppingCart;
 use App\Entity\User;
 use App\Global\Persistence\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -53,6 +56,13 @@ class ShoppingCartControllerTest extends WebTestCase
 
         $userRepository = static::getContainer()->get(UserRepository::class);
         $testUser = $userRepository->findOneByEmail('test@lol.com');
+
+        $cart = new ShoppingCart();
+
+        $shoppingCartBusiness = $this->createMock(ShoppingCartBusinessFacade::class);
+        $shoppingCartBusiness->method('manageCart')
+            ->willReturn($cart);
+        $client->getContainer()->set(ShoppingCartBusinessFacade::class, $shoppingCartBusiness);
 
         $client->loginUser($testUser);
 

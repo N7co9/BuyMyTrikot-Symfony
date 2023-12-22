@@ -13,7 +13,6 @@ class UserLoginValidation
     )
     {
     }
-
     public function authenticate(array $formData, SessionInterface $session): ResponseDTO
     {
         $email = $formData['email'];

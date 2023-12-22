@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Components\ShoppingCart\Business;
+
+use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
+use App\Entity\ShoppingCart;
+use App\Global\Persistence\Repository\ItemRepository;
+use App\Global\Persistence\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+
+class ShoppingCartLogic
+{
+    public function __construct(
+        public UserRepository $userRepository,
+        public Security $security, public EntityManagerInterface $entityManager,
+        public ShoppingCartRepository $cartRepository, public  ItemRepository $itemRepository
+    )
+    {}
+    public function manage(string $slug, int $itemId): ?ShoppingCart
+    {
+        $userEmail = $this->security->getUser()->getUserIdentifier();
+        $user = $this->userRepository->findOneByEmail($userEmail);
+        if (!$user) {
+            throw new \RuntimeException('User not authenticated');
+        }
+
+        $cart = $this->cartRepository->findOneByUserIdAndItemId($user->getId(), $itemId);
+        $itemToBeAdded = $this->itemRepository->findOneByItemId($itemId);
+
+        if ($slug === 'add') {
+            if ($cart === null && $itemToBeAdded) {
+                $shoppingCart = new ShoppingCart();
+
+                $shoppingCart->setItemId($itemId);
+                $shoppingCart->setQuantity(1);
+                $shoppingCart->setUserId($user->getId());
+                $shoppingCart->setName($itemToBeAdded->getName() ?? '');
+                $shoppingCart->setPrice($itemToBeAdded->getPrice() ?? 0.00);
+                $shoppingCart->setThumbnail($itemToBeAdded->getThumbnail() ?? '');
+
+                return $shoppingCart;
+            } elseif ($cart !== null) {
+                $cart->setQuantity($cart->getQuantity() + 1);
+                return $cart;
+            }
+        } elseif ($slug === 'remove' && $cart !== null && $itemToBeAdded) {
+            if ($cart->getQuantity() > 1) {
+                $cart->setQuantity($cart->getQuantity() - 1);
+                return $cart;
+            } elseif ($cart->getQuantity() === 1) {
+                $cart->setQuantity(0);
+                return $cart;
+            }
+        }
+        return null;
+    }
+}
