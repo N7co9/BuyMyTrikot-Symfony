@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Components\Orderflow\Business\Validation;
+namespace App\Components\Orderflow\Business;
 
 use App\Entity\Orders;
 use App\Global\Persistence\DTO\ResponseDTO;
@@ -9,7 +9,7 @@ class OrderFlowValidation
 {
     public function validate(Orders $order): ?array
     {
-        $responses = [
+        return [
             'firstName' => $this->validateFirstName($order->getFirstName()),
             'lastName' => $this->validateLastName($order->getLastName()),
             'city' => $this->validateCity($order->getCity()),
@@ -18,7 +18,6 @@ class OrderFlowValidation
             'region' => $this->validateState($order->getState()),
             'phoneNumber' => $this->validatePhoneNumber($order->getPhoneNumber())
         ];
-        return $responses;
     }
 
     private function validateFirstName($firstName): ?ResponseDTO

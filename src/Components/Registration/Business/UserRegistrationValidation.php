@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Components\Registration\Business\Validation;
+namespace App\Components\Registration\Business;
 
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\DTO\UserDTO;

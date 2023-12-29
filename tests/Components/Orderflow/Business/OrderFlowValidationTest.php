@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\Orderflow\Business;
 
-use App\Components\Orderflow\Business\Validation\OrderFlowValidation;
+use App\Components\Orderflow\Business\OrderFlowValidation;
 use App\Entity\Orders;
 use App\Global\Persistence\DTO\ResponseDTO;
 use PHPUnit\Framework\TestCase;

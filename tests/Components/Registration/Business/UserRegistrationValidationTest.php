@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\Registration\Business;
 
-use App\Components\Registration\Business\Validation\UserRegistrationValidation;
+use App\Components\Registration\Business\UserRegistrationValidation;
 use App\Global\Persistence\DTO\UserDTO;
 use PHPUnit\Framework\TestCase;
 
@@ -102,6 +102,11 @@ class UserRegistrationValidationTest extends TestCase
         $this->assertEquals('Exception', $errors[0]->type);
 
         // Add more test cases for password validation
+    }
+
+    public function tearDown() : void
+    {
+        parent::tearDown();
     }
 
 }

@@ -2,7 +2,6 @@
 
 namespace App\Components\ShoppingCart\Business;
 
-use App\Entity\Items;
 use App\Entity\ShoppingCart;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -21,7 +20,7 @@ interface ShoppingCartBusinessFacadeInterface
      * Find the user's ID by their security context.
      *
      * @param Security $security
-     * @return int
+     * @return ?int
      */
     public function findOneByEmail(Security $security): ?int;
 

@@ -2,7 +2,6 @@
 
 namespace App\Components\ShoppingCart\Communication;
 
-use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacade;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;

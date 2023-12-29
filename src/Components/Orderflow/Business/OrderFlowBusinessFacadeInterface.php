@@ -61,7 +61,7 @@ interface OrderFlowBusinessFacadeInterface
      * Get the most recent order for a user by email.
      *
      * @param string $email
-     * @return Orders
+     * @return ?Orders
      */
     public function getMostRecentOrder(string $email): ?Orders;
 

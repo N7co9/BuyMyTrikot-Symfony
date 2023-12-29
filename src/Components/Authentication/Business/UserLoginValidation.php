@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Components\Authentication\Business\Validation;
+namespace App\Components\Authentication\Business;
 
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\Repository\UserRepository;
@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class UserLoginValidation
 {
     public function __construct(
-        private UserRepository $repository,
+        private readonly UserRepository $repository,
     )
     {
     }
@@ -31,6 +31,7 @@ class UserLoginValidation
         if (!password_verify($plainPassword, $user->getPassword())) {
             return new ResponseDTO('Invalid credentials', 'Error');
         }
+
         $session->set('user', $email);
         return new ResponseDTO('Login successful!', 'OK');
     }

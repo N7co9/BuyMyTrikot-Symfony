@@ -2,7 +2,7 @@
 
 namespace App\Components\Orderflow\Persistence;
 
-use App\Components\Orderflow\Business\Validation\OrderFlowValidation;
+use App\Components\Orderflow\Business\OrderFlowValidation;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\Orders;

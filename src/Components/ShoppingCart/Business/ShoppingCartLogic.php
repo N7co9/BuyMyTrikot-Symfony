@@ -7,19 +7,27 @@ use App\Entity\ShoppingCart;
 use App\Global\Persistence\Repository\ItemRepository;
 use App\Global\Persistence\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class ShoppingCartLogic
 {
     public function __construct(
-        public UserRepository $userRepository,
-        public Security $security, public EntityManagerInterface $entityManager,
-        public ShoppingCartRepository $cartRepository, public  ItemRepository $itemRepository
+        public UserRepository         $userRepository,
+        public Security               $security,
+        public EntityManagerInterface $entityManager,
+        public ShoppingCartRepository $cartRepository,
+        public ItemRepository         $itemRepository
     )
-    {}
+    {
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
     public function manage(string $slug, int $itemId): ?ShoppingCart
     {
-        $userEmail = $this->security->getUser()->getUserIdentifier();
+        $userEmail = $this->security->getUser()?->getUserIdentifier();
         $user = $this->userRepository->findOneByEmail($userEmail);
         if (!$user) {
             throw new \RuntimeException('User not authenticated');
@@ -40,7 +48,9 @@ class ShoppingCartLogic
                 $shoppingCart->setThumbnail($itemToBeAdded->getThumbnail() ?? '');
 
                 return $shoppingCart;
-            } elseif ($cart !== null) {
+            }
+
+            if ($cart !== null) {
                 $cart->setQuantity($cart->getQuantity() + 1);
                 return $cart;
             }
@@ -48,7 +58,9 @@ class ShoppingCartLogic
             if ($cart->getQuantity() > 1) {
                 $cart->setQuantity($cart->getQuantity() - 1);
                 return $cart;
-            } elseif ($cart->getQuantity() === 1) {
+            }
+
+            if ($cart->getQuantity() === 1) {
                 $cart->setQuantity(0);
                 return $cart;
             }

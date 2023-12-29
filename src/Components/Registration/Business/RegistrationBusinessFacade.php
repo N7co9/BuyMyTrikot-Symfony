@@ -2,12 +2,10 @@
 
 namespace App\Components\Registration\Business;
 
-use App\Components\Registration\Business\Validation\UserRegistrationValidation;
 use App\Components\Registration\Persistence\UserEntityManager;
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\DTO\UserDTO;
 use App\Global\Persistence\Mapping\Mapper;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpFoundation\Request;
 
 class RegistrationBusinessFacade implements RegistrationBusinessFacadeInterface

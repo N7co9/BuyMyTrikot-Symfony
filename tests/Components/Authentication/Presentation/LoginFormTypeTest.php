@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\Authentication\Presentation;
 
-use App\Components\Authentication\Presentation\Form\LoginFormType;
+use App\Components\Authentication\Presentation\LoginFormType;
 use Symfony\Component\Form\Test\TypeTestCase;
 
 class LoginFormTypeTest extends TypeTestCase

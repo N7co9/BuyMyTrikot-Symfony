@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private RegistrationBusinessFacadeInterface $facade,
+        private readonly RegistrationBusinessFacadeInterface $facade,
     )
     {
     }

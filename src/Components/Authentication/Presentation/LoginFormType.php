@@ -2,7 +2,7 @@
 
 // src/Form/LoginFormType.php
 
-namespace App\Components\Authentication\Presentation\Form;
+namespace App\Components\Authentication\Presentation;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;

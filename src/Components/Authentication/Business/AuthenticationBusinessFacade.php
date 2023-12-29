@@ -2,7 +2,6 @@
 
 namespace App\Components\Authentication\Business;
 
-use App\Components\Authentication\Business\Validation\UserLoginValidation;
 use App\Global\Persistence\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 

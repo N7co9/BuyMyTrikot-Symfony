@@ -44,7 +44,7 @@ class ShoppingCartEntityManager
     public function removeAllItemsFromUser(string $email, EntityManagerInterface $entityManager, ShoppingCartRepository $cartRepository, UserRepository $userRepository): void
     {
         $userId = $userRepository->findOneByEmail($email);
-        $shoppingCarts = $cartRepository->findByUserId($userId->getId());
+        $shoppingCarts = $cartRepository->findByUserId($userId?->getId());
         foreach ($shoppingCarts as $shoppingCart) {
             $entityManager->remove($shoppingCart);
         }

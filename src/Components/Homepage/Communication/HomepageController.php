@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomepageController extends AbstractController
 {
     public function __construct(
-        private HomepageBusinessFacadeInterface $facade,
+        private readonly HomepageBusinessFacadeInterface $facade,
     )
     {
     }

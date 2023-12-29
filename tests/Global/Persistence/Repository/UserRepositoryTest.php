@@ -2,6 +2,9 @@
 
 namespace App\Tests\Global\Persistence\Repository;
 
+use App\Components\Registration\Persistence\UserEntityManager;
+use App\Global\Persistence\DTO\UserDTO;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use App\Global\Persistence\Repository\UserRepository;
 use App\Entity\User;
@@ -15,16 +18,14 @@ class UserRepositoryTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
+        $this->entityManager = self::getContainer()->get(UserEntityManager::class);
 
-        // Get the entity manager
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
+        $userDTO = new UserDTO();
+        $userDTO->email = 'test@lol.com';
+        $this->entityManager->register($userDTO);
 
-        // Get the UserRepository
-        $this->userRepository = $this->entityManager
-            ->getRepository(User::class);
+        $this->userRepository =  self::getContainer()->get(UserRepository::class);
+
     }
 
     public function testUpgradePassword(): void
@@ -58,5 +59,16 @@ class UserRepositoryTest extends KernelTestCase
         $this->userRepository->upgradePassword($unsupportedUser, 'new_hashed_password');
     }
 
-    // ... Other test methods ...
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $connection = $entityManager->getConnection();
+
+        $connection->executeQuery('DELETE FROM user');
+        $connection->executeQuery('ALTER TABLE user AUTO_INCREMENT=0');
+
+        $connection->close();
+    }
 }

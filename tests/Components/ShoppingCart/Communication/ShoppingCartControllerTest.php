@@ -4,15 +4,16 @@ namespace App\Tests\Components\ShoppingCart\Communication;
 namespace App\Tests\Components\ShoppingCart\Communication;
 
 
-use App\Components\Orderflow\Persistence\OrderFlowEntityManager;
+use App\Components\Registration\Persistence\UserEntityManager;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacade;
 use App\Components\ShoppingCart\Communication\ShoppingCartController;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\ShoppingCart;
-use App\Entity\User;
+use App\Global\Persistence\DTO\UserDTO;
 use App\Global\Persistence\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ShoppingCartControllerTest extends WebTestCase
@@ -21,38 +22,52 @@ class ShoppingCartControllerTest extends WebTestCase
     public SessionInterface $session;
     public UserRepository $userRepository;
     public ShoppingCartRepository $cartRepository;
+    public KernelBrowser $client;
 
-    public function setUp() : void
+    public function setUp(): void
     {
+        $this->client = self::createClient();
+        parent::setUp();
     }
+
     public function testIndexNoUser(): void
     {
-        // Create a Symfony test client
-        $client = static::createClient();
 
         // Send a GET request to the shopping cart route
-        $client->request('GET', '/shopping/cart');
-        self::assertStringContainsString('(500 Internal Server Error)', $client->getResponse()->getContent());
+        $this->client->request('GET', '/shopping/cart');
+        self::assertStringContainsString('(500 Internal Server Error)', $this->client->getResponse()->getContent());
     }
 
     public function testIndexUserLoggedInNoItemsInCart(): void
     {
-        $client = static::createClient();
+        $entityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $userDTO = new UserDTO();
+        $userDTO->email = 'test@lol.com';
+        $userDTO->username = 'test';
+        $userDTO->password = 'Xyz12345*';
+        $entityManager->register($userDTO);
+
 
         $userRepository = static::getContainer()->get(UserRepository::class);
         $testUser = $userRepository->findOneByEmail('test@lol.com');
 
-        $client->loginUser($testUser);
+        $this->client->loginUser($testUser);
 
-        $client->request('GET', '/shopping/cart');
+        $this->client->request('GET', '/shopping/cart');
 
-        self::assertStringNotContainsString('(500 Internal Server Error)', $client->getResponse()->getContent());
+
+        self::assertStringNotContainsString('(500 Internal Server Error)', $this->client->getResponse()->getContent());
         self::assertResponseIsSuccessful();
     }
 
-    public function testManage() : void
+    public function testManage(): void
     {
-        $client = static::createClient();
+        $entityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $userDTO = new UserDTO();
+        $userDTO->email = 'test@lol.com';
+        $userDTO->username = 'test';
+        $userDTO->password = 'Xyz12345*';
+        $entityManager->register($userDTO);
 
         $userRepository = static::getContainer()->get(UserRepository::class);
         $testUser = $userRepository->findOneByEmail('test@lol.com');
@@ -62,12 +77,24 @@ class ShoppingCartControllerTest extends WebTestCase
         $shoppingCartBusiness = $this->createMock(ShoppingCartBusinessFacade::class);
         $shoppingCartBusiness->method('manageCart')
             ->willReturn($cart);
-        $client->getContainer()->set(ShoppingCartBusinessFacade::class, $shoppingCartBusiness);
+        $this->client->getContainer()->set(ShoppingCartBusinessFacade::class, $shoppingCartBusiness);
 
-        $client->loginUser($testUser);
+        $this->client->loginUser($testUser);
 
-        $client->request('GET', '/shopping/cart/add?id=44');
+        $this->client->request('GET', '/shopping/cart/add?id=44');
 
         self::assertResponseRedirects('/shopping/cart');
+    }
+
+    protected function tearDown(): void
+    {
+        $entityManager = $this->client->getContainer()->get(EntityManagerInterface::class);
+        $connection = $entityManager->getConnection();
+
+        $connection->executeQuery('DELETE FROM user');
+        $connection->executeQuery('ALTER TABLE user AUTO_INCREMENT=0');
+
+        $connection->close();
+        parent::tearDown();
     }
 }

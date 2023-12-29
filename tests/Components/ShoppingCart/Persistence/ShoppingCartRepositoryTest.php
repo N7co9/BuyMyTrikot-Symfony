@@ -2,7 +2,9 @@
 
 namespace App\Tests\Components\ShoppingCart\Persistence;
 
+use App\Components\Registration\Persistence\UserEntityManager;
 use App\Entity\ShoppingCart;
+use App\Global\Persistence\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -13,9 +15,15 @@ class ShoppingCartRepositoryTest extends KernelTestCase
 
     public function setUp(): void
     {
+        $this->entityManager = self::getContainer()->get(UserEntityManager::class);
+        $userDTO = new UserDTO();
+        $userDTO->email = 'test@lol.com';
+        $userDTO->username = 'test';
+        $userDTO->password = 'Xyz12345*';
+        $this->entityManager->register($userDTO);
+
         $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
 
-        // Get the UserRepository
         $this->cartRepository = $this->entityManager
             ->getRepository(ShoppingCart::Class);
 
@@ -70,6 +78,9 @@ class ShoppingCartRepositoryTest extends KernelTestCase
 
         $connection->executeQuery('DELETE FROM shopping_cart');
         $connection->executeQuery('ALTER TABLE shopping_cart AUTO_INCREMENT=0');
+
+        $connection->executeQuery('DELETE FROM user');
+        $connection->executeQuery('ALTER TABLE user AUTO_INCREMENT=0');
 
         $connection->close();
     }

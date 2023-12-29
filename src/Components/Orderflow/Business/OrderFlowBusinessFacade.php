@@ -2,7 +2,6 @@
 
 namespace App\Components\Orderflow\Business;
 
-use App\Components\Orderflow\Business\Validation\OrderFlowValidation;
 use App\Components\Orderflow\Persistence\OrderFlowEntityManager;
 use App\Components\Orderflow\Persistence\OrdersRepository;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
@@ -36,7 +35,7 @@ class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
 
     public function getUserIdentifier(Security $security): string
     {
-        return $security->getUser()->getUserIdentifier();
+        return $security->getUser()?->getUserIdentifier();
     }
 
     public function findOneByEmail(string $email) : User
@@ -46,7 +45,7 @@ class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
 
     public function getUserID(Security $security) : int
     {
-        return $security->getUser()->getId();
+        return $security->getUser()?->getId();
     }
 
     public function getItemsInCart(int $userID) : array

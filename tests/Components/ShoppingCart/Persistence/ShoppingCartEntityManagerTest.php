@@ -2,15 +2,14 @@
 
 namespace App\Tests\Components\ShoppingCart\Persistence;
 
+use App\Components\Registration\Persistence\UserEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\ShoppingCart;
+use App\Global\Persistence\DTO\UserDTO;
 use App\Global\Persistence\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class ShoppingCartEntityManagerTest extends WebTestCase
 {
@@ -21,6 +20,14 @@ class ShoppingCartEntityManagerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+
+        $this->entityManager = self::getContainer()->get(UserEntityManager::class);
+        $userDTO = new UserDTO();
+        $userDTO->email = 'test@lol.com';
+        $userDTO->username = 'test';
+        $userDTO->password = 'Xyz12345*';
+        $this->entityManager->register($userDTO);
+
 
         $this->userRepository = self::getContainer()->get(UserRepository::class);
         $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
@@ -121,6 +128,9 @@ class ShoppingCartEntityManagerTest extends WebTestCase
 
         $connection->executeQuery('DELETE FROM shopping_cart');
         $connection->executeQuery('ALTER TABLE shopping_cart AUTO_INCREMENT=0');
+
+        $connection->executeQuery('DELETE FROM user');
+        $connection->executeQuery('ALTER TABLE user AUTO_INCREMENT=0');
 
         $connection->close();
     }

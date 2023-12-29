@@ -3,28 +3,33 @@
 namespace App\Tests\Components\Registration\Business;
 
 use App\Components\Registration\Business\RegistrationBusinessFacade;
-use App\Components\Registration\Business\Validation\UserRegistrationValidation;
+use App\Components\Registration\Business\UserRegistrationValidation;
 use App\Components\Registration\Persistence\UserEntityManager;
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\DTO\UserDTO;
 use App\Global\Persistence\Mapping\Mapper;
-use Cassandra\Map;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class RegistrationBusinessFacadeTest extends TestCase
+class RegistrationBusinessFacadeTest extends WebTestCase
 {
     private RegistrationBusinessFacade $registrationBusinessFacade;
     private UserRegistrationValidation $registrationValidation;
     private Mapper $mapper;
     private UserEntityManager $entityManager;
 
+    /**
+     * @throws Exception
+     */
     protected function setUp(): void
     {
         $this->mapper = $this->createMock(Mapper::class);
-        $this->entityManager = $this->createMock(UserEntityManager::class);
+        $this->entityManager = self::getContainer()->get(UserEntityManager::class);
         $this->registrationValidation = $this->createMock(UserRegistrationValidation::class);
         $this->registrationBusinessFacade = new RegistrationBusinessFacade($this->registrationValidation, $this->mapper, $this->entityManager);
+        parent::setUp();
     }
 
     public function testValidateUserWithValidData(): void
@@ -65,5 +70,32 @@ class RegistrationBusinessFacadeTest extends TestCase
 
         // Assert that there are error responses returned
         self::assertCount(3, $errors);
+    }
+
+    public function testRegisterEmailNotUnique(): void
+    {
+        $userDTO = new UserDTO();
+        $userDTO->username = 'Valid';
+        $userDTO->email = 'test@test.com';
+        $userDTO->password = 'Xyz12345*';
+        $this->registrationBusinessFacade->register($userDTO);
+
+
+        $res = $this->registrationBusinessFacade->register($userDTO);
+
+        self::assertSame('Email is not unique!!!', $res[0]->getMessage());
+    }
+
+    protected function tearDown(): void
+    {
+
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $connection = $entityManager->getConnection();
+
+        $connection->executeQuery('DELETE FROM user');
+        $connection->executeQuery('ALTER TABLE user AUTO_INCREMENT=0');
+
+        $connection->close();
+        parent::tearDown();
     }
 }

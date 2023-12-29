@@ -3,7 +3,7 @@
 namespace App\Tests\Components\Authentication\Business;
 
 use App\Components\Authentication\Business\AuthenticationBusinessFacade;
-use App\Components\Authentication\Business\Validation\UserLoginValidation;
+use App\Components\Authentication\Business\UserLoginValidation;
 use App\Global\Persistence\DTO\ResponseDTO;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

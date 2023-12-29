@@ -10,8 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 class UserEntityManager
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private Mapper $mapper,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Mapper                 $mapper,
     )
     {}
 

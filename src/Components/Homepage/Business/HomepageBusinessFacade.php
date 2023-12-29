@@ -6,9 +6,8 @@ use App\Global\Persistence\API\ItemsTransferService;
 
 class HomepageBusinessFacade implements HomepageBusinessFacadeInterface
 {
-    public function __construct(ItemsTransferService $itemsTransferService)
+    public function __construct(private readonly ItemsTransferService $itemsTransferService)
     {
-        $this->itemsTransferService = $itemsTransferService;
     }
 
     public function itemTransfer(string $slug): ?array
