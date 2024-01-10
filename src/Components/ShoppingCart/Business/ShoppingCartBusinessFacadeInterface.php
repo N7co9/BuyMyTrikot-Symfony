@@ -22,7 +22,7 @@ interface ShoppingCartBusinessFacadeInterface
      * @param Security $security
      * @return ?int
      */
-    public function findOneByEmail(Security $security): ?int;
+    public function getUserIdFromMail(Security $security): ?int;
 
     /**
      * Get items for a specific user.

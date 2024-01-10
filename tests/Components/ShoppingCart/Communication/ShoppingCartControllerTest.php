@@ -32,8 +32,6 @@ class ShoppingCartControllerTest extends WebTestCase
 
     public function testIndexNoUser(): void
     {
-
-        // Send a GET request to the shopping cart route
         $this->client->request('GET', '/shopping/cart');
         self::assertStringContainsString('(500 Internal Server Error)', $this->client->getResponse()->getContent());
     }
@@ -84,6 +82,32 @@ class ShoppingCartControllerTest extends WebTestCase
         $this->client->request('GET', '/shopping/cart/add?id=44');
 
         self::assertResponseRedirects('/shopping/cart');
+    }
+
+    public function testManageRuntimeExceptionWhenCartObjectIsNull(): void
+    {
+        $entityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $userDTO = new UserDTO();
+        $userDTO->email = 'test@lol.com';
+        $userDTO->username = 'test';
+        $userDTO->password = 'Xyz12345*';
+        $entityManager->register($userDTO);
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByEmail('test@lol.com');
+
+        $shoppingCartBusiness = $this->createMock(ShoppingCartBusinessFacade::class);
+
+        $shoppingCartBusiness->method('manageCart')
+            ->willReturn(null);
+
+        $this->client->getContainer()->set(ShoppingCartBusinessFacade::class, $shoppingCartBusiness);
+
+        $this->client->loginUser($testUser);
+
+        $this->client->request('GET', '/shopping/cart/add?id=999');
+
+        self::assertStringContainsString('Sorry, we couldn’t find the page you’re looking for.', $this->client->getResponse()->getContent());
     }
 
     protected function tearDown(): void

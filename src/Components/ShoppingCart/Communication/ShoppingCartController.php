@@ -21,7 +21,7 @@ class ShoppingCartController extends AbstractController
     #[Route('/shopping/cart', name: 'app_shopping_cart')]
     public function index(): Response
     {
-        $userID = $this->facade->findOneByEmail($this->security);
+        $userID = $this->facade->getUserIdFromMail($this->security);
         $items = $this->facade->getItems($userID);
         $total = $this->facade->getTotal($userID);
         return $this->render('shopping_cart/index.html.twig', ['controller_name' => 'ShoppingCartController',
@@ -34,17 +34,14 @@ class ShoppingCartController extends AbstractController
     public function manage(string $slug, Request $request): Response
     {
         $itemId = $request->get('id');
-        try {
-            $cartObject = $this->facade->manageCart($slug, $itemId);
+        $cartObject = $this->facade->manageCart($slug, $itemId);
 
-            if ($cartObject === null) {
-                throw new \RuntimeException('Failed to manage cart.');
-            }
-
-            $this->facade->persist($cartObject);
-        } catch (\Exception $e) {
+        if ($cartObject === null) {
             return $this->render('exceptions/404.html.twig');
         }
+
+        $this->facade->persist($cartObject);
         return $this->redirectToRoute('app_shopping_cart');
     }
+
 }

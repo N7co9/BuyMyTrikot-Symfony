@@ -26,7 +26,7 @@ class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
         return $this->shoppingCartLogic->manage($slug, $itemId);
     }
 
-    public function findOneByEmail(Security $security): ?int
+    public function getUserIdFromMail(Security $security): ?int
     {
         $user = $security->getUser();
 
