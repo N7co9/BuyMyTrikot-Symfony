@@ -45,16 +45,6 @@ class Mapper
 
         return $itemDTOArray;
     }
-    public function mapRequest2DTO(Request $request) : UserDTO
-    {
-        $user = new UserDTO();
-
-        $user->email = $request->get('email', '');
-        $user->username = $request->get('username', '');
-        $user->password = $request->get('password', '');
-
-        return $user;
-    }
     public function getUserEntity(UserDTO $userDTO) : User
     {
         $user = new User();

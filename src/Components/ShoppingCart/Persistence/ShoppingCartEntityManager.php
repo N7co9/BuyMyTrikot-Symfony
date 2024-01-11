@@ -41,13 +41,12 @@ class ShoppingCartEntityManager
         $this->insert($cart);
     }
 
-    public function removeAllItemsFromUser(string $email, EntityManagerInterface $entityManager, ShoppingCartRepository $cartRepository, UserRepository $userRepository): void
+    public function removeAllAfterSuccessfulOrder($userId): void
     {
-        $userId = $userRepository->findOneByEmail($email);
-        $shoppingCarts = $cartRepository->findByUserId($userId?->getId());
+        $shoppingCarts = $this->cartRepository->findByUserId($userId);
         foreach ($shoppingCarts as $shoppingCart) {
-            $entityManager->remove($shoppingCart);
+            $this->entityManager->remove($shoppingCart);
         }
-        $entityManager->flush();
+        $this->entityManager->flush();
     }
 }

@@ -41,45 +41,19 @@ class ShoppingCartRepository extends ServiceEntityRepository
      */
     public function findByUserId(int $userId): array
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.user_id = :userId')
-            ->setParameter('userId', $userId)
-            ->getQuery()
-            ->getResult();
+        return $this->findBy(['user_id' => $userId]);
     }
 
-    public function getTotal(int $userId) : array // return subtotal, tax, shipping & total
-    {
-        $itemsInCart = $this->findByUserId($userId);
-        $subTotal = 0.00;
-        foreach ($itemsInCart as $item)
-        {
-            $subTotal += $item->getPrice() * $item->getQuantity();
-        }
-        $tax = $subTotal * 0.19;
-        $shipping = 4.95;
-        $total = $subTotal + $shipping + $tax;
-
-        return [
-            'tax' => $tax,
-            'shipping' => $shipping,
-            'subTotal' => $subTotal,
-            'total' => $total
-            ];
-    }
     /**
-     * Get all item ids and quantities for items in the shopping cart of a user identified by email.
-     *
-     * @param string $email User's email
+     * @param int $userId
      * @return array Returns an array of arrays with item_id and quantity
      */
-    public function findCartItemsByEmail(string $email): array
+    public function findCartItemsByUserId(int $userId): array
     {
         $query = $this->createQueryBuilder('sc')
             ->select('sc.item_id AS id', 'sc.quantity AS quantity')
-            ->innerJoin('App\Entity\User', 'u', 'WITH', 'sc.user_id = u.id')
-            ->where('u.email = :email')
-            ->setParameter('email', $email)
+            ->where('sc.user_id = :userId')
+            ->setParameter('userId', $userId)
             ->getQuery();
 
         return $query->getArrayResult();

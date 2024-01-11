@@ -1,0 +1,156 @@
+Escaped mutants:
+================
+
+1) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Business/UserLoginValidation.php:21    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+     {
+         $email = $formData['email'];
+         $plainPassword = $formData['password'];
+-        if (empty($email) || empty($plainPassword)) {
++        if (empty($email) && empty($plainPassword)) {
+             return new ResponseDTO('Email or password cannot be empty', 'Error');
+         }
+         $user = $this->repository->findOneByEmail($email);
+
+
+2) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Communication/AuthenticationController.php:12    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+ class AuthenticationController extends AbstractController
+ {
+     #[Route('/login', name: 'app_login')]
+-    public function login(AuthenticationUtils $authenticationUtils) : Response
++    protected function login(AuthenticationUtils $authenticationUtils) : Response
+     {
+         $error = $authenticationUtils->getLastAuthenticationError();
+         $lastUsername = $authenticationUtils->getLastUsername();
+
+
+3) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Communication/AuthenticationController.php:18    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $error = $authenticationUtils->getLastAuthenticationError();
+         $lastUsername = $authenticationUtils->getLastUsername();
+-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
++        return $this->render('security/login.html.twig', ['error' => $error]);
+     }
+ }
+
+
+4) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Presentation/LoginFormType.php:20    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+ {
+     public function buildForm(FormBuilderInterface $builder, array $options) : void
+     {
+-        $builder->add('email', EmailType::class)->add('password', PasswordType::class)->add('submit', SubmitType::class, ['label' => 'Login']);
++        $builder->add('email', EmailType::class)->add('password', PasswordType::class)->add('submit', SubmitType::class, []);
+     }
+ }
+
+
+5) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:25    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+     }
+     private function validateFirstName($firstName) : ?ResponseDTO
+     {
+-        if (empty($firstName) || !is_string($firstName)) {
++        if (empty($firstName) && !is_string($firstName)) {
+             return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
+         }
+         $firstName = $this->trim($firstName);
+
+
+6) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:30    [M] GreaterThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
+         }
+         $firstName = $this->trim($firstName);
+-        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
++        if (strlen($firstName) > 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
+             return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+7) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:30    [M] LessThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
+         }
+         $firstName = $this->trim($firstName);
+-        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
++        if (strlen($firstName) >= 30 || strlen($firstName) < 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
+             return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+8) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:31    [M] PregMatchRemoveCaret
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
+         }
+         $firstName = $this->trim($firstName);
+-        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
++        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/[\\p{L}\\s-]+$/u', $firstName)) {
+             return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+9) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:31    [M] PregMatchRemoveDollar
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
+         }
+         $firstName = $this->trim($firstName);
+-        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
++        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+/u', $firstName)) {
+             return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+10) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:31    [M] PregMatchRemoveFlags
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
+         }
+         $firstName = $this->trim($firstName);
+-        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
++        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/', $firstName)) {
+             return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+Timed Out mutants:
+==================
+
+Skipped mutants:
+================

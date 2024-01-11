@@ -11,11 +11,11 @@ class ResponseDTO
     {
     }
 
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

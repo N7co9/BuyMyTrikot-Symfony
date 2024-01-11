@@ -1,14 +1,42 @@
 {
-    "$schema": "vendor/infection/infection/resources/schema.json",
+    "$schema": "./resources/schema.json",
+    "timeout": 25,
     "source": {
         "directories": [
             "src"
         ],
-        "excludes": [
-            "Entity"
+        excludes: [
+            "FileSystem/DummyFileSystem.php",
+            "FileSystem/DummySymfony5FileSystem.php",
+            "FileSystem/DummySymfony6FileSystem.php"
         ]
     },
+    "logs": {
+        "text": "infection.log",
+        "html": "infection.html",
+        "stryker": {
+            "report": "master"
+        }
+    },
     "mutators": {
-        "@default": true
+        "global-ignoreSourceCodeByRegex": [
+            "Assert::.*"
+        ],
+        "@default": true,
+        "InstanceOf_": {
+            ignore: [
+                "Infection\\Mutator\\Boolean\\LogicalOr::canMutate"
+            ]
+        },
+        "LogicalAnd": {
+            ignore: [
+                "Infection\\Mutator\\Boolean\\LogicalOr::canMutate"
+            ]
+        },
+        "LogicalOr": {
+            ignore: [
+                "Infection\\Mutator\\Boolean\\LogicalOr::canMutate"
+            ]
+        }
     }
 }

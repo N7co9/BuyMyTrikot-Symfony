@@ -2,10 +2,10 @@
 
 namespace App\Components\Orderflow\Communication;
 
-use App\Components\Orderflow\Business\OrderFlowBusinessFacade;
 use App\Components\Orderflow\Business\OrderFlowBusinessFacadeInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
+use App\Components\Orderflow\Communication\Form\OrderFlowValidation;
+use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
+use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,39 +14,42 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderFlowController extends AbstractController
 {
     public function __construct(
-        private Security                         $security,
-        private OrderFlowBusinessFacadeInterface $facade,
-        public ?array                            $response = [],
-        public ?array                            $total = []
+        private readonly OrderFlowBusinessFacadeInterface    $orderFlowBusinessFacade,
+        private readonly ShoppingCartBusinessFacadeInterface $shoppingCartBusinessFacade,
+        private readonly OrderFlowValidation                 $orderFlowValidation,
+        public ?array                                        $total = null,
     )
     {
     }
 
     #[Route('/order/flow', name: 'app_order_flow')]
-    public function index(Request $request
-    ): Response
+    public function index(Request $request): Response
     {
-        $user = $this->getUser();
-        if (!$user) {
-            throw $this->createNotFoundException('User not authenticated.');
+        $loginUserDto = $this->getLoggingUser();
+
+        $errors = [];
+        if ($request->getMethod() === 'POST') {
+
+            $orderDto = $this->orderFlowBusinessFacade->mapRequestOrderToDto($request);
+            $errors = $this->orderFlowValidation->validate($orderDto);
+
+            if (empty($errors)) {
+
+                $orderDto->email = $loginUserDto->email;
+                $this->orderFlowBusinessFacade->createOrder($orderDto, $loginUserDto);
+
+                return $this->redirectToRoute('app_order_flow_thankyou');
+            }
         }
 
-        $email = $this->facade->getUserIdentifier($this->security);
-        $userID = $this->facade->getUserID($this->security);
-        $itemsInCart = $this->facade->getItemsInCart($userID);
-        $total = $this->facade->getTotal($userID);
-
-
-        $response = $this->facade->createOrderFlow($request, $email);
-        if ($response === null) {
-            return $this->redirectToRoute('app_order_flow_thankyou');
-        }
+        $itemsInCart = $this->orderFlowBusinessFacade->getItemsInCart($loginUserDto->id);
+        $total = $this->shoppingCartBusinessFacade->getTotal($loginUserDto->id);
 
         return $this->render('order_flow/index.html.twig', [
-            'email' => $email,
+            'email' => $loginUserDto->email,
             'items' => $itemsInCart,
             'costs' => $total,
-            'response' => $response
+            'response' => $errors
         ]);
     }
 
@@ -54,17 +57,16 @@ class OrderFlowController extends AbstractController
     public function success(): Response
     {
         $user = $this->getUser();
-
         if (!$user) {
             throw $this->createNotFoundException('User not authenticated.');
         }
-        $email = $this->facade->getUserIdentifier($this->security);
-        $mostRecentOrder = $this->facade->getMostRecentOrder($email);
+        $email = $this->getLoggingUser()->email;
+        $mostRecentOrder = $this->orderFlowBusinessFacade->getMostRecentOrder($email);
 
         if (!$mostRecentOrder) {
             throw $this->createNotFoundException('Order not found.');
         }
-        $items = $this->facade->findItemsByArrayOfIds($mostRecentOrder->getItems());
+        $items = $this->orderFlowBusinessFacade->findItemsByArrayOfIds($mostRecentOrder->getItems());
 
         return $this->render('thank_you/index.html.twig', [
             'items' => $items,

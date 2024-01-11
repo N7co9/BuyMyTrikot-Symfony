@@ -1,23 +1,25 @@
 <?php
 
-namespace App\Components\Orderflow\Business;
+namespace App\Components\Orderflow\Communication\Form;
 
-use App\Entity\Orders;
+use App\Global\Persistence\DTO\OrderDTO;
 use App\Global\Persistence\DTO\ResponseDTO;
 
 class OrderFlowValidation
 {
-    public function validate(Orders $order): ?array
+    public function validate(OrderDTO $order): array
     {
-        return [
-            'firstName' => $this->validateFirstName($order->getFirstName()),
-            'lastName' => $this->validateLastName($order->getLastName()),
-            'city' => $this->validateCity($order->getCity()),
-            'zip' => $this->validateZip($order->getZip()),
-            'address' => $this->validateAddress($order->getAddress()),
-            'region' => $this->validateState($order->getState()),
-            'phoneNumber' => $this->validatePhoneNumber($order->getPhoneNumber())
+        $errorCheck = [
+            'firstName' => $this->validateFirstName($order->firstName),
+            'lastName' => $this->validateLastName($order->lastName),
+            'city' => $this->validateCity($order->city),
+            'zip' => $this->validateZip($order->zip),
+            'address' => $this->validateAddress($order->address),
+            'region' => $this->validateState($order->state),
+            'phoneNumber' => $this->validatePhoneNumber($order->phoneNumber),
         ];
+
+        return array_filter($errorCheck);
     }
 
     private function validateFirstName($firstName): ?ResponseDTO

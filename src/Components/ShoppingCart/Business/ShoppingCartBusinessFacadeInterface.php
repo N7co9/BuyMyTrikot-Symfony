@@ -17,14 +17,6 @@ interface ShoppingCartBusinessFacadeInterface
     public function manageCart(string $slug, int $itemId): ?ShoppingCart;
 
     /**
-     * Find the user's ID by their security context.
-     *
-     * @param Security $security
-     * @return ?int
-     */
-    public function getUserIdFromMail(Security $security): ?int;
-
-    /**
      * Get items for a specific user.
      *
      * @param int $userID

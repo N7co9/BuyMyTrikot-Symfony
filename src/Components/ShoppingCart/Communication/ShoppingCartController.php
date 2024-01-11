@@ -3,8 +3,7 @@
 namespace App\Components\ShoppingCart\Communication;
 
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
+use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +12,6 @@ class ShoppingCartController extends AbstractController
 {
     public function __construct(
         public ShoppingCartBusinessFacadeInterface $facade,
-        public Security                            $security
     )
     {
     }
@@ -21,7 +19,7 @@ class ShoppingCartController extends AbstractController
     #[Route('/shopping/cart', name: 'app_shopping_cart')]
     public function index(): Response
     {
-        $userID = $this->facade->getUserIdFromMail($this->security);
+        $userID = $this->getLoggingUser()->id;
         $items = $this->facade->getItems($userID);
         $total = $this->facade->getTotal($userID);
         return $this->render('shopping_cart/index.html.twig', ['controller_name' => 'ShoppingCartController',
@@ -43,5 +41,4 @@ class ShoppingCartController extends AbstractController
         $this->facade->persist($cartObject);
         return $this->redirectToRoute('app_shopping_cart');
     }
-
 }

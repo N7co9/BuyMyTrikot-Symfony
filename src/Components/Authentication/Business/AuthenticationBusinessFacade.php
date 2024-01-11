@@ -10,9 +10,10 @@ class AuthenticationBusinessFacade implements AuthenticationBusinessFacadeInterf
     public function __construct(
         public UserLoginValidation $loginValidation
     )
-    {}
+    {
+    }
 
-    public function authenticate(array $formData, SessionInterface $session) : ?ResponseDTO
+    public function authenticate(array $formData, SessionInterface $session): ?ResponseDTO
     {
         return $this->loginValidation->authenticate($formData, $session);
     }

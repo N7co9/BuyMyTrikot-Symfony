@@ -5,14 +5,14 @@ namespace App\Components\Registration\Business;
 use App\Components\Registration\Persistence\UserEntityManager;
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\DTO\UserDTO;
-use App\Global\Persistence\Mapping\Mapper;
+use App\Global\Persistence\Mapping\UserMapper;
 use Symfony\Component\HttpFoundation\Request;
 
 class RegistrationBusinessFacade implements RegistrationBusinessFacadeInterface
 {
     public function __construct(
         public UserRegistrationValidation $registrationValidation,
-        public Mapper $mapper,
+        public UserMapper $mapper,
         public UserEntityManager $entityManager
     )
     {}
@@ -24,7 +24,7 @@ class RegistrationBusinessFacade implements RegistrationBusinessFacadeInterface
 
     public function mapRequestToUserDto(Request $request): UserDTO
     {
-        return $this->mapper->mapRequest2DTO($request);
+        return $this->mapper->request2DTO($request);
     }
 
     public function register(UserDTO $userDTO) : ?array

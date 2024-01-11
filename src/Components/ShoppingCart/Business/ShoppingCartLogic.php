@@ -67,4 +67,23 @@ class ShoppingCartLogic
         }
         return null;
     }
+    public function provideOrderCost($userId) : array
+    {
+        $itemsInCart = $this->cartRepository->findByUserId($userId);
+        $subTotal = 0.00;
+        foreach ($itemsInCart as $item)
+        {
+            $subTotal += $item->getPrice() * $item->getQuantity();
+        }
+        $tax = $subTotal * 0.19;
+        $shipping = 4.95;
+        $total = $subTotal + $shipping + $tax;
+
+        return [
+            'tax' => $tax,
+            'shipping' => $shipping,
+            'subTotal' => $subTotal,
+            'total' => $total
+        ];
+    }
 }

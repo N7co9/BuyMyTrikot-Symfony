@@ -2,58 +2,35 @@
 
 namespace App\Components\Orderflow\Persistence;
 
-use App\Components\Orderflow\Business\OrderFlowValidation;
+use App\Components\Orderflow\Persistence\Mapper\OrderDTO2OrderEntity;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
-use App\Entity\Orders;
-use App\Global\Persistence\Repository\UserRepository;
+use App\Global\Persistence\DTO\OrderDTO;
+use App\Global\Persistence\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class OrderFlowEntityManager
 {
-    public array $errors = [];
-    public function persistOrder(
-        Request                $request,
-        EntityManagerInterface $entityManager,
-        OrderFlowValidation $validation,
-        ShoppingCartRepository $cartRepository,
-        ShoppingCartEntityManager $cartEntityManager,
-        UserRepository $userRepository,
-        string $email,
-    ): ?array
+    public function __construct(
+        private readonly EntityManagerInterface    $entityManager,
+        private readonly ShoppingCartEntityManager $shoppingCartEntityManager,
+        private readonly OrderDTO2OrderEntity      $orderMapper,
+        private readonly ShoppingCartRepository    $shoppingCartRepository,
+    )
     {
-        if ($request->getMethod() === 'POST') {
-            $order = new Orders();
-            $order->setEmail($email);
-            $order->setFirstName($request->get('first-name'));
-            $order->setLastName($request->get('last-name'));
-            $order->setAddress($request->get('address'));
-            $order->setCity($request->get('city'));
-            $order->setState($request->get('region'));
-            $order->setZip($request->get('postal-code'));
-            $order->setPhoneNumber($request->get('phone'));
-            $order->setDeliveryMethod($request->get('delivery-method') ?? 'Standard');
-            $order->setPaymentMethod($request->get('payment-type'));
+    }
 
-            $order->setItems($cartRepository->findCartItemsByEmail($email));
+    public function create(OrderDTO $orderDto, UserDTO $userDto): void
+    {
+        $order = $this->orderMapper->map($orderDto);
 
-            $order->setDue($request->get('totalCost'));
+        $items = $this->shoppingCartRepository->findCartItemsByUserId($userDto->id);
 
-            $responseFromValidation = $validation->validate($order);
-            $this->errors = array_filter($responseFromValidation, function ($response) {
-                return $response !== null;
-            });
+        $order->setItems($items);
 
-            if (empty($this->errors)) {
-                // No errors, proceed with persisting the order
-                $entityManager->persist($order);
-                $entityManager->flush();
-                $cartEntityManager->removeAllItemsFromUser($email,$entityManager, $cartRepository, $userRepository);
-                return null; // Explicitly return null to indicate success
-            }
-        }
-        // Return the validation errors
-        return $this->errors;
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+
+        $this->shoppingCartEntityManager->removeAllAfterSuccessfulOrder($userDto->id);
     }
 }

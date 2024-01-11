@@ -4,6 +4,7 @@ namespace App\Global\Persistence\Repository;
 
 use App\Entity\Items;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -27,6 +28,7 @@ class ItemRepository extends ServiceEntityRepository
      *
      * @param int $itemId
      * @return Items|null Returns an Items object or null
+     * @throws NonUniqueResultException
      */
     public function findOneByItemId(int $itemId): ?Items
     {
@@ -35,20 +37,6 @@ class ItemRepository extends ServiceEntityRepository
             ->setParameter('val', $itemId)
             ->getQuery()
             ->getOneOrNullResult();
-    }
-
-    /**
-     * @param int $teamId
-     * @return Items[] Returns an array of Items objects
-     */
-    public function findManyByTeamId(int $team_id): array
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.team_id = :val')
-            ->setParameter('val', $team_id)
-            ->orderBy('i.id', 'ASC')
-            ->getQuery()
-            ->getResult();
     }
 
     public function findOneByExternalId($externalId): ?array
@@ -68,17 +56,13 @@ class ItemRepository extends ServiceEntityRepository
      */
     public function findItemsByArrayOfIds(array $itemsWithQuantities): array
     {
-        // Extract item IDs from the array
         $itemIds = array_column($itemsWithQuantities, 'id');
 
-        // Find items by the extracted IDs
         $query = $this->createQueryBuilder('i')
-            ->where('i.item_id IN (:ids)') // Make sure 'id' is the correct field in your Items entity
+            ->where('i.item_id IN (:ids)')
             ->setParameter('ids', $itemIds)
             ->getQuery();
 
-        // Execute the query and return the result
         return $query->getResult();
     }
-
 }

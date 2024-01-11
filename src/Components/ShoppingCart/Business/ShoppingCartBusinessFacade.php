@@ -7,8 +7,7 @@ namespace App\Components\ShoppingCart\Business;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\ShoppingCart;
-use App\Entity\User;
-use Symfony\Bundle\SecurityBundle\Security;
+use Doctrine\ORM\NonUniqueResultException;
 
 
 class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
@@ -21,19 +20,12 @@ class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
     {
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function manageCart(string $slug, int $itemId): ?ShoppingCart
     {
         return $this->shoppingCartLogic->manage($slug, $itemId);
-    }
-
-    public function getUserIdFromMail(Security $security): ?int
-    {
-        $user = $security->getUser();
-
-        if ($user instanceof User) {
-            return $user->getId();
-        }
-        return null;
     }
 
     public function getItems(int $userID): array
@@ -43,7 +35,7 @@ class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
 
     public function getTotal(int $userID): array
     {
-        return $this->cartRepository->getTotal($userID);
+        return $this->shoppingCartLogic->provideOrderCost($userID);
     }
 
     public function persist(ShoppingCart $cart): void

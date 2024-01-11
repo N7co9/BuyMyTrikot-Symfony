@@ -29,12 +29,6 @@ class OrdersRepository extends ServiceEntityRepository
      */
     public function findMostRecentOrderByEmail(string $email): ?Orders
     {
-        return $this->createQueryBuilder('o')
-            ->where('o.email = :email')
-            ->setParameter('email', $email)
-            ->orderBy('o.id', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $this->findOneBy(['email' => $email], ['id' => 'DESC']);
     }
 }
