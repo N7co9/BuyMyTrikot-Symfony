@@ -106,11 +106,4 @@ class ShoppingCart
 
         return $this;
     }
-
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 }

@@ -56,10 +56,6 @@ class OrderFlowController extends AbstractController
     #[Route('/order/flow/thankyou', name: 'app_order_flow_thankyou')]
     public function success(): Response
     {
-        $user = $this->getUser();
-        if (!$user) {
-            throw $this->createNotFoundException('User not authenticated.');
-        }
         $email = $this->getLoggingUser()->email;
         $mostRecentOrder = $this->orderFlowBusinessFacade->getMostRecentOrder($email);
 

@@ -21,12 +21,6 @@ class OrdersRepository extends ServiceEntityRepository
         parent::__construct($registry, Orders::class);
     }
 
-    /**
-     * Find the most recent order by user's email.
-     *
-     * @param string $email The email of the user.
-     * @return Orders|null The most recent order or null if none found.
-     */
     public function findMostRecentOrderByEmail(string $email): ?Orders
     {
         return $this->findOneBy(['email' => $email], ['id' => 'DESC']);

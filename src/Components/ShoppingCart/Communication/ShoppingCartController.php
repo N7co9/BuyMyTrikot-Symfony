@@ -3,6 +3,7 @@
 namespace App\Components\ShoppingCart\Communication;
 
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
+use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,17 +29,20 @@ class ShoppingCartController extends AbstractController
         ]);
     }
 
-    #[Route('/shopping/cart/{slug}', name: 'app_shopping_cart_manage')]
-    public function manage(string $slug, Request $request): Response
+
+    #[Route('/shopping/cart/add/{itemId}/{quantity?}', name: 'app_shopping_cart_save', requirements: ['quantity' => '\d+'], defaults: ['quantity' => 1])]
+    public function save(int $itemId, int $quantity): Response
     {
-        $itemId = $request->get('id');
-        $cartObject = $this->facade->manageCart($slug, $itemId);
+        $userDto = $this->getLoggingUser();
 
-        if ($cartObject === null) {
-            return $this->render('exceptions/404.html.twig');
-        }
+        $shoppingCartDto = new ShoppingCartSaveDTO(
+            quantity: $quantity,
+            itemId: $itemId,
+            userId: $userDto->id
+        );
 
-        $this->facade->persist($cartObject);
+        $this->facade->saveItemToCart($shoppingCartDto);
+
         return $this->redirectToRoute('app_shopping_cart');
     }
 }

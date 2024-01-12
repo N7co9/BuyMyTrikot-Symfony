@@ -78,7 +78,6 @@ class ShoppingCartLogic
         $tax = $subTotal * 0.19;
         $shipping = 4.95;
         $total = $subTotal + $shipping + $tax;
-
         return [
             'tax' => $tax,
             'shipping' => $shipping,
