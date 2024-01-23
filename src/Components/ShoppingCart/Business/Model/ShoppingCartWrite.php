@@ -31,9 +31,9 @@ class ShoppingCartWrite implements CartWriteInterface
         $this->shoppingCartEntityManager->save($shoppingCartDto);
     }
 
-    public function remove()
+    public function remove(int $itemId) : void
     {
-
+        $this->shoppingCartEntityManager->removeItemByItemId($itemId);
     }
 
 }

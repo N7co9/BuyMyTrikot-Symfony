@@ -44,10 +44,10 @@ class ItemsTransferService
 
         if (!$item) {
             // Fetch from external API
-            $itemData = $this->fetchFromFootballApi($item->team_id, 'teams');
+            $itemData = $this->fetchFromFootballApi($clubName, 'teams');
 
             // Create and persist new item
-            $this->createAndPersistHomepageItems($itemData);
+            return $this->createAndPersistHomepageItems($itemData);
         }
         return $this->itemRepository->findOneByExternalId($clubName);
     }

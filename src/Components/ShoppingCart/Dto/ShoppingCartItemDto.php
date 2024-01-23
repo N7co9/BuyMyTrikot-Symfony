@@ -2,7 +2,6 @@
 
 namespace App\Components\ShoppingCart\Dto;
 
-// this is the complete Item DTO
 class ShoppingCartItemDto
 {
         public function __construct(
@@ -12,6 +11,7 @@ class ShoppingCartItemDto
             public readonly string $name,
             public readonly float $price,
             public readonly string $thumbnail,
+            public readonly int $itemId,
         )
         {
         }

@@ -19,28 +19,17 @@ class ShoppingCartEntityManager
     )
     {}
 
-
-
-    public function save(ShoppingCartSaveDTO $shoppingCartDto)
+    public function save(ShoppingCartSaveDTO $shoppingCartSaveDTO): void
     {
-        $shoppingCartEntity = $this->shoppingCartRepository->find($shoppingCartDto->id);
+        $shoppingCartEntity = $this->shoppingCartRepository->find($shoppingCartSaveDTO->id);
 
         if($shoppingCartEntity === null) {
             $shoppingCartEntity = new ShoppingCart();
         }
 
-        $shoppingCartEntity = $this->shoppingCartMapping->mapDtoToEntity($shoppingCartDto, $shoppingCartEntity);
+        $shoppingCartEntity = $this->shoppingCartMapping->mapDtoToEntity($shoppingCartSaveDTO, $shoppingCartEntity);
 
         $this->insert($shoppingCartEntity);
-    }
-
-    public function persist(ShoppingCart $cart) : void
-    {
-        if ($cart->getQuantity() === 0)
-        {
-            $this->remove($cart);
-        }
-        $this->insert($cart);
     }
 
     public function removeAllAfterSuccessfulOrder($userId): void
@@ -57,13 +46,14 @@ class ShoppingCartEntityManager
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
     }
-    private function remove(ShoppingCart $cart) : void
+    public function removeItemByItemId(int $itemId): void
     {
         $this->shoppingCartRepository->createQueryBuilder('sc')
             ->delete()
-            ->where('sc.id = :id')
-            ->setParameter('id', $cart->getId())
+            ->where('sc.item_id = :item_id')
+            ->setParameter('item_id', $itemId)
             ->getQuery()
             ->execute();
+
     }
 }

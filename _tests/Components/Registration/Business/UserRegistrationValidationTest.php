@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\Registration\Business;
 
-use App\Components\Registration\Business\UserRegistrationValidation;
+use App\Components\Registration\Business\Model\UserRegistrationValidation;
 use App\Global\Persistence\DTO\UserDTO;
 use PHPUnit\Framework\TestCase;
 

@@ -16,15 +16,4 @@ class UserMapper
             username: $user->getUsername(),
         );
     }
-
-    public function request2DTO(Request $request): UserDTO
-    {
-        return new UserDTO(
-            id: $request->get(''),
-            email: $request->get('email'),
-            username: $request->get('username'),
-            password: $request->get('password')
-        );
-    }
-
 }

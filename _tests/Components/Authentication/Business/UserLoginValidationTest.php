@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\Authentication\Business;
 
-use App\Components\Authentication\Business\UserLoginValidation;
+use App\Components\Authentication\Business\Model\UserLoginValidation;
 use App\Entity\User;
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\Repository\UserRepository;

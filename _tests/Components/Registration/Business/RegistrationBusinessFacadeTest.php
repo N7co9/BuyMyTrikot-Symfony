@@ -2,15 +2,14 @@
 
 namespace App\Tests\Components\Registration\Business;
 
+use App\Components\Registration\Business\Model\UserRegistrationValidation;
 use App\Components\Registration\Business\RegistrationBusinessFacade;
-use App\Components\Registration\Business\UserRegistrationValidation;
 use App\Components\Registration\Persistence\UserEntityManager;
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\DTO\UserDTO;
 use App\Global\Persistence\Mapping\Mapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RegistrationBusinessFacadeTest extends WebTestCase

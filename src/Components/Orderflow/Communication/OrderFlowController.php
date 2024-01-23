@@ -16,7 +16,6 @@ class OrderFlowController extends AbstractController
     public function __construct(
         private readonly OrderFlowBusinessFacadeInterface    $orderFlowBusinessFacade,
         private readonly ShoppingCartBusinessFacadeInterface $shoppingCartBusinessFacade,
-        private readonly OrderFlowValidation                 $orderFlowValidation,
         public ?array                                        $total = null,
     )
     {
@@ -29,25 +28,20 @@ class OrderFlowController extends AbstractController
 
         $errors = [];
         if ($request->getMethod() === 'POST') {
-
             $orderDto = $this->orderFlowBusinessFacade->mapRequestOrderToDto($request);
-            $errors = $this->orderFlowValidation->validate($orderDto);
+            $errors = $this->orderFlowBusinessFacade->createOrder($orderDto, $loginUserDto);
 
             if (empty($errors)) {
-
-                $orderDto->email = $loginUserDto->email;
-                $this->orderFlowBusinessFacade->createOrder($orderDto, $loginUserDto);
-
                 return $this->redirectToRoute('app_order_flow_thankyou');
             }
         }
 
-        $itemsInCart = $this->orderFlowBusinessFacade->getItemsInCart($loginUserDto->id);
-        $total = $this->shoppingCartBusinessFacade->getTotal($loginUserDto->id);
+        $cartDTOList = $this->shoppingCartBusinessFacade->getCart($loginUserDto->id);
+        $total = $this->shoppingCartBusinessFacade->calculateExpenses($cartDTOList);
 
         return $this->render('order_flow/index.html.twig', [
             'email' => $loginUserDto->email,
-            'items' => $itemsInCart,
+            'items' => $cartDTOList,
             'costs' => $total,
             'response' => $errors
         ]);

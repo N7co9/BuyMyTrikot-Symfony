@@ -9,7 +9,7 @@
             <form class="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
                 <section aria-labelledby="cart-heading" class="lg:col-span-7">
                     <h2 id="cart-heading" class="sr-only">Items in your shopping cart</h2>
-                   {% if items %}
+                    {% if items %}
                     <ul role="list" class="divide-y divide-gray-200 border-b border-t border-gray-200">
                         {% for item in items %}
                             <li class="flex py-6 sm:py-10">
@@ -35,13 +35,18 @@
                                         </div>
                                         <div class="mt-4 sm:mt-0 sm:pr-9">
                                             <label for="quantity-0" class="sr-only">Quantity, Basic Tee</label>
-                                            <select id="quantity-0" name="quantity-0"
-                                                    class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                                                <option value="{{ item.quantity }}">{{ item.quantity }}</option>
+
+                                            <select id="quantity-{{ item.itemId }}" name="quantity-{{ item.itemId }}"
+                                                    class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm quantity-dropdown"
+                                                    data-item-id="{{ item.itemId }}"
+                                                    data-quantity-url="{{ path('app_shopping_cart_save', {'itemId': item.itemId, 'quantity': 1}) }}">
+                                                {% for i in range(1, 5) %}
+                                                    <option value="{{ i }}" {{ item.quantity == i ? 'selected' : '' }}>{{ i }}</option>
+                                                {% endfor %}
                                             </select>
                                             <div id="quantity-display-0">
                                                 <div class="absolute right-0 top-0">
-                                                    <a href="{{ path('app_shopping_cart_manage', {'slug': 'remove', 'id': item.itemId}) }}"
+                                                    <a href="{{ path('app_shopping_cart_remove', {'itemId': item.itemId}) }}"
                                                        class="-m-2">
                                                         <button type="button"
                                                                 class="inline-flex p-2 text-gray-400 hover:text-gray-500">
@@ -131,10 +136,27 @@
             </form>
             {% endif %}
             {% if items is empty %}
-            <p> Go shopping! There is nothing in your Cart at this Moment</p>
-            <br>
-            <a href="{{ path('app_homepage') }}">Click here</a> to go home
+                <p> Go shopping! There is nothing in your Cart at this Moment</p>
+                <br>
+                <a href="{{ path('app_homepage') }}">Click here</a> to go home
             {% endif %}
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var quantityDropdowns = document.querySelectorAll('.quantity-dropdown');
+
+            quantityDropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener('change', function () {
+                    var quantityUrl = this.getAttribute('data-quantity-url');
+                    var quantity = this.value;
+
+                    var newUrl = `${quantityUrl}/${quantity}`;
+
+                    window.location.href = newUrl;
+                });
+            });
+        });
+    </script>
+
 {% endblock %}

@@ -42,7 +42,7 @@ interface OrderFlowBusinessFacadeInterface
     public function findItemsByArrayOfIds(array $array): array;
 
 
-    public function createOrder(OrderDTO $orderDto, UserDTO $userDto): void;
+    public function createOrder(OrderDTO $orderDto, UserDTO $userDto): array;
 
 
 }
