@@ -33,7 +33,7 @@ class Mapper
             $itemDTO->clubEmblem = $footballArray['crest'];
             $itemDTO->clubFounded = $footballArray['founded'];
             $itemDTO->clubAddress = $footballArray['address'];
-            $itemDTO->item_id = $footballItem['id'];
+            $itemDTO->itemId = $footballItem['id'];
             $itemDTO->price = $prices[array_rand($prices)]; // Select a random price
             $itemDTO->name = $footballItem['name'];
             $itemDTO->nationality = $footballItem['nationality'];

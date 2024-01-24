@@ -70,7 +70,7 @@ class ItemsTransferService
                 ->setPosition($itemDTO->position)
                 ->setThumbnail($itemDTO->thumbnail)
                 ->setTeamId($itemDTO->team_id)
-                ->setItemId($itemDTO->item_id);
+                ->setItemId($itemDTO->itemId);
 
             $this->entityManager->persist($item);
         }

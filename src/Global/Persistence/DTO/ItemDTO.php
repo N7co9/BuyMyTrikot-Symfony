@@ -18,5 +18,5 @@ class ItemDTO
     public int $team_id = 0;
     public int $quantity = 0;
     public string $user_id = '';
-    public int $item_id = 0;
+    public int $itemId = 0;
 }

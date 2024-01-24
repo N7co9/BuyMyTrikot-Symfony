@@ -3,8 +3,8 @@
 namespace App\Tests\Components\ShoppingCart\Business;
 
 use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\ShoppingCart\Business\Model\ShoppingCartLogic;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacade;
-use App\Components\ShoppingCart\Business\ShoppingCartLogic;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\ShoppingCart;

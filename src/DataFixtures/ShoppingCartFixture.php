@@ -21,12 +21,18 @@ class ShoppingCartFixture extends Fixture
 
         $shoppingCart1 = new ShoppingCart();
         $shoppingCart1->setUserId(3);
+        $shoppingCart1->setThumbnail('thumbnail1.com');
+        $shoppingCart1->setName('firstItem');
+        $shoppingCart1->setPrice(99.33);
         $shoppingCart1->setItemId($item1);
         $shoppingCart1->setQuantity(3);
         $manager->persist($shoppingCart1);
 
         $shoppingCart2 = new ShoppingCart();
         $shoppingCart2->setUserId(3);
+        $shoppingCart1->setThumbnail('thumbnail2.com');
+        $shoppingCart1->setName('secondItem');
+        $shoppingCart1->setPrice(33.33);
         $shoppingCart2->setItemId($item2);
         $shoppingCart2->setQuantity(5);
         $manager->persist($shoppingCart2);

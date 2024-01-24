@@ -38,7 +38,7 @@ class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
         return $this->shoppingCartCalculator->calculateExpenses($shoppingCartItemDtoList);
     }
 
-    public function remove(int $itemId) : void
+    public function remove(int $itemId): void
     {
         $this->cartWrite->remove($itemId);
     }

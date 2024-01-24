@@ -41,6 +41,35 @@ class ItemsFixture extends Fixture
         $item2->setItemId(102);
         $manager->persist($item2);
 
+        $item2 = new Items();
+        $item2->setClubWebsite('https://exampleclub2.com');
+        $item2->setClubName('Example Club 3');
+        $item2->setClubEmblem('emblem3.png');
+        $item2->setClubFounded('1950');
+        $item2->setClubAddress('456 Another Road, City');
+        $item2->setPrice(149.99);
+        $item2->setName('Player 3');
+        $item2->setNationality('Country3');
+        $item2->setPosition('Forward');
+        $item2->setThumbnail('thumbnail3.png');
+        $item2->setTeamId('2');
+        $item2->setItemId(1);
+        $manager->persist($item2);
+
+        $item2 = new Items();
+        $item2->setClubWebsite('https://exampleclub2.com');
+        $item2->setClubName('Example Club 4');
+        $item2->setClubEmblem('emblem4.png');
+        $item2->setClubFounded('1950');
+        $item2->setClubAddress('456 Another Road, City');
+        $item2->setPrice(77.99);
+        $item2->setName('Player 4');
+        $item2->setNationality('Country4');
+        $item2->setPosition('Forward');
+        $item2->setThumbnail('thumbnail4.png');
+        $item2->setTeamId('2');
+        $item2->setItemId(2);
+        $manager->persist($item2);
         $manager->flush();
     }
 }

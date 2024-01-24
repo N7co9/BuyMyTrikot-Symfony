@@ -20,7 +20,7 @@ class UserFixture extends Fixture
         $user = new User();
         $user->setEmail('Hannah@montana.com');
         $user->setUsername('Hannah Montana');
-        $user->setPassword('Qwertz123**');
+        $user->setPassword(password_hash('Qwertz123**', PASSWORD_DEFAULT));
         $user->setRoles([]);
         $manager->persist($user);
 

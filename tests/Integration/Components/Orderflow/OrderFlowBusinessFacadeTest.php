@@ -12,6 +12,7 @@ use App\Global\Persistence\DTO\OrderDTO;
 use App\Global\Persistence\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 
 /*
@@ -277,4 +278,33 @@ class OrderFlowBusinessFacadeTest extends KernelTestCase
         $this->assertEquals('Error', $res['zip']->type);
     }
 
+    /*
+     * End of Exceptions Testing!
+     */
+
+    public function testMapRequestOrderToDto(): void
+    {
+
+        $request = new Request();
+
+        $request->request->set('first-name', 'John');
+        $request->request->set('last-name', 'Doe');
+        $request->request->set('address', 'AnyStreet');
+        $request->request->set('city', 'NYC');
+        $request->request->set('region', 'AMERICCAA');
+        $request->request->set('postal-code', '40404');
+        $request->request->set('phone', '+494010232');
+        $request->request->set('delivery-method', 'Standard');
+        $request->request->set('payment-type', 'eTransfer');
+        $request->request->set('totalCost', 100.00);
+
+        $res = $this->orderFlowBusinessFacade->mapRequestOrderToDto($request);
+
+
+        self::assertSame('John', $res->firstName);
+        self::assertSame('Doe', $res->lastName);
+        self::assertSame('AnyStreet', $res->address);
+        self::assertSame('NYC', $res->city);
+
+    }
 }
