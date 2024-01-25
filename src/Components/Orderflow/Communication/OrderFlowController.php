@@ -3,7 +3,6 @@
 namespace App\Components\Orderflow\Communication;
 
 use App\Components\Orderflow\Business\OrderFlowBusinessFacadeInterface;
-use App\Components\Orderflow\Communication\Form\OrderFlowValidation;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

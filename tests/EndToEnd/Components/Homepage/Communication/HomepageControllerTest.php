@@ -84,7 +84,6 @@ class HomepageControllerTest extends WebTestCase
         self::assertStringContainsString('Gregor Kobel Trikot', $this->client->getResponse()->getContent());
         self::assertStringContainsString('Alexander Meyer Trikot', $this->client->getResponse()->getContent());
         self::assertStringContainsString('Mats Hummels Trikot', $this->client->getResponse()->getContent());
-
     }
 
 }
