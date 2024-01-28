@@ -16,6 +16,14 @@ class ShoppingCartRepository extends ServiceEntityRepository
         parent::__construct($registry, ShoppingCart::class);
     }
 
+    /**
+     * @param int $userId
+     * @return ShoppingCart[] Returns an array of ShoppingCart entities
+     */
+    public function findShoppingCartEntitiesByUserId(int $userId): array
+    {
+        return $this->findBy(['user_id' => $userId]);
+    }
 
     public function findOneByUserIdAndItemId(int $userId, int $itemId): ?ShoppingCartSaveDTO
     {

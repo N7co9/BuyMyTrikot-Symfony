@@ -21,15 +21,14 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register', methods: ['POST', 'GET'])]
     public function register(Request $request): Response
     {
+        $errors = [];
         if ($request->getMethod() === 'POST') {
             $userDTO = $this->request2UserDTO->request2DTO($request);
             $errors = $this->facade->register($request);
+            if (empty($errors)) {
+                return $this->redirectToRoute('app_login');
+            }
         }
-        if (empty($errors))
-        {
-            return $this->redirectToRoute('app_login');
-        }
-
         return $this->render('registration/index.html.twig', [
             'user' => $userDTO ?? null,
             'errors' => $errors

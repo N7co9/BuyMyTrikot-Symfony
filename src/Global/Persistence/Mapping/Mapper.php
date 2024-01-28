@@ -5,7 +5,6 @@ namespace App\Global\Persistence\Mapping;
 use App\Entity\User;
 use App\Global\Persistence\DTO\ItemDTO;
 use App\Global\Persistence\DTO\UserDTO;
-use Symfony\Component\HttpFoundation\Request;
 
 class Mapper
 {

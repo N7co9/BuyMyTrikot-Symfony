@@ -4,7 +4,6 @@ namespace App\Global\Persistence\Mapping;
 
 use App\Entity\User as UserEntity;
 use App\Global\Persistence\DTO\UserDTO;
-use Symfony\Component\HttpFoundation\Request;
 
 class UserMapper
 {

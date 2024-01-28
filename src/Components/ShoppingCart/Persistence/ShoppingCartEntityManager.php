@@ -34,7 +34,7 @@ class ShoppingCartEntityManager
 
     public function removeAllAfterSuccessfulOrder($userId): void
     {
-        $shoppingCarts = $this->shoppingCartRepository->findByUserId($userId);
+        $shoppingCarts = $this->shoppingCartRepository->findShoppingCartEntitiesByUserId($userId);
         foreach ($shoppingCarts as $shoppingCart) {
             $this->entityManager->remove($shoppingCart);
         }

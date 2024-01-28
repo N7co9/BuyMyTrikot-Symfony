@@ -8,7 +8,8 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Items>
+ * @extends ServiceEntityRepository
+ * +<Items>
  *
  * @method Items|null find($id, $lockMode = null, $lockVersion = null)
  * @method Items|null findOneBy(array $criteria, array $orderBy = null)
@@ -33,7 +34,7 @@ class ItemRepository extends ServiceEntityRepository
     public function findOneByItemId(int $itemId): ?Items
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.item_id = :val') // Replace 'itemId' with the actual field name in your Items entity
+            ->andWhere('i.item_id = :val')
             ->setParameter('val', $itemId)
             ->getQuery()
             ->getOneOrNullResult();

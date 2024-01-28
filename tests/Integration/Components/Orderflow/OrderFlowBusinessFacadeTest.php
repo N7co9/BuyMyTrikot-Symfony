@@ -36,9 +36,9 @@ class OrderFlowBusinessFacadeTest extends KernelTestCase
         $this->entityManager = $container->get(EntityManagerInterface::class);
 
         $this->loadUserFixture();
+        $this->loadItemsFixture();
         $this->loadShoppingCartFixture();
         $this->loadOrdersFixture();
-        $this->loadItemsFixture();
 
 
         parent::setUp();
@@ -130,13 +130,14 @@ class OrderFlowBusinessFacadeTest extends KernelTestCase
 
     public function testGetItemsInCart(): void
     {
-        $res = $this->orderFlowBusinessFacade->getItemsInCart(3);
+        $res = $this->orderFlowBusinessFacade->getItemsInCart(1);
 
-        self::assertSame(1, $res [0]->itemId);
-        self::assertSame(2, $res [1]->itemId);
 
-        self::assertSame(3, $res [0]->quantity);
-        self::assertSame(5, $res [1]->quantity);
+        self::assertSame(3, $res[0]->quantity);
+        self::assertSame(5, $res[1]->quantity);
+
+        self::assertSame(334, $res[0]->itemId);
+        self::assertSame(176268, $res[1]->itemId);
     }
 
     public function testGetMostRecentOrder(): void
@@ -156,21 +157,23 @@ class OrderFlowBusinessFacadeTest extends KernelTestCase
     {
         $arrayOfItemIds = [
             [
-                'id' => 101
+                'id' => 334
             ],
             [
-                'id' => 102
+                'id' => 9389
             ]
         ];
+
         $res = $this->orderFlowBusinessFacade->findItemsByArrayOfIds($arrayOfItemIds);
 
-        self::assertSame('1900', $res[0]->getClubFounded());
-        self::assertSame(99.99, $res[0]->getPrice());
-        self::assertSame('Player 1', $res[0]->getName());
 
-        self::assertSame('1950', $res[1]->getClubFounded());
-        self::assertSame(149.99, $res[1]->getPrice());
-        self::assertSame('Player 2', $res[1]->getName());
+        self::assertSame('1909', $res[0]->getClubFounded());
+        self::assertSame(27.95, $res[0]->getPrice());
+        self::assertSame('Gregor Kobel', $res[0]->getName());
+
+        self::assertSame('1909', $res[1]->getClubFounded());
+        self::assertSame(27.95, $res[1]->getPrice());
+        self::assertSame('Alexander Meyer', $res[1]->getName());
     }
 
     public function testCreateOrderValid(): void
