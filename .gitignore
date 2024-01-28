@@ -3,9 +3,13 @@
 /.env.local
 /.env.local.php
 /.env.*.local
+node_modules/
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
+.env
+.env.test
+var/
 /vendor/
 /.idea/
 
