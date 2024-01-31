@@ -21,7 +21,6 @@ class ShoppingCartControllerTest extends WebTestCase
         $this->client = self::createClient();
 
         $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
-        (new UserFixture())->load($this->entityManager);
         (new ItemsFixture())->load($this->entityManager);
         (new ShoppingCartFixture())->load($this->entityManager);
 
@@ -49,6 +48,14 @@ class ShoppingCartControllerTest extends WebTestCase
     {
         $container = $this->client->getContainer();
         $this->entityManager = $container->get(EntityManagerInterface::class);
+
+        $connection = $this->entityManager->getConnection();
+        $connection->executeQuery('DELETE FROM user');
+        $connection->executeQuery('ALTER TABLE user AUTO_INCREMENT=0');
+        $connection->close();
+
+
+        (new UserFixture())->load($this->entityManager);
 
         $userRepository = $container->get(UserRepository::class);
         $user = $userRepository->findOneByEmail('John@doe.com');

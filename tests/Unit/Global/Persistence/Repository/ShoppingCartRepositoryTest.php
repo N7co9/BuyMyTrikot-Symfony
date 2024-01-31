@@ -49,15 +49,15 @@ class ShoppingCartRepositoryTest extends KernelTestCase
     public function testFindByUserId(): void
     {
         $shoppingCartSaveDto = new ShoppingCartSaveDTO(
-            quantity: 1,itemId: 33, userId: 300, id: 20
+            quantity: 1, itemId: 33, userId: 300, id: 20
         );
 
         $this->shoppingCartEntityManager->save($shoppingCartSaveDto);
 
         $res = $this->shoppingCartRepository->findByUserId(300);
 
-        self::assertSame(1, $res[0]->getQuantity());
-        self::assertSame(33, $res[0]->getItemId());
-        self::assertSame(300, $res[0]->getUserId());
+        self::assertSame(1, $res[0]->quantity);
+        self::assertSame(33, $res[0]->itemId);
+        self::assertSame(300, $res[0]->userId);
     }
 }

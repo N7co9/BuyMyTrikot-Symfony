@@ -35,6 +35,11 @@ class OrderFlowBusinessFacadeTest extends KernelTestCase
         $this->orderFlowBusinessFacade = $container->get(OrderFlowBusinessFacade::class);
         $this->entityManager = $container->get(EntityManagerInterface::class);
 
+        $connection = $this->entityManager->getConnection();
+        $connection->executeQuery('DELETE FROM user');
+        $connection->executeQuery('ALTER TABLE user AUTO_INCREMENT=0');
+        $connection->close();
+
         $this->loadUserFixture();
         $this->loadItemsFixture();
         $this->loadShoppingCartFixture();
@@ -123,7 +128,7 @@ class OrderFlowBusinessFacadeTest extends KernelTestCase
     public function testFindOneByEmail(): void
     {
         $res = $this->orderFlowBusinessFacade->findOneByEmail('John@doe.com');
-        self::assertSame(3, $res->getId());
+        self::assertSame(1, $res->getId());
         self::assertSame('John Doe', $res->getUsername());
         self::assertSame('Qwertz123', $res->getPassword());
     }
@@ -143,6 +148,7 @@ class OrderFlowBusinessFacadeTest extends KernelTestCase
     public function testGetMostRecentOrder(): void
     {
         $res = $this->orderFlowBusinessFacade->getMostRecentOrder('John@doe.com');
+
 
         self::assertSame(3, $res->getId()); // the id might change due to autoincrement
         self::assertSame('John@doe.com', $res->getEmail());

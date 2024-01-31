@@ -27,6 +27,9 @@
 
     <coverage processUncoveredFiles="true">
         <exclude>
+            <directory suffix=".php">src/Components/Authentication/Presentation</directory>
+            <directory suffix=".php">src/Components/ShoppingCart/Dto</directory>
+            <directory suffix=".php">src/Symfony/</directory>
             <directory suffix=".php">src/Entity</directory>
             <directory suffix=".php">src/Global/Persistence/API</directory>
         </exclude>

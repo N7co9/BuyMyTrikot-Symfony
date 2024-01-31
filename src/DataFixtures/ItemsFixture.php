@@ -535,5 +535,7 @@ class ItemsFixture extends Fixture
         $item37->setTeamId('4');
         $item37->setItemId(182280);
         $manager->persist($item37);
+
+        $manager->flush();
     }
 }

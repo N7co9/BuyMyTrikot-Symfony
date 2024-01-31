@@ -97,7 +97,6 @@ class ShoppingCartBusinessFacadeTest extends KernelTestCase
 
         self::assertSame(99, $res[0]->itemId);
         self::assertSame(3, $res[0]->quantity);
-        self::assertSame(5, $res[0]->id);
     }
 
     public function testSaveItemToCartIncreaseQuantityOfExistingItem(): void

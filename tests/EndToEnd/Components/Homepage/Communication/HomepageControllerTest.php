@@ -22,7 +22,6 @@ class HomepageControllerTest extends WebTestCase
         $this->entityManager = self::getContainer()->get(EntityManagerInterface::class);
 
 
-        (new UserFixture())->load($this->entityManager);
         (new ItemsFixture())->load($this->entityManager);
 
 
@@ -48,6 +47,12 @@ class HomepageControllerTest extends WebTestCase
         $container = $this->client->getContainer();
         $this->entityManager = $container->get(EntityManagerInterface::class);
 
+        $connection = $this->entityManager->getConnection();
+        $connection->executeQuery('DELETE FROM user');
+        $connection->executeQuery('ALTER TABLE user AUTO_INCREMENT=0');
+        $connection->close();
+
+        (new UserFixture())->load($this->entityManager);
         $userRepository = $container->get(UserRepository::class);
         $user = $userRepository->findOneByEmail('Hannah@montana.com');
         $this->client->loginUser($user);
@@ -75,14 +80,14 @@ class HomepageControllerTest extends WebTestCase
     {
         $this->createAuthenticatedClient();
 
-        $this->client->request('GET', '/home/browse/4');
+        $this->client->request('GET', '/home/browse/Borussia%20Dortmund');
 
         self::assertStringContainsString('Items from Borussia Dortmund:', $this->client->getResponse()->getContent());
     }
 
     public function testSearchRedirect() : void
     {
-        $this->client->request('GET', 'home/search?query=Borussia+Dortmund');
+        $this->client->request('GET', 'home/search?query=Borussia%20Dortmund');
         self::assertResponseRedirects('/home/browse/Borussia%20Dortmund');
 
         $this->client->followRedirect();
@@ -91,5 +96,15 @@ class HomepageControllerTest extends WebTestCase
         self::assertStringContainsString('Alexander Meyer Trikot', $this->client->getResponse()->getContent());
         self::assertStringContainsString('Mats Hummels Trikot', $this->client->getResponse()->getContent());
     }
+
+    public function testBrowseException(): void
+    {
+        $this->createAuthenticatedClient();
+
+        $this->client->request('GET', '/home/browse/THISCLUBDOESNTEXIST');
+
+        self::assertStringContainsString('Sorry, we couldn’t find the page you’re looking for.', $this->client->getResponse()->getContent());
+    }
+
 
 }

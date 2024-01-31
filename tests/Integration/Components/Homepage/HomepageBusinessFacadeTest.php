@@ -35,8 +35,8 @@ class HomepageBusinessFacadeTest extends KernelTestCase
 
         $res = $this->homepageBusinessFacade->itemTransfer('4');
 
-        self::assertSame(334, $res[0]->item_id);
-        self::assertSame(9389, $res[1]->item_id);
+        self::assertSame(334, $res[0]->itemId);
+        self::assertSame(9389, $res[1]->itemId);
 
         self::assertSame('Switzerland', $res[0]->nationality);
         self::assertSame('Germany', $res[1]->nationality);

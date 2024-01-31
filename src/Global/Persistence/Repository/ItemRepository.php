@@ -6,6 +6,7 @@ use App\Entity\Items;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @extends ServiceEntityRepository
@@ -42,11 +43,13 @@ class ItemRepository extends ServiceEntityRepository
 
     public function findOneByExternalId($externalId): ?array
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.clubName = :val')
-            ->setParameter('val', $externalId)
-            ->getQuery()
-            ->getResult();
+        {
+            return $this->createQueryBuilder('i')
+                ->andWhere('i.clubName = :val')
+                ->setParameter('val', $externalId)
+                ->getQuery()
+                ->getResult();
+        }
     }
 
     /**
