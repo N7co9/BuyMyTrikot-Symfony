@@ -1,7 +1,7 @@
 Escaped mutants:
 ================
 
-1) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Business/UserLoginValidation.php:21    [M] LogicalOr
+1) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Business/Model/UserLoginValidation.php:21    [M] LogicalOr
 
 --- Original
 +++ New
@@ -16,65 +16,37 @@ Escaped mutants:
          $user = $this->repository->findOneByEmail($email);
 
 
-2) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Communication/AuthenticationController.php:12    [M] PublicVisibility
+2) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/Model/OrderLogicHandling.php:28    [M] MethodCallRemoval
 
 --- Original
 +++ New
 @@ @@
- class AuthenticationController extends AbstractController
- {
-     #[Route('/login', name: 'app_login')]
--    public function login(AuthenticationUtils $authenticationUtils) : Response
-+    protected function login(AuthenticationUtils $authenticationUtils) : Response
-     {
-         $error = $authenticationUtils->getLastAuthenticationError();
-         $lastUsername = $authenticationUtils->getLastUsername();
-
-
-3) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Communication/AuthenticationController.php:18    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     {
-         $error = $authenticationUtils->getLastAuthenticationError();
-         $lastUsername = $authenticationUtils->getLastUsername();
--        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
-+        return $this->render('security/login.html.twig', ['error' => $error]);
-     }
- }
-
-
-4) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Presentation/LoginFormType.php:20    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
- {
-     public function buildForm(FormBuilderInterface $builder, array $options) : void
-     {
--        $builder->add('email', EmailType::class)->add('password', PasswordType::class)->add('submit', SubmitType::class, ['label' => 'Login']);
-+        $builder->add('email', EmailType::class)->add('password', PasswordType::class)->add('submit', SubmitType::class, []);
-     }
- }
-
-
-5) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:25    [M] LogicalOr
-
---- Original
-+++ New
-@@ @@
-     }
-     private function validateFirstName($firstName) : ?ResponseDTO
-     {
--        if (empty($firstName) || !is_string($firstName)) {
-+        if (empty($firstName) && !is_string($firstName)) {
-             return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
+         $errors = $this->validate($orderDTO);
+         if (empty($errors)) {
+             $orderDTO->email = $userDTO->email;
+-            $this->orderFlowEntityManager->create($orderDTO, $userDTO);
++            
          }
-         $firstName = $this->trim($firstName);
+         return $errors;
+     }
 
 
-6) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:30    [M] GreaterThanOrEqualTo
+3) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/Model/OrderLogicHandling.php:30    [M] ArrayOneItem
+
+--- Original
++++ New
+@@ @@
+             $orderDTO->email = $userDTO->email;
+             $this->orderFlowEntityManager->create($orderDTO, $userDTO);
+         }
+-        return $errors;
++        return count($errors) > 1 ? array_slice($errors, 0, 1, true) : $errors;
+     }
+     private function validate(OrderDTO $orderDTO) : array
+     {
+
+
+4) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:32    [M] GreaterThanOrEqualTo
 
 --- Original
 +++ New
@@ -89,7 +61,7 @@ Escaped mutants:
          return null;
 
 
-7) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:30    [M] LessThanOrEqualTo
+5) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:32    [M] LessThanOrEqualTo
 
 --- Original
 +++ New
@@ -104,7 +76,7 @@ Escaped mutants:
          return null;
 
 
-8) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:31    [M] PregMatchRemoveCaret
+6) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:32    [M] LogicalOr
 
 --- Original
 +++ New
@@ -113,13 +85,13 @@ Escaped mutants:
          }
          $firstName = $this->trim($firstName);
 -        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
-+        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 || !preg_match('/[\\p{L}\\s-]+$/u', $firstName)) {
++        if (strlen($firstName) >= 30 && strlen($firstName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $firstName)) {
              return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
          }
          return null;
 
 
-9) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:31    [M] PregMatchRemoveDollar
+7) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:33    [M] PregMatchRemoveDollar
 
 --- Original
 +++ New
@@ -134,7 +106,7 @@ Escaped mutants:
          return null;
 
 
-10) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Business/OrderFlowValidation.php:31    [M] PregMatchRemoveFlags
+8) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:33    [M] PregMatchRemoveFlags
 
 --- Original
 +++ New
@@ -147,6 +119,2520 @@ Escaped mutants:
              return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
          }
          return null;
+
+
+9) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:46    [M] GreaterThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Last name cannot be empty and must be a string.', 'Error');
+         }
+         $lastName = $this->trim($lastName);
+-        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
++        if (strlen($lastName) > 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
+             return new ResponseDTO('Oops, your last name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+10) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:46    [M] LessThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Last name cannot be empty and must be a string.', 'Error');
+         }
+         $lastName = $this->trim($lastName);
+-        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
++        if (strlen($lastName) >= 30 || strlen($lastName) < 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
+             return new ResponseDTO('Oops, your last name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+11) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:46    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Last name cannot be empty and must be a string.', 'Error');
+         }
+         $lastName = $this->trim($lastName);
+-        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
++        if (strlen($lastName) >= 30 && strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
+             return new ResponseDTO('Oops, your last name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+12) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:47    [M] PregMatchRemoveCaret
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Last name cannot be empty and must be a string.', 'Error');
+         }
+         $lastName = $this->trim($lastName);
+-        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
++        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/[\\p{L}\\s-]+$/u', $lastName)) {
+             return new ResponseDTO('Oops, your last name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+13) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:47    [M] PregMatchRemoveDollar
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Last name cannot be empty and must be a string.', 'Error');
+         }
+         $lastName = $this->trim($lastName);
+-        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
++        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+/u', $lastName)) {
+             return new ResponseDTO('Oops, your last name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+14) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:47    [M] PregMatchRemoveFlags
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Last name cannot be empty and must be a string.', 'Error');
+         }
+         $lastName = $this->trim($lastName);
+-        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/u', $lastName)) {
++        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 || !preg_match('/^[\\p{L}\\s-]+$/', $lastName)) {
+             return new ResponseDTO('Oops, your last name doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+15) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:60    [M] GreaterThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('City cannot be empty and must be a string.', 'Error');
+         }
+         $city = $this->trim($city);
+-        if (strlen($city) >= 20 || strlen($city) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $city)) {
++        if (strlen($city) > 20 || strlen($city) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $city)) {
+             return new ResponseDTO('Oops, your City doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+16) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:60    [M] LessThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('City cannot be empty and must be a string.', 'Error');
+         }
+         $city = $this->trim($city);
+-        if (strlen($city) >= 20 || strlen($city) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $city)) {
++        if (strlen($city) >= 20 || strlen($city) < 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $city)) {
+             return new ResponseDTO('Oops, your City doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+17) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:60    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('City cannot be empty and must be a string.', 'Error');
+         }
+         $city = $this->trim($city);
+-        if (strlen($city) >= 20 || strlen($city) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $city)) {
++        if (strlen($city) >= 20 && strlen($city) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $city)) {
+             return new ResponseDTO('Oops, your City doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+18) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:61    [M] PregMatchRemoveCaret
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('City cannot be empty and must be a string.', 'Error');
+         }
+         $city = $this->trim($city);
+-        if (strlen($city) >= 20 || strlen($city) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $city)) {
++        if (strlen($city) >= 20 || strlen($city) <= 2 || !preg_match('/[a-zA-Z\\s-]+$/', $city)) {
+             return new ResponseDTO('Oops, your City doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+19) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:61    [M] PregMatchRemoveDollar
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('City cannot be empty and must be a string.', 'Error');
+         }
+         $city = $this->trim($city);
+-        if (strlen($city) >= 20 || strlen($city) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $city)) {
++        if (strlen($city) >= 20 || strlen($city) <= 2 || !preg_match('/^[a-zA-Z\\s-]+/', $city)) {
+             return new ResponseDTO('Oops, your City doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+20) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:74    [M] GreaterThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('State cannot be empty and must be a string.', 'Error');
+         }
+         $state = $this->trim($state);
+-        if (strlen($state) >= 20 || strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
++        if (strlen($state) > 20 || strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
+             return new ResponseDTO('Oops, your State doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+21) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:74    [M] LessThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('State cannot be empty and must be a string.', 'Error');
+         }
+         $state = $this->trim($state);
+-        if (strlen($state) >= 20 || strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
++        if (strlen($state) >= 20 || strlen($state) < 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
+             return new ResponseDTO('Oops, your State doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+22) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:74    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('State cannot be empty and must be a string.', 'Error');
+         }
+         $state = $this->trim($state);
+-        if (strlen($state) >= 20 || strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
++        if (strlen($state) >= 20 && strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
+             return new ResponseDTO('Oops, your State doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+23) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:74    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('State cannot be empty and must be a string.', 'Error');
+         }
+         $state = $this->trim($state);
+-        if (strlen($state) >= 20 || strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
++        if ((strlen($state) >= 20 || strlen($state) <= 2) && !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
+             return new ResponseDTO('Oops, your State doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+24) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:75    [M] PregMatchRemoveCaret
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('State cannot be empty and must be a string.', 'Error');
+         }
+         $state = $this->trim($state);
+-        if (strlen($state) >= 20 || strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
++        if (strlen($state) >= 20 || strlen($state) <= 2 || !preg_match('/[a-zA-Z\\s-]+$/', $state)) {
+             return new ResponseDTO('Oops, your State doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+25) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:75    [M] PregMatchRemoveDollar
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('State cannot be empty and must be a string.', 'Error');
+         }
+         $state = $this->trim($state);
+-        if (strlen($state) >= 20 || strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+$/', $state)) {
++        if (strlen($state) >= 20 || strlen($state) <= 2 || !preg_match('/^[a-zA-Z\\s-]+/', $state)) {
+             return new ResponseDTO('Oops, your State doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+26) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:105    [M] PregMatchRemoveCaret
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Zip code cannot be empty and must be a string.', 'Error');
+         }
+         $zip = $this->trim($zip);
+-        if (!preg_match('/^\\d{4,6}$/', $zip)) {
++        if (!preg_match('/\\d{4,6}$/', $zip)) {
+             return new ResponseDTO('Oops, your Postcode doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+27) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:105    [M] PregMatchRemoveDollar
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Zip code cannot be empty and must be a string.', 'Error');
+         }
+         $zip = $this->trim($zip);
+-        if (!preg_match('/^\\d{4,6}$/', $zip)) {
++        if (!preg_match('/^\\d{4,6}/', $zip)) {
+             return new ResponseDTO('Oops, your Postcode doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+28) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:118    [M] GreaterThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Address cannot be empty and must be a string.', 'Error');
+         }
+         $address = $this->trim($address);
+-        if (strlen($address) >= 20 || strlen($address) <= 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+$/', $address)) {
++        if (strlen($address) > 20 || strlen($address) <= 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+$/', $address)) {
+             return new ResponseDTO('Oops, your Address doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+29) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:118    [M] LessThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Address cannot be empty and must be a string.', 'Error');
+         }
+         $address = $this->trim($address);
+-        if (strlen($address) >= 20 || strlen($address) <= 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+$/', $address)) {
++        if (strlen($address) >= 20 || strlen($address) < 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+$/', $address)) {
+             return new ResponseDTO('Oops, your Address doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+30) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:118    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Address cannot be empty and must be a string.', 'Error');
+         }
+         $address = $this->trim($address);
+-        if (strlen($address) >= 20 || strlen($address) <= 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+$/', $address)) {
++        if (strlen($address) >= 20 && strlen($address) <= 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+$/', $address)) {
+             return new ResponseDTO('Oops, your Address doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+31) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:119    [M] PregMatchRemoveCaret
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Address cannot be empty and must be a string.', 'Error');
+         }
+         $address = $this->trim($address);
+-        if (strlen($address) >= 20 || strlen($address) <= 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+$/', $address)) {
++        if (strlen($address) >= 20 || strlen($address) <= 2 || !preg_match('/[a-zA-Z0-9\\s.-]+$/', $address)) {
+             return new ResponseDTO('Oops, your Address doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+32) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:119    [M] PregMatchRemoveDollar
+
+--- Original
++++ New
+@@ @@
+             return new ResponseDTO('Address cannot be empty and must be a string.', 'Error');
+         }
+         $address = $this->trim($address);
+-        if (strlen($address) >= 20 || strlen($address) <= 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+$/', $address)) {
++        if (strlen($address) >= 20 || strlen($address) <= 2 || !preg_match('/^[a-zA-Z0-9\\s.-]+/', $address)) {
+             return new ResponseDTO('Oops, your Address doesn\'t look right!', 'Error');
+         }
+         return null;
+
+
+33) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:125    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         }
+         return null;
+     }
+-    public function trim(string $value) : string
++    protected function trim(string $value) : string
+     {
+         return trim($value);
+     }
+ }
+
+
+34) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/Form/OrderFlowValidation.php:127    [M] UnwrapTrim
+
+--- Original
++++ New
+@@ @@
+     }
+     public function trim(string $value) : string
+     {
+-        return trim($value);
++        return $value;
+     }
+ }
+
+
+35) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication/OrderFlowController.php:60    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+             throw $this->createNotFoundException('Order not found.');
+         }
+         $items = $this->orderFlowBusinessFacade->findItemsByArrayOfIds($mostRecentOrder->getItems());
+-        return $this->render('thank_you/index.html.twig', ['items' => $items, 'order' => $mostRecentOrder]);
++        return $this->render('thank_you/index.html.twig', ['order' => $mostRecentOrder]);
+     }
+ }
+
+
+36) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Persistence/OrderFlowEntityManager.php:29    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $order = $this->orderMapper->map($orderDto);
+         $items = $this->shoppingCartRepository->findCartItemsByUserId($userDto->id);
+-        $order->setItems($items);
++        
+         $this->entityManager->persist($order);
+         $this->entityManager->flush();
+         $this->shoppingCartEntityManager->removeAllAfterSuccessfulOrder($userDto->id);
+     }
+ }
+
+
+37) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Persistence/OrderFlowEntityManager.php:32    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $items = $this->shoppingCartRepository->findCartItemsByUserId($userDto->id);
+         $order->setItems($items);
+         $this->entityManager->persist($order);
+-        $this->entityManager->flush();
++        
+         $this->shoppingCartEntityManager->removeAllAfterSuccessfulOrder($userDto->id);
+     }
+ }
+
+
+38) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Persistence/OrderFlowEntityManager.php:34    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $order->setItems($items);
+         $this->entityManager->persist($order);
+         $this->entityManager->flush();
+-        $this->shoppingCartEntityManager->removeAllAfterSuccessfulOrder($userDto->id);
++        
+     }
+ }
+
+
+39) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Persistence/OrdersRepository.php:26    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function findMostRecentOrderByEmail(string $email) : ?Orders
+     {
+-        return $this->findOneBy(['email' => $email], ['id' => 'DESC']);
++        return $this->findOneBy(['email' => $email], []);
+     }
+ }
+
+
+40) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Business/Model/UserRegistrationHandling.php:37    [M] ArrayOneItem
+
+--- Original
++++ New
+@@ @@
+                 $errors[] = new ResponseDTO('Email is not unique!!!', 'ERROR');
+             }
+         }
+-        return $errors;
++        return count($errors) > 1 ? array_slice($errors, 0, 1, true) : $errors;
+     }
+     private function validate(UserDTO $userDTO) : ?array
+     {
+
+
+41) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Business/Model/UserRegistrationValidation.php:17    [M] ArrayOneItem
+
+--- Original
++++ New
+@@ @@
+         $this->validateName($userDTO, $errorDTOList);
+         $this->validateEmail($userDTO, $errorDTOList);
+         $this->validatePassword($userDTO, $errorDTOList);
+-        return $errorDTOList;
++        return count($errorDTOList) > 1 ? array_slice($errorDTOList, 0, 1, true) : $errorDTOList;
+     }
+     private function validateName($clientDTO, &$errorDTOList) : void
+     {
+
+
+42) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Business/Model/UserRegistrationValidation.php:37    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+     }
+     private function validatePassword($clientDTO, &$errorDTOList) : void
+     {
+-        if (empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
++        if (empty($clientDTO->password) && !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
+             $errorDTOList[] = new ResponseDTO('Oops, your password doesn\'t look right!', 'Exception');
+         }
+     }
+ }
+
+
+43) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Business/Model/UserRegistrationValidation.php:37    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+     }
+     private function validatePassword($clientDTO, &$errorDTOList) : void
+     {
+-        if (empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
++        if ((empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password)) && !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
+             $errorDTOList[] = new ResponseDTO('Oops, your password doesn\'t look right!', 'Exception');
+         }
+     }
+ }
+
+
+44) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Business/Model/UserRegistrationValidation.php:37    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+     }
+     private function validatePassword($clientDTO, &$errorDTOList) : void
+     {
+-        if (empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
++        if ((empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password)) && !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
+             $errorDTOList[] = new ResponseDTO('Oops, your password doesn\'t look right!', 'Exception');
+         }
+     }
+ }
+
+
+45) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Business/Model/UserRegistrationValidation.php:37    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+     }
+     private function validatePassword($clientDTO, &$errorDTOList) : void
+     {
+-        if (empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
++        if ((empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password)) && !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
+             $errorDTOList[] = new ResponseDTO('Oops, your password doesn\'t look right!', 'Exception');
+         }
+     }
+ }
+
+
+46) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Business/Model/UserRegistrationValidation.php:42    [M] LessThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+     }
+     private function validatePassword($clientDTO, &$errorDTOList) : void
+     {
+-        if (empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) <= 6) {
++        if (empty($clientDTO->password) || !preg_match('@[A-Z]@', $clientDTO->password) || !preg_match('@[a-z]@', $clientDTO->password) || !preg_match('@\\d@', $clientDTO->password) || !preg_match('@\\W@', $clientDTO->password) || strlen($clientDTO->password) < 6) {
+             $errorDTOList[] = new ResponseDTO('Oops, your password doesn\'t look right!', 'Exception');
+         }
+     }
+ }
+
+
+47) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Communication/Mapper/Request2UserDTO.php:14    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+ {
+     public function request2DTO(Request $request) : UserDTO
+     {
+-        return new UserDTO(id: $request->get('', 0), email: $request->get('email', ''), username: $request->get('username', ''), password: $request->get('password', ''));
++        return new UserDTO(id: $request->get('', -1), email: $request->get('email', ''), username: $request->get('username', ''), password: $request->get('password', ''));
+     }
+ }
+
+
+48) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Communication/Mapper/Request2UserDTO.php:14    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+ {
+     public function request2DTO(Request $request) : UserDTO
+     {
+-        return new UserDTO(id: $request->get('', 0), email: $request->get('email', ''), username: $request->get('username', ''), password: $request->get('password', ''));
++        return new UserDTO(id: $request->get('', 1), email: $request->get('email', ''), username: $request->get('username', ''), password: $request->get('password', ''));
+     }
+ }
+
+
+49) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Persistence/UserEntityManager.php:21    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     public function register(UserDTO $userDTO) : void
+     {
+         $user = $this->mapper->getUserEntity($userDTO);
+-        $user->setPassword($this->hashPassword($user));
++        
+         $this->entityManager->persist($user);
+         $this->entityManager->flush();
+     }
+
+
+50) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Business/Model/ShoppingCartCalculator.php:13    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+     private const SHIPPING_COST = 4.95;
+     public function calculateExpenses(array $shoppingCartItemDtoList) : ShoppingCartExpensesDto
+     {
+-        $tax = 0;
++        $tax = -1;
+         $subTotal = 0;
+         foreach ($shoppingCartItemDtoList as $shoppingCartItemDto) {
+             $subTotal += $shoppingCartItemDto->price * $shoppingCartItemDto->quantity;
+
+
+51) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Business/Model/ShoppingCartRead.php:35    [M] InstanceOf_
+
+--- Original
++++ New
+@@ @@
+         $shoppingCartItemDtoList = [];
+         foreach ($shoppingCartSaveDTOArray as $shoppingCartSaveDTO) {
+             $item = $this->itemRepository->findOneByItemId($shoppingCartSaveDTO->itemId);
+-            if ($item instanceof Items) {
++            if (true) {
+                 $shoppingCartItemDTOs = new ShoppingCartItemDto(id: $shoppingCartSaveDTO->id, userId: $shoppingCartSaveDTO->userId, quantity: $shoppingCartSaveDTO->quantity, name: $item->getName(), price: $item->getPrice(), thumbnail: $item->getThumbnail(), itemId: $item->getItemId());
+                 $shoppingCartItemDtoList[] = $shoppingCartItemDTOs;
+             }
+
+
+52) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Communication/ShoppingCartController.php:32    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+         foreach ($shoppingCartItemDtoList as $shoppingCartItemDto) {
+             $items[] = $shoppingCartItemDto;
+         }
+-        return $this->render('shopping_cart/index.html.twig', ['controller_name' => 'ShoppingCartController', 'items' => $items, 'total' => $expenses]);
++        return $this->render('shopping_cart/index.html.twig', ['items' => $items, 'total' => $expenses]);
+     }
+     #[Route('/shopping/cart/add/{itemId}/{quantity?}', name: 'app_shopping_cart_save', requirements: ['quantity' => '\\d+'], defaults: ['quantity' => 1])]
+     public function save(int $itemId, int $quantity) : Response
+
+
+53) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Persistence/ShoppingCartEntityManager.php:38    [M] Foreach_
+
+--- Original
++++ New
+@@ @@
+     public function removeAllAfterSuccessfulOrder($userId) : void
+     {
+         $shoppingCarts = $this->shoppingCartRepository->findShoppingCartEntitiesByUserId($userId);
+-        foreach ($shoppingCarts as $shoppingCart) {
++        foreach (array() as $shoppingCart) {
+             $this->entityManager->remove($shoppingCart);
+         }
+         $this->entityManager->flush();
+
+
+54) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Persistence/ShoppingCartEntityManager.php:39    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $shoppingCarts = $this->shoppingCartRepository->findShoppingCartEntitiesByUserId($userId);
+         foreach ($shoppingCarts as $shoppingCart) {
+-            $this->entityManager->remove($shoppingCart);
++            
+         }
+         $this->entityManager->flush();
+     }
+
+
+55) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Persistence/ShoppingCartEntityManager.php:41    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         foreach ($shoppingCarts as $shoppingCart) {
+             $this->entityManager->remove($shoppingCart);
+         }
+-        $this->entityManager->flush();
++        
+     }
+     private function insert(ShoppingCart $cart) : void
+     {
+
+
+56) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Persistence/ShoppingCartRepository.php:25    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function findShoppingCartEntitiesByUserId(int $userId) : array
+     {
+-        return $this->findBy(['user_id' => $userId]);
++        return $this->findBy([]);
+     }
+     public function findOneByUserIdAndItemId(int $userId, int $itemId) : ?ShoppingCartSaveDTO
+     {
+
+
+57) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Persistence/ShoppingCartRepository.php:30    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function findOneByUserIdAndItemId(int $userId, int $itemId) : ?ShoppingCartSaveDTO
+     {
+-        $shoppingCart = $this->findOneBy(['user_id' => $userId, 'item_id' => $itemId]);
++        $shoppingCart = $this->findOneBy(['item_id' => $itemId]);
+         if ($shoppingCart instanceof ShoppingCart) {
+             return $this->shoppingCartMapper->mapEntityToDto($shoppingCart);
+         }
+
+
+58) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Persistence/ShoppingCartRepository.php:54    [M] InstanceOf_
+
+--- Original
++++ New
+@@ @@
+         $shoppingCartSaveDtoList = [];
+         $shoppingCart = $this->findBy(['user_id' => $userId]);
+         foreach ($shoppingCart as $item) {
+-            if ($item instanceof ShoppingCart) {
++            if (true) {
+                 $shoppingCartSaveDtoList[] = $this->shoppingCartMapper->mapEntityToDto($item);
+             }
+         }
+
+
+59) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:86    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item7->setPosition('Defence');
+         $item7->setThumbnail('https://images.pexels.com/photos/15033219/pexels-photo-15033219.jpeg');
+         $item7->setTeamId('4');
+-        $item7->setItemId(350);
++        $item7->setItemId(349);
+         $manager->persist($item7);
+         $item8 = new Items();
+         $item8->setClubWebsite('http://www.bvb.de');
+
+
+60) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:86    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item7->setPosition('Defence');
+         $item7->setThumbnail('https://images.pexels.com/photos/15033219/pexels-photo-15033219.jpeg');
+         $item7->setTeamId('4');
+-        $item7->setItemId(350);
++        $item7->setItemId(351);
+         $manager->persist($item7);
+         $item8 = new Items();
+         $item8->setClubWebsite('http://www.bvb.de');
+
+
+61) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:101    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item8->setPosition('Defence');
+         $item8->setThumbnail('https://images.pexels.com/photos/8007498/pexels-photo-8007498.jpeg');
+         $item8->setTeamId('4');
+-        $item8->setItemId(351);
++        $item8->setItemId(350);
+         $manager->persist($item8);
+         $item9 = new Items();
+         $item9->setClubWebsite('http://www.bvb.de');
+
+
+62) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:101    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item8->setPosition('Defence');
+         $item8->setThumbnail('https://images.pexels.com/photos/8007498/pexels-photo-8007498.jpeg');
+         $item8->setTeamId('4');
+-        $item8->setItemId(351);
++        $item8->setItemId(352);
+         $manager->persist($item8);
+         $item9 = new Items();
+         $item9->setClubWebsite('http://www.bvb.de');
+
+
+63) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:102    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item8->setThumbnail('https://images.pexels.com/photos/8007498/pexels-photo-8007498.jpeg');
+         $item8->setTeamId('4');
+         $item8->setItemId(351);
+-        $manager->persist($item8);
++        
+         $item9 = new Items();
+         $item9->setClubWebsite('http://www.bvb.de');
+         $item9->setClubName('Borussia Dortmund');
+
+
+64) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:116    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item9->setPosition('Defence');
+         $item9->setThumbnail('https://images.pexels.com/photos/18256104/pexels-photo-18256104.jpeg');
+         $item9->setTeamId('4');
+-        $item9->setItemId(3650);
++        $item9->setItemId(3649);
+         $manager->persist($item9);
+         $item10 = new Items();
+         $item10->setClubWebsite('http://www.bvb.de');
+
+
+65) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:116    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item9->setPosition('Defence');
+         $item9->setThumbnail('https://images.pexels.com/photos/18256104/pexels-photo-18256104.jpeg');
+         $item9->setTeamId('4');
+-        $item9->setItemId(3650);
++        $item9->setItemId(3651);
+         $manager->persist($item9);
+         $item10 = new Items();
+         $item10->setClubWebsite('http://www.bvb.de');
+
+
+66) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:117    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item9->setThumbnail('https://images.pexels.com/photos/18256104/pexels-photo-18256104.jpeg');
+         $item9->setTeamId('4');
+         $item9->setItemId(3650);
+-        $manager->persist($item9);
++        
+         $item10 = new Items();
+         $item10->setClubWebsite('http://www.bvb.de');
+         $item10->setClubName('Borussia Dortmund');
+
+
+67) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:131    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item10->setPosition('Defence');
+         $item10->setThumbnail('https://images.pexels.com/photos/7084055/pexels-photo-7084055.jpeg');
+         $item10->setTeamId('4');
+-        $item10->setItemId(6714);
++        $item10->setItemId(6713);
+         $manager->persist($item10);
+         $item11 = new Items();
+         $item11->setClubWebsite('http://www.bvb.de');
+
+
+68) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:131    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item10->setPosition('Defence');
+         $item10->setThumbnail('https://images.pexels.com/photos/7084055/pexels-photo-7084055.jpeg');
+         $item10->setTeamId('4');
+-        $item10->setItemId(6714);
++        $item10->setItemId(6715);
+         $manager->persist($item10);
+         $item11 = new Items();
+         $item11->setClubWebsite('http://www.bvb.de');
+
+
+69) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:132    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item10->setThumbnail('https://images.pexels.com/photos/7084055/pexels-photo-7084055.jpeg');
+         $item10->setTeamId('4');
+         $item10->setItemId(6714);
+-        $manager->persist($item10);
++        
+         $item11 = new Items();
+         $item11->setClubWebsite('http://www.bvb.de');
+         $item11->setClubName('Borussia Dortmund');
+
+
+70) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:161    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item12->setPosition('Defence');
+         $item12->setThumbnail('https://images.pexels.com/photos/8007498/pexels-photo-8007498.jpeg');
+         $item12->setTeamId('4');
+-        $item12->setItemId(44030);
++        $item12->setItemId(44029);
+         $manager->persist($item12);
+         $item13 = new Items();
+         $item13->setClubWebsite('http://www.bvb.de');
+
+
+71) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:161    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item12->setPosition('Defence');
+         $item12->setThumbnail('https://images.pexels.com/photos/8007498/pexels-photo-8007498.jpeg');
+         $item12->setTeamId('4');
+-        $item12->setItemId(44030);
++        $item12->setItemId(44031);
+         $manager->persist($item12);
+         $item13 = new Items();
+         $item13->setClubWebsite('http://www.bvb.de');
+
+
+72) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:162    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item12->setThumbnail('https://images.pexels.com/photos/8007498/pexels-photo-8007498.jpeg');
+         $item12->setTeamId('4');
+         $item12->setItemId(44030);
+-        $manager->persist($item12);
++        
+         $item13 = new Items();
+         $item13->setClubWebsite('http://www.bvb.de');
+         $item13->setClubName('Borussia Dortmund');
+
+
+73) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:176    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item13->setPosition('Defence');
+         $item13->setThumbnail('https://images.pexels.com/photos/17485149/pexels-photo-17485149.jpeg');
+         $item13->setTeamId('4');
+-        $item13->setItemId(58521);
++        $item13->setItemId(58520);
+         $manager->persist($item13);
+         $item14 = new Items();
+         $item14->setClubWebsite('http://www.bvb.de');
+
+
+74) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:176    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item13->setPosition('Defence');
+         $item13->setThumbnail('https://images.pexels.com/photos/17485149/pexels-photo-17485149.jpeg');
+         $item13->setTeamId('4');
+-        $item13->setItemId(58521);
++        $item13->setItemId(58522);
+         $manager->persist($item13);
+         $item14 = new Items();
+         $item14->setClubWebsite('http://www.bvb.de');
+
+
+75) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:177    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item13->setThumbnail('https://images.pexels.com/photos/17485149/pexels-photo-17485149.jpeg');
+         $item13->setTeamId('4');
+         $item13->setItemId(58521);
+-        $manager->persist($item13);
++        
+         $item14 = new Items();
+         $item14->setClubWebsite('http://www.bvb.de');
+         $item14->setClubName('Borussia Dortmund');
+
+
+76) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:191    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item14->setPosition('Defence');
+         $item14->setThumbnail('https://images.pexels.com/photos/7556621/pexels-photo-7556621.jpeg');
+         $item14->setTeamId('4');
+-        $item14->setItemId(75539);
++        $item14->setItemId(75538);
+         $manager->persist($item14);
+         $item15 = new Items();
+         $item15->setClubWebsite('http://www.bvb.de');
+
+
+77) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:191    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item14->setPosition('Defence');
+         $item14->setThumbnail('https://images.pexels.com/photos/7556621/pexels-photo-7556621.jpeg');
+         $item14->setTeamId('4');
+-        $item14->setItemId(75539);
++        $item14->setItemId(75540);
+         $manager->persist($item14);
+         $item15 = new Items();
+         $item15->setClubWebsite('http://www.bvb.de');
+
+
+78) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:192    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item14->setThumbnail('https://images.pexels.com/photos/7556621/pexels-photo-7556621.jpeg');
+         $item14->setTeamId('4');
+         $item14->setItemId(75539);
+-        $manager->persist($item14);
++        
+         $item15 = new Items();
+         $item15->setClubWebsite('http://www.bvb.de');
+         $item15->setClubName('Borussia Dortmund');
+
+
+79) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:206    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item15->setPosition('Defence');
+         $item15->setThumbnail('https://images.pexels.com/photos/15033210/pexels-photo-15033210.jpeg');
+         $item15->setTeamId('4');
+-        $item15->setItemId(120984);
++        $item15->setItemId(120983);
+         $manager->persist($item15);
+         $item16 = new Items();
+         $item16->setClubWebsite('http://www.bvb.de');
+
+
+80) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:206    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item15->setPosition('Defence');
+         $item15->setThumbnail('https://images.pexels.com/photos/15033210/pexels-photo-15033210.jpeg');
+         $item15->setTeamId('4');
+-        $item15->setItemId(120984);
++        $item15->setItemId(120985);
+         $manager->persist($item15);
+         $item16 = new Items();
+         $item16->setClubWebsite('http://www.bvb.de');
+
+
+81) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:207    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item15->setThumbnail('https://images.pexels.com/photos/15033210/pexels-photo-15033210.jpeg');
+         $item15->setTeamId('4');
+         $item15->setItemId(120984);
+-        $manager->persist($item15);
++        
+         $item16 = new Items();
+         $item16->setClubWebsite('http://www.bvb.de');
+         $item16->setClubName('Borussia Dortmund');
+
+
+82) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:221    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item16->setPosition('Defence');
+         $item16->setThumbnail('https://images.pexels.com/photos/3653331/pexels-photo-3653331.jpeg');
+         $item16->setTeamId('4');
+-        $item16->setItemId(131120);
++        $item16->setItemId(131119);
+         $manager->persist($item16);
+         $item17 = new Items();
+         $item17->setClubWebsite('http://www.bvb.de');
+
+
+83) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:221    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item16->setPosition('Defence');
+         $item16->setThumbnail('https://images.pexels.com/photos/3653331/pexels-photo-3653331.jpeg');
+         $item16->setTeamId('4');
+-        $item16->setItemId(131120);
++        $item16->setItemId(131121);
+         $manager->persist($item16);
+         $item17 = new Items();
+         $item17->setClubWebsite('http://www.bvb.de');
+
+
+84) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:222    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item16->setThumbnail('https://images.pexels.com/photos/3653331/pexels-photo-3653331.jpeg');
+         $item16->setTeamId('4');
+         $item16->setItemId(131120);
+-        $manager->persist($item16);
++        
+         $item17 = new Items();
+         $item17->setClubWebsite('http://www.bvb.de');
+         $item17->setClubName('Borussia Dortmund');
+
+
+85) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:236    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item17->setPosition('Defence');
+         $item17->setThumbnail('https://images.pexels.com/photos/8111439/pexels-photo-8111439.jpeg');
+         $item17->setTeamId('4');
+-        $item17->setItemId(177664);
++        $item17->setItemId(177663);
+         $manager->persist($item17);
+         $item18 = new Items();
+         $item18->setClubWebsite('http://www.bvb.de');
+
+
+86) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:236    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item17->setPosition('Defence');
+         $item17->setThumbnail('https://images.pexels.com/photos/8111439/pexels-photo-8111439.jpeg');
+         $item17->setTeamId('4');
+-        $item17->setItemId(177664);
++        $item17->setItemId(177665);
+         $manager->persist($item17);
+         $item18 = new Items();
+         $item18->setClubWebsite('http://www.bvb.de');
+
+
+87) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:237    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item17->setThumbnail('https://images.pexels.com/photos/8111439/pexels-photo-8111439.jpeg');
+         $item17->setTeamId('4');
+         $item17->setItemId(177664);
+-        $manager->persist($item17);
++        
+         $item18 = new Items();
+         $item18->setClubWebsite('http://www.bvb.de');
+         $item18->setClubName('Borussia Dortmund');
+
+
+88) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:251    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item18->setPosition('Defence');
+         $item18->setThumbnail('https://images.pexels.com/photos/18798576/pexels-photo-18798576.jpeg');
+         $item18->setTeamId('4');
+-        $item18->setItemId(212298);
++        $item18->setItemId(212297);
+         $manager->persist($item18);
+         $item19 = new Items();
+         $item19->setClubWebsite('http://www.bvb.de');
+
+
+89) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:251    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item18->setPosition('Defence');
+         $item18->setThumbnail('https://images.pexels.com/photos/18798576/pexels-photo-18798576.jpeg');
+         $item18->setTeamId('4');
+-        $item18->setItemId(212298);
++        $item18->setItemId(212299);
+         $manager->persist($item18);
+         $item19 = new Items();
+         $item19->setClubWebsite('http://www.bvb.de');
+
+
+90) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:252    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item18->setThumbnail('https://images.pexels.com/photos/18798576/pexels-photo-18798576.jpeg');
+         $item18->setTeamId('4');
+         $item18->setItemId(212298);
+-        $manager->persist($item18);
++        
+         $item19 = new Items();
+         $item19->setClubWebsite('http://www.bvb.de');
+         $item19->setClubName('Borussia Dortmund');
+
+
+91) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:266    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item19->setPosition('Midfield');
+         $item19->setThumbnail('https://images.pexels.com/photos/8120617/pexels-photo-8120617.jpeg');
+         $item19->setTeamId('4');
+-        $item19->setItemId(138);
++        $item19->setItemId(137);
+         $manager->persist($item19);
+         $item20 = new Items();
+         $item20->setClubWebsite('http://www.bvb.de');
+
+
+92) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:266    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item19->setPosition('Midfield');
+         $item19->setThumbnail('https://images.pexels.com/photos/8120617/pexels-photo-8120617.jpeg');
+         $item19->setTeamId('4');
+-        $item19->setItemId(138);
++        $item19->setItemId(139);
+         $manager->persist($item19);
+         $item20 = new Items();
+         $item20->setClubWebsite('http://www.bvb.de');
+
+
+93) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:267    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item19->setThumbnail('https://images.pexels.com/photos/8120617/pexels-photo-8120617.jpeg');
+         $item19->setTeamId('4');
+         $item19->setItemId(138);
+-        $manager->persist($item19);
++        
+         $item20 = new Items();
+         $item20->setClubWebsite('http://www.bvb.de');
+         $item20->setClubName('Borussia Dortmund');
+
+
+94) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:281    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item20->setPosition('Midfield');
+         $item20->setThumbnail('https://images.pexels.com/photos/5246966/pexels-photo-5246966.jpeg');
+         $item20->setTeamId('4');
+-        $item20->setItemId(146);
++        $item20->setItemId(145);
+         $manager->persist($item20);
+         $item21 = new Items();
+         $item21->setClubWebsite('http://www.bvb.de');
+
+
+95) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:281    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item20->setPosition('Midfield');
+         $item20->setThumbnail('https://images.pexels.com/photos/5246966/pexels-photo-5246966.jpeg');
+         $item20->setTeamId('4');
+-        $item20->setItemId(146);
++        $item20->setItemId(147);
+         $manager->persist($item20);
+         $item21 = new Items();
+         $item21->setClubWebsite('http://www.bvb.de');
+
+
+96) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:282    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item20->setThumbnail('https://images.pexels.com/photos/5246966/pexels-photo-5246966.jpeg');
+         $item20->setTeamId('4');
+         $item20->setItemId(146);
+-        $manager->persist($item20);
++        
+         $item21 = new Items();
+         $item21->setClubWebsite('http://www.bvb.de');
+         $item21->setClubName('Borussia Dortmund');
+
+
+97) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:296    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item21->setPosition('Midfield');
+         $item21->setThumbnail('https://images.pexels.com/photos/19079608/pexels-photo-19079608.jpeg');
+         $item21->setTeamId('4');
+-        $item21->setItemId(201);
++        $item21->setItemId(200);
+         $manager->persist($item21);
+         $item22 = new Items();
+         $item22->setClubWebsite('http://www.bvb.de');
+
+
+98) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:296    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item21->setPosition('Midfield');
+         $item21->setThumbnail('https://images.pexels.com/photos/19079608/pexels-photo-19079608.jpeg');
+         $item21->setTeamId('4');
+-        $item21->setItemId(201);
++        $item21->setItemId(202);
+         $manager->persist($item21);
+         $item22 = new Items();
+         $item22->setClubWebsite('http://www.bvb.de');
+
+
+99) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:297    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item21->setThumbnail('https://images.pexels.com/photos/19079608/pexels-photo-19079608.jpeg');
+         $item21->setTeamId('4');
+         $item21->setItemId(201);
+-        $manager->persist($item21);
++        
+         $item22 = new Items();
+         $item22->setClubWebsite('http://www.bvb.de');
+         $item22->setClubName('Borussia Dortmund');
+
+
+100) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:311    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item22->setPosition('Midfield');
+         $item22->setThumbnail('https://images.pexels.com/photos/7399346/pexels-photo-7399346.jpeg');
+         $item22->setTeamId('4');
+-        $item22->setItemId(3183);
++        $item22->setItemId(3182);
+         $manager->persist($item22);
+         $item23 = new Items();
+         $item23->setClubWebsite('http://www.bvb.de');
+
+
+101) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:311    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item22->setPosition('Midfield');
+         $item22->setThumbnail('https://images.pexels.com/photos/7399346/pexels-photo-7399346.jpeg');
+         $item22->setTeamId('4');
+-        $item22->setItemId(3183);
++        $item22->setItemId(3184);
+         $manager->persist($item22);
+         $item23 = new Items();
+         $item23->setClubWebsite('http://www.bvb.de');
+
+
+102) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:312    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item22->setThumbnail('https://images.pexels.com/photos/7399346/pexels-photo-7399346.jpeg');
+         $item22->setTeamId('4');
+         $item22->setItemId(3183);
+-        $manager->persist($item22);
++        
+         $item23 = new Items();
+         $item23->setClubWebsite('http://www.bvb.de');
+         $item23->setClubName('Borussia Dortmund');
+
+
+103) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:326    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item23->setPosition('Midfield');
+         $item23->setThumbnail('https://images.pexels.com/photos/19079606/pexels-photo-19079606.jpeg');
+         $item23->setTeamId('4');
+-        $item23->setItemId(101074);
++        $item23->setItemId(101073);
+         $manager->persist($item23);
+         $item24 = new Items();
+         $item24->setClubWebsite('http://www.bvb.de');
+
+
+104) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:326    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item23->setPosition('Midfield');
+         $item23->setThumbnail('https://images.pexels.com/photos/19079606/pexels-photo-19079606.jpeg');
+         $item23->setTeamId('4');
+-        $item23->setItemId(101074);
++        $item23->setItemId(101075);
+         $manager->persist($item23);
+         $item24 = new Items();
+         $item24->setClubWebsite('http://www.bvb.de');
+
+
+105) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:327    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item23->setThumbnail('https://images.pexels.com/photos/19079606/pexels-photo-19079606.jpeg');
+         $item23->setTeamId('4');
+         $item23->setItemId(101074);
+-        $manager->persist($item23);
++        
+         $item24 = new Items();
+         $item24->setClubWebsite('http://www.bvb.de');
+         $item24->setClubName('Borussia Dortmund');
+
+
+106) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:341    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item24->setPosition('Midfield');
+         $item24->setThumbnail('https://images.pexels.com/photos/15033215/pexels-photo-15033215.jpeg');
+         $item24->setTeamId('4');
+-        $item24->setItemId(161415);
++        $item24->setItemId(161414);
+         $manager->persist($item24);
+         $item25 = new Items();
+         $item25->setClubWebsite('http://www.bvb.de');
+
+
+107) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:341    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item24->setPosition('Midfield');
+         $item24->setThumbnail('https://images.pexels.com/photos/15033215/pexels-photo-15033215.jpeg');
+         $item24->setTeamId('4');
+-        $item24->setItemId(161415);
++        $item24->setItemId(161416);
+         $manager->persist($item24);
+         $item25 = new Items();
+         $item25->setClubWebsite('http://www.bvb.de');
+
+
+108) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:342    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item24->setThumbnail('https://images.pexels.com/photos/15033215/pexels-photo-15033215.jpeg');
+         $item24->setTeamId('4');
+         $item24->setItemId(161415);
+-        $manager->persist($item24);
++        
+         $item25 = new Items();
+         $item25->setClubWebsite('http://www.bvb.de');
+         $item25->setClubName('Borussia Dortmund');
+
+
+109) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:356    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item25->setPosition('Midfield');
+         $item25->setThumbnail('https://images.pexels.com/photos/3653376/pexels-photo-3653376.jpeg');
+         $item25->setTeamId('4');
+-        $item25->setItemId(179460);
++        $item25->setItemId(179459);
+         $manager->persist($item25);
+         $item26 = new Items();
+         $item26->setClubWebsite('http://www.bvb.de');
+
+
+110) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:356    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item25->setPosition('Midfield');
+         $item25->setThumbnail('https://images.pexels.com/photos/3653376/pexels-photo-3653376.jpeg');
+         $item25->setTeamId('4');
+-        $item25->setItemId(179460);
++        $item25->setItemId(179461);
+         $manager->persist($item25);
+         $item26 = new Items();
+         $item26->setClubWebsite('http://www.bvb.de');
+
+
+111) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:357    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item25->setThumbnail('https://images.pexels.com/photos/3653376/pexels-photo-3653376.jpeg');
+         $item25->setTeamId('4');
+         $item25->setItemId(179460);
+-        $manager->persist($item25);
++        
+         $item26 = new Items();
+         $item26->setClubWebsite('http://www.bvb.de');
+         $item26->setClubName('Borussia Dortmund');
+
+
+112) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:371    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item26->setPosition('Offence');
+         $item26->setThumbnail('https://images.pexels.com/photos/19079601/pexels-photo-19079601.jpeg');
+         $item26->setTeamId('4');
+-        $item26->setItemId(148);
++        $item26->setItemId(147);
+         $manager->persist($item26);
+         $item27 = new Items();
+         $item27->setClubWebsite('http://www.bvb.de');
+
+
+113) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:371    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item26->setPosition('Offence');
+         $item26->setThumbnail('https://images.pexels.com/photos/19079601/pexels-photo-19079601.jpeg');
+         $item26->setTeamId('4');
+-        $item26->setItemId(148);
++        $item26->setItemId(149);
+         $manager->persist($item26);
+         $item27 = new Items();
+         $item27->setClubWebsite('http://www.bvb.de');
+
+
+114) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:372    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item26->setThumbnail('https://images.pexels.com/photos/19079601/pexels-photo-19079601.jpeg');
+         $item26->setTeamId('4');
+         $item26->setItemId(148);
+-        $manager->persist($item26);
++        
+         $item27 = new Items();
+         $item27->setClubWebsite('http://www.bvb.de');
+         $item27->setClubName('Borussia Dortmund');
+
+
+115) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:386    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item27->setPosition('Offence');
+         $item27->setThumbnail('https://images.pexels.com/photos/7928625/pexels-photo-7928625.jpeg');
+         $item27->setTeamId('4');
+-        $item27->setItemId(304);
++        $item27->setItemId(303);
+         $manager->persist($item27);
+         $item28 = new Items();
+         $item28->setClubWebsite('http://www.bvb.de');
+
+
+116) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:386    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item27->setPosition('Offence');
+         $item27->setThumbnail('https://images.pexels.com/photos/7928625/pexels-photo-7928625.jpeg');
+         $item27->setTeamId('4');
+-        $item27->setItemId(304);
++        $item27->setItemId(305);
+         $manager->persist($item27);
+         $item28 = new Items();
+         $item28->setClubWebsite('http://www.bvb.de');
+
+
+117) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:387    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item27->setThumbnail('https://images.pexels.com/photos/7928625/pexels-photo-7928625.jpeg');
+         $item27->setTeamId('4');
+         $item27->setItemId(304);
+-        $manager->persist($item27);
++        
+         $item28 = new Items();
+         $item28->setClubWebsite('http://www.bvb.de');
+         $item28->setClubName('Borussia Dortmund');
+
+
+118) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:401    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item28->setPosition('Offence');
+         $item28->setThumbnail('https://images.pexels.com/photos/19079607/pexels-photo-19079607.jpeg');
+         $item28->setTeamId('4');
+-        $item28->setItemId(6721);
++        $item28->setItemId(6720);
+         $manager->persist($item28);
+         $item29 = new Items();
+         $item29->setClubWebsite('http://www.bvb.de');
+
+
+119) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:401    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item28->setPosition('Offence');
+         $item28->setThumbnail('https://images.pexels.com/photos/19079607/pexels-photo-19079607.jpeg');
+         $item28->setTeamId('4');
+-        $item28->setItemId(6721);
++        $item28->setItemId(6722);
+         $manager->persist($item28);
+         $item29 = new Items();
+         $item29->setClubWebsite('http://www.bvb.de');
+
+
+120) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:402    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item28->setThumbnail('https://images.pexels.com/photos/19079607/pexels-photo-19079607.jpeg');
+         $item28->setTeamId('4');
+         $item28->setItemId(6721);
+-        $manager->persist($item28);
++        
+         $item29 = new Items();
+         $item29->setClubWebsite('http://www.bvb.de');
+         $item29->setClubName('Borussia Dortmund');
+
+
+121) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:416    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item29->setPosition('Offence');
+         $item29->setThumbnail('https://images.pexels.com/photos/19917366/pexels-photo-19917366.jpeg');
+         $item29->setTeamId('4');
+-        $item29->setItemId(7457);
++        $item29->setItemId(7456);
+         $manager->persist($item29);
+         $item30 = new Items();
+         $item30->setClubWebsite('http://www.bvb.de');
+
+
+122) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:416    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item29->setPosition('Offence');
+         $item29->setThumbnail('https://images.pexels.com/photos/19917366/pexels-photo-19917366.jpeg');
+         $item29->setTeamId('4');
+-        $item29->setItemId(7457);
++        $item29->setItemId(7458);
+         $manager->persist($item29);
+         $item30 = new Items();
+         $item30->setClubWebsite('http://www.bvb.de');
+
+
+123) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:417    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item29->setThumbnail('https://images.pexels.com/photos/19917366/pexels-photo-19917366.jpeg');
+         $item29->setTeamId('4');
+         $item29->setItemId(7457);
+-        $manager->persist($item29);
++        
+         $item30 = new Items();
+         $item30->setClubWebsite('http://www.bvb.de');
+         $item30->setClubName('Borussia Dortmund');
+
+
+124) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:431    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item30->setPosition('Offence');
+         $item30->setThumbnail('https://images.pexels.com/photos/1884580/pexels-photo-1884580.jpeg');
+         $item30->setTeamId('4');
+-        $item30->setItemId(9551);
++        $item30->setItemId(9550);
+         $manager->persist($item30);
+         $item31 = new Items();
+         $item31->setClubWebsite('http://www.bvb.de');
+
+
+125) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:431    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item30->setPosition('Offence');
+         $item30->setThumbnail('https://images.pexels.com/photos/1884580/pexels-photo-1884580.jpeg');
+         $item30->setTeamId('4');
+-        $item30->setItemId(9551);
++        $item30->setItemId(9552);
+         $manager->persist($item30);
+         $item31 = new Items();
+         $item31->setClubWebsite('http://www.bvb.de');
+
+
+126) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:432    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item30->setThumbnail('https://images.pexels.com/photos/1884580/pexels-photo-1884580.jpeg');
+         $item30->setTeamId('4');
+         $item30->setItemId(9551);
+-        $manager->persist($item30);
++        
+         $item31 = new Items();
+         $item31->setClubWebsite('http://www.bvb.de');
+         $item31->setClubName('Borussia Dortmund');
+
+
+127) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:446    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item31->setPosition('Offence');
+         $item31->setThumbnail('https://images.pexels.com/photos/5247136/pexels-photo-5247136.jpeg');
+         $item31->setTeamId('4');
+-        $item31->setItemId(82515);
++        $item31->setItemId(82514);
+         $manager->persist($item31);
+         $item32 = new Items();
+         $item32->setClubWebsite('http://www.bvb.de');
+
+
+128) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:446    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item31->setPosition('Offence');
+         $item31->setThumbnail('https://images.pexels.com/photos/5247136/pexels-photo-5247136.jpeg');
+         $item31->setTeamId('4');
+-        $item31->setItemId(82515);
++        $item31->setItemId(82516);
+         $manager->persist($item31);
+         $item32 = new Items();
+         $item32->setClubWebsite('http://www.bvb.de');
+
+
+129) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:447    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item31->setThumbnail('https://images.pexels.com/photos/5247136/pexels-photo-5247136.jpeg');
+         $item31->setTeamId('4');
+         $item31->setItemId(82515);
+-        $manager->persist($item31);
++        
+         $item32 = new Items();
+         $item32->setClubWebsite('http://www.bvb.de');
+         $item32->setClubName('Borussia Dortmund');
+
+
+130) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:461    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item32->setPosition('Offence');
+         $item32->setThumbnail('https://images.pexels.com/photos/15023680/pexels-photo-15023680.jpeg');
+         $item32->setTeamId('4');
+-        $item32->setItemId(136733);
++        $item32->setItemId(136732);
+         $manager->persist($item32);
+         $item33 = new Items();
+         $item33->setClubWebsite('http://www.bvb.de');
+
+
+131) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:461    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item32->setPosition('Offence');
+         $item32->setThumbnail('https://images.pexels.com/photos/15023680/pexels-photo-15023680.jpeg');
+         $item32->setTeamId('4');
+-        $item32->setItemId(136733);
++        $item32->setItemId(136734);
+         $manager->persist($item32);
+         $item33 = new Items();
+         $item33->setClubWebsite('http://www.bvb.de');
+
+
+132) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:462    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item32->setThumbnail('https://images.pexels.com/photos/15023680/pexels-photo-15023680.jpeg');
+         $item32->setTeamId('4');
+         $item32->setItemId(136733);
+-        $manager->persist($item32);
++        
+         $item33 = new Items();
+         $item33->setClubWebsite('http://www.bvb.de');
+         $item33->setClubName('Borussia Dortmund');
+
+
+133) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:476    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item33->setPosition('Offence');
+         $item33->setThumbnail('https://images.pexels.com/photos/17395073/pexels-photo-17395073.jpeg');
+         $item33->setTeamId('4');
+-        $item33->setItemId(142162);
++        $item33->setItemId(142161);
+         $manager->persist($item33);
+         $item34 = new Items();
+         $item34->setClubWebsite('http://www.bvb.de');
+
+
+134) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:476    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item33->setPosition('Offence');
+         $item33->setThumbnail('https://images.pexels.com/photos/17395073/pexels-photo-17395073.jpeg');
+         $item33->setTeamId('4');
+-        $item33->setItemId(142162);
++        $item33->setItemId(142163);
+         $manager->persist($item33);
+         $item34 = new Items();
+         $item34->setClubWebsite('http://www.bvb.de');
+
+
+135) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:477    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item33->setThumbnail('https://images.pexels.com/photos/17395073/pexels-photo-17395073.jpeg');
+         $item33->setTeamId('4');
+         $item33->setItemId(142162);
+-        $manager->persist($item33);
++        
+         $item34 = new Items();
+         $item34->setClubWebsite('http://www.bvb.de');
+         $item34->setClubName('Borussia Dortmund');
+
+
+136) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:491    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item34->setPosition('Offence');
+         $item34->setThumbnail('https://images.pexels.com/photos/15033216/pexels-photo-15033216.jpeg');
+         $item34->setTeamId('4');
+-        $item34->setItemId(150817);
++        $item34->setItemId(150816);
+         $manager->persist($item34);
+         $item35 = new Items();
+         $item35->setClubWebsite('http://www.bvb.de');
+
+
+137) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:491    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item34->setPosition('Offence');
+         $item34->setThumbnail('https://images.pexels.com/photos/15033216/pexels-photo-15033216.jpeg');
+         $item34->setTeamId('4');
+-        $item34->setItemId(150817);
++        $item34->setItemId(150818);
+         $manager->persist($item34);
+         $item35 = new Items();
+         $item35->setClubWebsite('http://www.bvb.de');
+
+
+138) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:492    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item34->setThumbnail('https://images.pexels.com/photos/15033216/pexels-photo-15033216.jpeg');
+         $item34->setTeamId('4');
+         $item34->setItemId(150817);
+-        $manager->persist($item34);
++        
+         $item35 = new Items();
+         $item35->setClubWebsite('http://www.bvb.de');
+         $item35->setClubName('Borussia Dortmund');
+
+
+139) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:506    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item35->setPosition('Offence');
+         $item35->setThumbnail('https://images.pexels.com/photos/8217358/pexels-photo-8217358.jpeg');
+         $item35->setTeamId('4');
+-        $item35->setItemId(192607);
++        $item35->setItemId(192606);
+         $manager->persist($item35);
+         $item36 = new Items();
+         $item36->setClubWebsite('http://www.bvb.de');
+
+
+140) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:506    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item35->setPosition('Offence');
+         $item35->setThumbnail('https://images.pexels.com/photos/8217358/pexels-photo-8217358.jpeg');
+         $item35->setTeamId('4');
+-        $item35->setItemId(192607);
++        $item35->setItemId(192608);
+         $manager->persist($item35);
+         $item36 = new Items();
+         $item36->setClubWebsite('http://www.bvb.de');
+
+
+141) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:507    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item35->setThumbnail('https://images.pexels.com/photos/8217358/pexels-photo-8217358.jpeg');
+         $item35->setTeamId('4');
+         $item35->setItemId(192607);
+-        $manager->persist($item35);
++        
+         $item36 = new Items();
+         $item36->setClubWebsite('http://www.bvb.de');
+         $item36->setClubName('Borussia Dortmund');
+
+
+142) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:521    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item36->setPosition('Offence');
+         $item36->setThumbnail('https://images.pexels.com/photos/5247133/pexels-photo-5247133.jpeg');
+         $item36->setTeamId('4');
+-        $item36->setItemId(244696);
++        $item36->setItemId(244695);
+         $manager->persist($item36);
+         $item37 = new Items();
+         $item37->setClubWebsite('http://www.bvb.de');
+
+
+143) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:521    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item36->setPosition('Offence');
+         $item36->setThumbnail('https://images.pexels.com/photos/5247133/pexels-photo-5247133.jpeg');
+         $item36->setTeamId('4');
+-        $item36->setItemId(244696);
++        $item36->setItemId(244697);
+         $manager->persist($item36);
+         $item37 = new Items();
+         $item37->setClubWebsite('http://www.bvb.de');
+
+
+144) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:522    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item36->setThumbnail('https://images.pexels.com/photos/5247133/pexels-photo-5247133.jpeg');
+         $item36->setTeamId('4');
+         $item36->setItemId(244696);
+-        $manager->persist($item36);
++        
+         $item37 = new Items();
+         $item37->setClubWebsite('http://www.bvb.de');
+         $item37->setClubName('Borussia Dortmund');
+
+
+145) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:536    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item37->setPosition('Forward');
+         $item37->setThumbnail('https://images.pexels.com/photos/8111295/pexels-photo-8111295.jpeg');
+         $item37->setTeamId('4');
+-        $item37->setItemId(182280);
++        $item37->setItemId(182279);
+         $manager->persist($item37);
+         $manager->flush();
+     }
+ }
+
+
+146) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:536    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $item37->setPosition('Forward');
+         $item37->setThumbnail('https://images.pexels.com/photos/8111295/pexels-photo-8111295.jpeg');
+         $item37->setTeamId('4');
+-        $item37->setItemId(182280);
++        $item37->setItemId(182281);
+         $manager->persist($item37);
+         $manager->flush();
+     }
+ }
+
+
+147) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ItemsFixture.php:537    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $item37->setThumbnail('https://images.pexels.com/photos/8111295/pexels-photo-8111295.jpeg');
+         $item37->setTeamId('4');
+         $item37->setItemId(182280);
+-        $manager->persist($item37);
++        
+         $manager->flush();
+     }
+ }
+
+
+148) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/OrdersFixture.php:26    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+         $order1->setDeliveryMethod('Standard');
+         $order1->setPaymentMethod('Credit Card');
+         $order1->setDue(100.5);
+-        $order1->setItems(['item1', 'item2']);
++        $order1->setItems(['item2']);
+         $manager->persist($order1);
+         $order2 = new Orders();
+         $order2->setEmail('Hannah@montana.com');
+
+
+149) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/OrdersFixture.php:26    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $order1->setDeliveryMethod('Standard');
+         $order1->setPaymentMethod('Credit Card');
+         $order1->setDue(100.5);
+-        $order1->setItems(['item1', 'item2']);
++        
+         $manager->persist($order1);
+         $order2 = new Orders();
+         $order2->setEmail('Hannah@montana.com');
+
+
+150) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/OrdersFixture.php:41    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+         $order2->setDeliveryMethod('Express');
+         $order2->setPaymentMethod('PayPal');
+         $order2->setDue(250.75);
+-        $order2->setItems(['item3', 'item4']);
++        $order2->setItems(['item4']);
+         $manager->persist($order2);
+         $manager->flush();
+     }
+ }
+
+
+151) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/OrdersFixture.php:41    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $order2->setDeliveryMethod('Express');
+         $order2->setPaymentMethod('PayPal');
+         $order2->setDue(250.75);
+-        $order2->setItems(['item3', 'item4']);
++        
+         $manager->persist($order2);
+         $manager->flush();
+     }
+ }
+
+
+152) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/OrdersFixture.php:42    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $order2->setPaymentMethod('PayPal');
+         $order2->setDue(250.75);
+         $order2->setItems(['item3', 'item4']);
+-        $manager->persist($order2);
++        
+         $manager->flush();
+     }
+ }
+
+
+153) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:21    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $shoppingCart1 = new ShoppingCart();
+         $shoppingCart1->setUserId(1);
+-        $shoppingCart1->setThumbnail('thumbnail1.com');
++        
+         $shoppingCart1->setName('firstItem');
+         $shoppingCart1->setPrice(99.33);
+         $shoppingCart1->setItemId(334);
+
+
+154) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:22    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $shoppingCart1 = new ShoppingCart();
+         $shoppingCart1->setUserId(1);
+         $shoppingCart1->setThumbnail('thumbnail1.com');
+-        $shoppingCart1->setName('firstItem');
++        
+         $shoppingCart1->setPrice(99.33);
+         $shoppingCart1->setItemId(334);
+         $shoppingCart1->setQuantity(3);
+
+
+155) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:23    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $shoppingCart1->setUserId(1);
+         $shoppingCart1->setThumbnail('thumbnail1.com');
+         $shoppingCart1->setName('firstItem');
+-        $shoppingCart1->setPrice(99.33);
++        
+         $shoppingCart1->setItemId(334);
+         $shoppingCart1->setQuantity(3);
+         $shoppingCart2 = new ShoppingCart();
+
+
+156) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:29    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $shoppingCart1->setQuantity(3);
+         $shoppingCart2 = new ShoppingCart();
+         $shoppingCart2->setUserId(1);
+-        $shoppingCart2->setThumbnail('thumbnail2.com');
++        
+         $shoppingCart2->setName('secondItem');
+         $shoppingCart2->setPrice(33.33);
+         $shoppingCart2->setItemId(176268);
+
+
+157) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:30    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $shoppingCart2 = new ShoppingCart();
+         $shoppingCart2->setUserId(1);
+         $shoppingCart2->setThumbnail('thumbnail2.com');
+-        $shoppingCart2->setName('secondItem');
++        
+         $shoppingCart2->setPrice(33.33);
+         $shoppingCart2->setItemId(176268);
+         $shoppingCart2->setQuantity(5);
+
+
+158) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:31    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $shoppingCart2->setUserId(1);
+         $shoppingCart2->setThumbnail('thumbnail2.com');
+         $shoppingCart2->setName('secondItem');
+-        $shoppingCart2->setPrice(33.33);
++        
+         $shoppingCart2->setItemId(176268);
+         $shoppingCart2->setQuantity(5);
+         $shoppingCart3 = new ShoppingCart();
+
+
+159) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:37    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $shoppingCart2->setQuantity(5);
+         $shoppingCart3 = new ShoppingCart();
+         $shoppingCart3->setUserId(1);
+-        $shoppingCart3->setThumbnail('thumbnail3.com');
++        
+         $shoppingCart3->setName('THIRDiTEM');
+         $shoppingCart3->setPrice(24.99);
+         $shoppingCart3->setItemId(151077);
+
+
+160) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:38    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $shoppingCart3 = new ShoppingCart();
+         $shoppingCart3->setUserId(1);
+         $shoppingCart3->setThumbnail('thumbnail3.com');
+-        $shoppingCart3->setName('THIRDiTEM');
++        
+         $shoppingCart3->setPrice(24.99);
+         $shoppingCart3->setItemId(151077);
+         $shoppingCart3->setQuantity(5);
+
+
+161) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/ShoppingCartFixture.php:39    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $shoppingCart3->setUserId(1);
+         $shoppingCart3->setThumbnail('thumbnail3.com');
+         $shoppingCart3->setName('THIRDiTEM');
+-        $shoppingCart3->setPrice(24.99);
++        
+         $shoppingCart3->setItemId(151077);
+         $shoppingCart3->setQuantity(5);
+         $manager->persist($shoppingCart1);
+
+
+162) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/UserFixture.php:17    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $user->setEmail('John@doe.com');
+         $user->setUsername('John Doe');
+         $user->setPassword('Qwertz123');
+-        $user->setRoles([]);
++        
+         $manager->persist($user);
+         $user = new User();
+         $user->setEmail('Hannah@montana.com');
+
+
+163) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/UserFixture.php:22    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $manager->persist($user);
+         $user = new User();
+         $user->setEmail('Hannah@montana.com');
+-        $user->setUsername('Hannah Montana');
++        
+         $user->setPassword(password_hash('Qwertz123**', PASSWORD_DEFAULT));
+         $user->setRoles([]);
+         $manager->persist($user);
+
+
+164) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/DataFixtures/UserFixture.php:24    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $user->setEmail('Hannah@montana.com');
+         $user->setUsername('Hannah Montana');
+         $user->setPassword(password_hash('Qwertz123**', PASSWORD_DEFAULT));
+-        $user->setRoles([]);
++        
+         $manager->persist($user);
+         $manager->flush();
+     }
+ }
+
+
+165) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/DTO/UserDTO.php:8    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+ 
+ class UserDTO
+ {
+-    public function __construct(public readonly int $id = 0, public readonly string $email = '', public readonly string $username = '', public readonly string $password = '')
++    public function __construct(public readonly int $id = -1, public readonly string $email = '', public readonly string $username = '', public readonly string $password = '')
+     {
+     }
+ }
+
+
+166) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/DTO/UserDTO.php:8    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+ 
+ class UserDTO
+ {
+-    public function __construct(public readonly int $id = 0, public readonly string $email = '', public readonly string $username = '', public readonly string $password = '')
++    public function __construct(public readonly int $id = 1, public readonly string $email = '', public readonly string $username = '', public readonly string $password = '')
+     {
+     }
+ }
+
+
+167) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Mapping/Mapper.php:12    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+ use App\Global\Persistence\DTO\UserDTO;
+ class Mapper
+ {
+-    public function mapRandomImage(array $imageArray) : string
++    protected function mapRandomImage(array $imageArray) : string
+     {
+         $entry = array_rand($imageArray['photos']);
+         return $imageArray['photos'][$entry]['src']['original'];
+
+
+168) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Mapping/Mapper.php:26    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     public function mapItems(array $images, array $footballArray) : array
+     {
+         $itemDTOArray = [];
+-        $prices = [29.95, 22.95, 39.95, 25.95, 20.95, 32.95, 35.95, 19.99, 27.95, 21.99];
++        $prices = [22.95, 39.95, 25.95, 20.95, 32.95, 35.95, 19.99, 27.95, 21.99];
+         // Array of prices
+         foreach ($footballArray['squad'] as $footballItem) {
+             $itemDTO = new ItemDTO();
+
+
+169) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Mapping/Mapper.php:52    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         $user = new User();
+         $user->setEmail($userDTO->email);
+         $user->setPassword($userDTO->password);
+-        $user->setUsername($userDTO->username);
++        
+         return $user;
+     }
+ }
+
+
+170) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Repository/ItemRepository.php:63    [M] UnwrapArrayColumn
+
+--- Original
++++ New
+@@ @@
+      */
+     public function findItemsByArrayOfIds(array $itemsWithQuantities) : array
+     {
+-        $itemIds = array_column($itemsWithQuantities, 'id');
++        $itemIds = $itemsWithQuantities;
+         $query = $this->createQueryBuilder('i')->where('i.item_id IN (:ids)')->setParameter('ids', $itemIds)->getQuery();
+         return $query->getResult();
+     }
+ }
+
+
+171) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Repository/UserRepository.php:34    [M] InstanceOf_
+
+--- Original
++++ New
+@@ @@
+      */
+     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword) : void
+     {
+-        if (!$user instanceof User) {
++        if (!true) {
+             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+         }
+         $user->setPassword($newHashedPassword);
+
+
+172) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Repository/UserRepository.php:38    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         if (!$user instanceof User) {
+             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+         }
+-        $user->setPassword($newHashedPassword);
++        
+         $this->getEntityManager()->persist($user);
+         $this->getEntityManager()->flush();
+     }
+
+
+173) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Repository/UserRepository.php:39    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+         }
+         $user->setPassword($newHashedPassword);
+-        $this->getEntityManager()->persist($user);
++        
+         $this->getEntityManager()->flush();
+     }
+     public function findOneByEmail($email) : ?User
+
+
+174) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Repository/UserRepository.php:40    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         }
+         $user->setPassword($newHashedPassword);
+         $this->getEntityManager()->persist($user);
+-        $this->getEntityManager()->flush();
++        
+     }
+     public function findOneByEmail($email) : ?User
+     {
+
+
+175) /home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Global/Persistence/Repository/UserRepository.php:43    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $this->getEntityManager()->persist($user);
+         $this->getEntityManager()->flush();
+     }
+-    public function findOneByEmail($email) : ?User
++    protected function findOneByEmail($email) : ?User
+     {
+         return $this->createQueryBuilder('u')->andWhere('u.email = :email')->setParameter('email', $email)->getQuery()->getOneOrNullResult();
+     }
+ }
 
 
 Timed Out mutants:
