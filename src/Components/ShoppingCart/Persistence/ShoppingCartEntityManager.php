@@ -12,18 +12,19 @@ use Doctrine\ORM\EntityManagerInterface;
 class ShoppingCartEntityManager
 {
     public function __construct(
-        public UserRepository               $userRepository,
-        public EntityManagerInterface       $entityManager,
-        public ShoppingCartRepository       $shoppingCartRepository,
+        public UserRepository                $userRepository,
+        public EntityManagerInterface        $entityManager,
+        public ShoppingCartRepository        $shoppingCartRepository,
         private readonly ShoppingCartMapping $shoppingCartMapping
     )
-    {}
+    {
+    }
 
     public function save(ShoppingCartSaveDTO $shoppingCartSaveDTO): void
     {
         $shoppingCartEntity = $this->shoppingCartRepository->find($shoppingCartSaveDTO->id);
 
-        if($shoppingCartEntity === null) {
+        if ($shoppingCartEntity === null) {
             $shoppingCartEntity = new ShoppingCart();
         }
 
@@ -41,11 +42,12 @@ class ShoppingCartEntityManager
         $this->entityManager->flush();
     }
 
-    private function insert(ShoppingCart $cart) : void
+    private function insert(ShoppingCart $cart): void
     {
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
     }
+
     public function removeItemByItemId(int $itemId): void
     {
         $this->shoppingCartRepository->createQueryBuilder('sc')

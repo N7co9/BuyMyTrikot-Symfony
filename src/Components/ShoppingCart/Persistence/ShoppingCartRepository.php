@@ -49,14 +49,12 @@ class ShoppingCartRepository extends ServiceEntityRepository
         $shoppingCartSaveDtoList = [];
         $shoppingCart = $this->findBy(['user_id' => $userId]);
 
-        foreach ($shoppingCart as $item)
-        {
-            if ($item instanceof ShoppingCart)
-            {
+        foreach ($shoppingCart as $item) {
+            if ($item instanceof ShoppingCart) {
                 $shoppingCartSaveDtoList [] = $this->shoppingCartMapper->mapEntityToDto($item);
             }
         }
-        return  $shoppingCartSaveDtoList;
+        return $shoppingCartSaveDtoList;
     }
 
     /**

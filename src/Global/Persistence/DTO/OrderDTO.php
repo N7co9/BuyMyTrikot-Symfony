@@ -16,5 +16,7 @@ class OrderDTO
     public string $deliveryMethod = '';
     public string $paymentMethod = '';
     public float $due = 0.0;
+    public string $shipping = '';
+
     public array $items = [];
 }

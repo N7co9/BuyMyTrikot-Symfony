@@ -2,7 +2,6 @@
 
 namespace App\Components\Registration\Business;
 
-use App\Global\Persistence\DTO\UserDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 interface RegistrationBusinessFacadeInterface

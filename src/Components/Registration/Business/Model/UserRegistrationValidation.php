@@ -17,21 +17,21 @@ class UserRegistrationValidation
         return $errorDTOList;
     }
 
-    private function validateName($clientDTO, &$errorDTOList) : void
+    private function validateName($clientDTO, &$errorDTOList): void
     {
         if (empty($clientDTO->username) || !preg_match("/^[a-zA-Z-' ]*$/", $clientDTO->username)) {
             $errorDTOList[] = new ResponseDTO('Oops, your name doesn\'t look right', 'Exception');
         }
     }
 
-    private function validateEmail($clientDTO, &$errorDTOList) : void
+    private function validateEmail($clientDTO, &$errorDTOList): void
     {
         if (empty($clientDTO->email) || !filter_var($clientDTO->email, FILTER_VALIDATE_EMAIL)) {
             $errorDTOList[] = new ResponseDTO('Oops, your email doesn\'t look right', 'Exception');
         }
     }
 
-    private function validatePassword($clientDTO, &$errorDTOList) : void
+    private function validatePassword($clientDTO, &$errorDTOList): void
     {
         if (
             empty($clientDTO->password) ||

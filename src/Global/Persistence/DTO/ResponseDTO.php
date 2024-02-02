@@ -15,6 +15,7 @@ class ResponseDTO
     {
         return $this->message;
     }
+
     public function getType(): string
     {
         return $this->type;

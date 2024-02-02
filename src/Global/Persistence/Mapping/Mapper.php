@@ -9,7 +9,7 @@ use App\Global\Persistence\DTO\UserDTO;
 class Mapper
 {
 
-    public function mapRandomImage(array $imageArray) : string
+    public function mapRandomImage(array $imageArray): string
     {
         $entry = array_rand($imageArray['photos']);
         return $imageArray['photos'][$entry]['src']['original'];
@@ -20,7 +20,7 @@ class Mapper
      * @param array $footballArray
      * @return ItemDTO[]
      */
-    public function mapItems(array $images, array $footballArray) : array
+    public function mapItems(array $images, array $footballArray): array
     {
         $itemDTOArray = [];
         $prices = [29.95, 22.95, 39.95, 25.95, 20.95, 32.95, 35.95, 19.99, 27.95, 21.99]; // Array of prices
@@ -44,7 +44,8 @@ class Mapper
 
         return $itemDTOArray;
     }
-    public function getUserEntity(UserDTO $userDTO) : User
+
+    public function getUserEntity(UserDTO $userDTO): User
     {
         $user = new User();
         $user->setEmail($userDTO->email);

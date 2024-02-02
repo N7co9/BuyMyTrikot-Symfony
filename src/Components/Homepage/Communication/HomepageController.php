@@ -2,8 +2,8 @@
 
 namespace App\Components\Homepage\Communication;
 
-use App\Components\Homepage\Business\HomepageBusinessFacade;
 use App\Components\Homepage\Business\HomepageBusinessFacadeInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +31,7 @@ class HomepageController extends AbstractController
         $user = $this->getUser();
         try {
             $items = $this->facade->itemTransfer($slug);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->render('exceptions/404.html.twig');
         }
         return $this->render('homepage/index.html.twig', [

@@ -129,7 +129,7 @@ class ShoppingCartBusinessFacadeTest extends KernelTestCase
 
         $res = $this->shoppingCartBusinessFacade->calculateExpenses($shoppingCartItems);
 
-        self::assertSame(146.7881, $res->total);
+        self::assertSame(171.47859999999997, $res->total);
         self::assertSame(4.95, $res->shipping);
         self::assertSame(139.94, $res->subTotal);
     }

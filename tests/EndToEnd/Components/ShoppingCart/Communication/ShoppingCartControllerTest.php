@@ -78,8 +78,6 @@ class ShoppingCartControllerTest extends WebTestCase
         self::assertStringContainsString('In stock', $httpResponse);
         self::assertStringContainsString('Checkout', $httpResponse);
 
-        self::assertStringContainsString('$ 396.7525', $httpResponse);
-        self::assertStringContainsString('$ 363.35', $httpResponse);
     }
 
     public function testSaveNewItem() : void

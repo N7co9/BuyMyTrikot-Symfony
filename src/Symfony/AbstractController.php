@@ -13,7 +13,7 @@ abstract class AbstractController extends SymfonyAbstractController
 
     public function getLoggingUser(): UserDTO
     {
-        if($this->userDto instanceof UserDTO) {
+        if ($this->userDto instanceof UserDTO) {
             return $this->userDto;
         }
 

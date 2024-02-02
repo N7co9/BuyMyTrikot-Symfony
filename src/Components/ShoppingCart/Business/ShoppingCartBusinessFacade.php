@@ -10,7 +10,6 @@ use App\Components\ShoppingCart\Business\Model\ShoppingCartCalculator;
 use App\Components\ShoppingCart\Business\Model\ShoppingCartRead;
 use App\Components\ShoppingCart\Dto\ShoppingCartExpensesDto;
 use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
-use App\Entity\ShoppingCart;
 
 class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
 {

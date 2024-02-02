@@ -11,6 +11,7 @@
         <h1 class="sr-only">Checkout</h1>
         <form class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16" method="POST"
               action={{ path('app_order_flow') }}>
+            <input type="hidden" id="shipping-cost-input" name="shippingCost" value="Standard">
             <div>
                 <div>
                     <h2 class="text-lg font-medium text-gray-900">Contact information</h2>
@@ -301,7 +302,7 @@
                     </dl>
                     <input type="hidden" id="total-cost-input" name="totalCost" value="{{ costs.total }}">
                     <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-                        <button type="submit"
+                            <button type="submit"
                                 class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                             Confirm order
                         </button>
@@ -359,12 +360,17 @@
 
                     function updateShippingCost() {
                         const selectedMethod = document.querySelector('input[name="delivery-method"]:checked').value;
+                        let shippingCost = 0;
                         if (selectedMethod === 'Standard') {
                             shippingCostElement.textContent = '$4.95';
+                            shippingCost = 495;
                         } else if (selectedMethod === 'Express') {
                             shippingCostElement.textContent = '$16.00';
+                            shippingCost = 1600;
                         }
+                        document.getElementById('shipping-cost-input').value = shippingCost; // Update hidden input
                     }
+
 
                     // Initial update on page load
                     updateDeliveryMethodSelection();

@@ -2,18 +2,19 @@
 
 namespace App\Components\Orderflow\Communication;
 
-use App\Components\Orderflow\Business\OrderFlowBusinessFacadeInterface;
+use App\Components\Orderflow\Business\OrderFlowBusinessFacade;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 
 class OrderFlowController extends AbstractController
 {
     public function __construct(
-        private readonly OrderFlowBusinessFacadeInterface    $orderFlowBusinessFacade,
+        private readonly OrderFlowBusinessFacade             $orderFlowBusinessFacade,
         private readonly ShoppingCartBusinessFacadeInterface $shoppingCartBusinessFacade,
         public ?array                                        $total = null,
     )
@@ -27,11 +28,13 @@ class OrderFlowController extends AbstractController
 
         $errors = [];
         if ($request->getMethod() === 'POST') {
-            $orderDto = $this->orderFlowBusinessFacade->mapRequestOrderToDto($request);
-            $errors = $this->orderFlowBusinessFacade->createOrder($orderDto, $loginUserDto);
-
+            $orderDTO = $this->orderFlowBusinessFacade->mapRequestOrderToDto($request);
+            $errors = $this->orderFlowBusinessFacade->validate($orderDTO);
             if (empty($errors)) {
-                return $this->redirectToRoute('app_order_flow_thankyou');
+                $this->orderFlowBusinessFacade->mapOrderDTO2Session($orderDTO, $request);
+                return $this->redirectToRoute('app_order_payment',
+                    ['shippingCost' => $orderDTO->shipping]
+                );
             }
         }
 
@@ -47,9 +50,12 @@ class OrderFlowController extends AbstractController
     }
 
     #[Route('/order/flow/thankyou', name: 'app_order_flow_thankyou')]
-    public function success(): Response
+    public function success(Request $request): Response
     {
+        $orderDTO = $this->orderFlowBusinessFacade->mapSession2OrderDTO($request);
+        $this->orderFlowBusinessFacade->createOrder($orderDTO, $this->getLoggingUser());
         $email = $this->getLoggingUser()->email;
+
         $mostRecentOrder = $this->orderFlowBusinessFacade->getMostRecentOrder($email);
 
         if (!$mostRecentOrder) {

@@ -7,7 +7,7 @@ use App\Components\Registration\Communication\Mapper\Request2UserDTO;
 use App\Components\Registration\Persistence\UserEntityManager;
 use App\Global\Persistence\DTO\ResponseDTO;
 use App\Global\Persistence\DTO\UserDTO;
-use phpDocumentor\Reflection\Types\Void_;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserRegistrationHandling
@@ -30,7 +30,7 @@ class UserRegistrationHandling
         if (empty($errors)) {
             try {
                 $this->userEntityManager->register($userDTO);
-            } catch (\Exception) {
+            } catch (Exception) {
                 $errors [] = new ResponseDTO('Email is not unique!!!', 'ERROR');
             }
         }

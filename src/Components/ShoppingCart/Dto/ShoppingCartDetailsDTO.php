@@ -8,7 +8,7 @@ namespace App\Components\ShoppingCart\Dto;
 class ShoppingCartDetailsDTO
 {
     public function __construct(
-        public readonly float $price,
+        public readonly float  $price,
         public readonly string $thumbnail,
         public readonly string $name,
     )

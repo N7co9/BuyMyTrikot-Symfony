@@ -3,8 +3,9 @@
 namespace App\Components\Orderflow\Business;
 
 use App\Components\Orderflow\Business\Model\OrderLogicHandling;
+use App\Components\Orderflow\Communication\Mapper\OrderDTO2Session;
 use App\Components\Orderflow\Communication\Mapper\Request2OrderDTO;
-use App\Components\Orderflow\Persistence\OrderFlowEntityManager;
+use App\Components\Orderflow\Communication\Mapper\Session2OrderDTO;
 use App\Components\Orderflow\Persistence\OrdersRepository;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\Orders;
@@ -14,6 +15,7 @@ use App\Global\Persistence\DTO\UserDTO;
 use App\Global\Persistence\Repository\ItemRepository;
 use App\Global\Persistence\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
 {
@@ -22,8 +24,10 @@ class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
         private readonly ShoppingCartRepository $cartRepository,
         private readonly OrdersRepository       $ordersRepository,
         private readonly ItemRepository         $itemRepository,
-        private readonly Request2OrderDTO $request2OrderDTO,
-        private readonly OrderLogicHandling $orderLogicHandling,
+        private readonly Request2OrderDTO       $request2OrderDTO,
+        private readonly OrderLogicHandling     $orderLogicHandling,
+        private readonly OrderDTO2Session $orderDTO2Session,
+        private readonly Session2OrderDTO $session2OrderDTO,
 
     )
     {
@@ -57,5 +61,19 @@ class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
     public function mapRequestOrderToDto(Request $request): OrderDTO
     {
         return $this->request2OrderDTO->mapRequestOrderToDto($request);
+    }
+
+    public function validate(OrderDTO $orderDTO): array
+    {
+        return $this->orderLogicHandling->validate($orderDTO);
+    }
+
+    public function mapOrderDTO2Session(OrderDTO $orderDTO, Request $request) : void
+    {
+        $this->orderDTO2Session->mapDtoToSession($orderDTO, $request);
+    }
+    public function mapSession2OrderDTO(Request $request) : OrderDTO
+    {
+        return $this->session2OrderDTO->mapSessionToDto($request);
     }
 }

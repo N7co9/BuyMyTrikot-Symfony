@@ -16,8 +16,8 @@ class ItemsTransferService
     private $mapper;
 
     public function __construct(
-        ItemRepository           $itemRepository, EntityManagerInterface $entityManager,
-        HttpClientInterface      $client, Mapper $mapper,
+        ItemRepository      $itemRepository, EntityManagerInterface $entityManager,
+        HttpClientInterface $client, Mapper $mapper,
     )
     {
         $this->itemRepository = $itemRepository;

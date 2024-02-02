@@ -13,6 +13,9 @@ Registration_controllers:
 ShoppingCart_controllers:
     resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Communication'
     type: annotation
+Payment_Controllers:
+        resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Payment/Communication'
+        type: annotation
 app_logout:
     path: /logout
     methods: GET

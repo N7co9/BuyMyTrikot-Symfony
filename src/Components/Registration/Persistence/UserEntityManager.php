@@ -13,7 +13,8 @@ class UserEntityManager
         private readonly EntityManagerInterface $entityManager,
         private readonly Mapper                 $mapper,
     )
-    {}
+    {
+    }
 
     public function register(UserDTO $userDTO): void
     {
@@ -22,8 +23,9 @@ class UserEntityManager
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
-    private function hashPassword(User $user) : string
+
+    private function hashPassword(User $user): string
     {
-       return password_hash($user->getPassword(), PASSWORD_DEFAULT);
+        return password_hash($user->getPassword(), PASSWORD_DEFAULT);
     }
 }

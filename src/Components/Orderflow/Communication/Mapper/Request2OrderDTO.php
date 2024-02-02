@@ -20,6 +20,7 @@ class Request2OrderDTO
         $orderDto->phoneNumber = $request->get('phone');
         $orderDto->deliveryMethod = $request->get('delivery-method', 'Standard');
         $orderDto->paymentMethod = $request->get('payment-type');
+        $orderDto->shipping = $request->get('shippingCost');
         $orderDto->due = $request->get('totalCost');
 
         return $orderDto;

@@ -9,7 +9,7 @@ use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 class ShoppingCartWrite implements CartWriteInterface
 {
     public function __construct(
-        private readonly ShoppingCartRepository $shoppingCartRepository,
+        private readonly ShoppingCartRepository    $shoppingCartRepository,
         private readonly ShoppingCartEntityManager $shoppingCartEntityManager,
     )
     {
@@ -31,7 +31,7 @@ class ShoppingCartWrite implements CartWriteInterface
         $this->shoppingCartEntityManager->save($shoppingCartDto);
     }
 
-    public function remove(int $itemId) : void
+    public function remove(int $itemId): void
     {
         $this->shoppingCartEntityManager->removeItemByItemId($itemId);
     }

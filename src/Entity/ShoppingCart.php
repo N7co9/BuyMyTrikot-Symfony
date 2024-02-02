@@ -46,6 +46,7 @@ class ShoppingCart
     {
         $this->item_id = $item_id;
     }
+
     public function getId(): ?int
     {
         return $this->id;

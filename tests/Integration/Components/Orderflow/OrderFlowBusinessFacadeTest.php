@@ -306,6 +306,7 @@ class OrderFlowBusinessFacadeTest extends KernelTestCase
         $request->request->set('delivery-method', 'Standard');
         $request->request->set('payment-type', 'eTransfer');
         $request->request->set('totalCost', 100.00);
+        $request->request->set('shippingCost', 4.95);
 
         $res = $this->orderFlowBusinessFacade->mapRequestOrderToDto($request);
 

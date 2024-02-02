@@ -13,6 +13,6 @@ class HomepageBusinessFacade implements HomepageBusinessFacadeInterface
 
     public function itemTransfer(string $slug): ?array
     {
-            return $this->itemsTransferService->itemTransfer($slug);
+        return $this->itemsTransferService->itemTransfer($slug);
     }
 }
