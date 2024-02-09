@@ -4,7 +4,7 @@ namespace App\Tests\Components\Orderflow\Business;
 
 use App\Components\Orderflow\Business\OrderFlowValidation;
 use App\Entity\Orders;
-use App\Global\Persistence\DTO\ResponseDTO;
+use App\Global\DTO\ResponseDTO;
 use PHPUnit\Framework\TestCase;
 
 class OrderFlowValidationTest extends TestCase

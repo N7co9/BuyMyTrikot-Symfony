@@ -4,11 +4,10 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Components\Homepage;
 
 use App\Components\Homepage\Business\HomepageBusinessFacade;
-use App\Global\Persistence\API\ItemsTransferService;
-use App\Global\Persistence\Mapping\Mapper;
-use App\Global\Persistence\Repository\ItemRepository;
+use App\Global\Service\API\ItemsTransferService;
+use App\Global\Service\Items\ItemRepository;
+use App\Global\Service\Mapping\Mapper;
 use Doctrine\ORM\EntityManagerInterface;
-
 use Monolog\Test\TestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 

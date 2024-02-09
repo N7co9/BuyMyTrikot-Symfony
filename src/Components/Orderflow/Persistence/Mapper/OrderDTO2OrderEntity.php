@@ -3,7 +3,7 @@
 namespace App\Components\Orderflow\Persistence\Mapper;
 
 use App\Entity\Orders;
-use App\Global\Persistence\DTO\OrderDTO;
+use App\Global\DTO\OrderDTO;
 
 class OrderDTO2OrderEntity
 {
@@ -20,7 +20,6 @@ class OrderDTO2OrderEntity
         $order->setzip($orderDto->zip);
         $order->setphoneNumber($orderDto->phoneNumber);
         $order->setdeliveryMethod($orderDto->deliveryMethod);
-        $order->setpaymentMethod($orderDto->paymentMethod);
         $order->setdue($orderDto->due);
 
         return $order;

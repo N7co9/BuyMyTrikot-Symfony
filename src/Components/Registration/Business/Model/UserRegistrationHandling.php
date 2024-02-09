@@ -5,9 +5,10 @@ namespace App\Components\Registration\Business\Model;
 
 use App\Components\Registration\Communication\Mapper\Request2UserDTO;
 use App\Components\Registration\Persistence\UserEntityManager;
-use App\Global\Persistence\DTO\ResponseDTO;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Global\DTO\ResponseDTO;
+use App\Global\DTO\UserDTO;
 use Exception;
+use Random\RandomException;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserRegistrationHandling
@@ -21,6 +22,9 @@ class UserRegistrationHandling
     {
     }
 
+    /**
+     * @throws RandomException
+     */
     public function register(Request $request): array
     {
         $userDTO = $this->request2UserDTO->request2DTO($request);

@@ -8,7 +8,6 @@ use App\Global\Service\Stripe\StripeClient;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
 class PaymentController extends AbstractController
@@ -17,7 +16,7 @@ class PaymentController extends AbstractController
     (
         private readonly PaymentHandling $paymentHandling,
         private readonly StripeClient    $stripeClient,
-        public RouterInterface $router,
+        public RouterInterface           $router,
 
     )
     {

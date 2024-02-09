@@ -40,8 +40,6 @@ class Orders
     #[ORM\Column(length: 255)]
     private ?string $deliveryMethod = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $paymentMethod = null;
 
     #[ORM\Column]
     private ?float $due = null;

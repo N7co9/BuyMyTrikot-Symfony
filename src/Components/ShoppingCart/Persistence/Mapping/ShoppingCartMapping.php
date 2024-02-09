@@ -2,7 +2,7 @@
 
 namespace App\Components\ShoppingCart\Persistence\Mapping;
 
-use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 use App\Entity\ShoppingCart as ShoppingCartEntity;
 
 class ShoppingCartMapping

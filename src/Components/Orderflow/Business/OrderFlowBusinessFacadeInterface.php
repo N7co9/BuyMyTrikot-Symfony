@@ -4,8 +4,9 @@ namespace App\Components\Orderflow\Business;
 
 use App\Entity\Orders;
 use App\Entity\User;
-use App\Global\Persistence\DTO\OrderDTO;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Global\DTO\OrderDTO;
+use App\Global\DTO\UserDTO;
+use Symfony\Component\HttpFoundation\Request;
 
 interface OrderFlowBusinessFacadeInterface
 {
@@ -42,6 +43,6 @@ interface OrderFlowBusinessFacadeInterface
     public function findItemsByArrayOfIds(array $array): array;
 
 
-    public function createOrder(OrderDTO $orderDto, UserDTO $userDto): array;
+    public function createOrder(OrderDTO $orderDto, UserDTO $userDto, Request $request): array;
 
 }

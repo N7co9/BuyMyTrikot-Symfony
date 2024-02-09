@@ -3,8 +3,8 @@
 namespace App\Components\Registration\Persistence;
 
 use App\Entity\User;
-use App\Global\Persistence\DTO\UserDTO;
-use App\Global\Persistence\Mapping\Mapper;
+use App\Global\DTO\UserDTO;
+use App\Global\Service\Mapping\Mapper;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserEntityManager

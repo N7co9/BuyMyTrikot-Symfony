@@ -11,7 +11,7 @@ services:
         arguments:
             $apiKey: '%stripe_secret_key%'
     App\Service\API\ItemsTransferService:
-        class: 'App\Global\Persistence\API\ItemsTransferService'
+        class: 'App\Global\Service\API\ItemsTransferService'
         arguments:
             $itemRepository: '@App\Model\Repository\ItemRepository'
             $entityManager: '@doctrine.orm.entity_manager'

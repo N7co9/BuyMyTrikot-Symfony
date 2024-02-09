@@ -3,8 +3,8 @@
 namespace App\Tests\Components\Homepage\Communication;
 
 use App\Components\Registration\Persistence\UserEntityManager;
-use App\Global\Persistence\DTO\UserDTO;
-use App\Global\Persistence\Repository\UserRepository;
+use App\Components\User\Persistence\UserRepository;
+use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\SecurityBundle\Security;

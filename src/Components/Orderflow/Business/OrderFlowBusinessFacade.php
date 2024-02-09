@@ -3,19 +3,17 @@
 namespace App\Components\Orderflow\Business;
 
 use App\Components\Orderflow\Business\Model\OrderLogicHandling;
-use App\Components\Orderflow\Communication\Mapper\OrderDTO2Session;
-use App\Components\Orderflow\Communication\Mapper\Request2OrderDTO;
-use App\Components\Orderflow\Communication\Mapper\Session2OrderDTO;
+use App\Components\Orderflow\Communication\Mapping\Request2OrderDTO;
 use App\Components\Orderflow\Persistence\OrdersRepository;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
+use App\Components\User\Business\Model\SessionManager;
+use App\Components\User\Persistence\UserRepository;
 use App\Entity\Orders;
 use App\Entity\User;
-use App\Global\Persistence\DTO\OrderDTO;
-use App\Global\Persistence\DTO\UserDTO;
-use App\Global\Persistence\Repository\ItemRepository;
-use App\Global\Persistence\Repository\UserRepository;
+use App\Global\DTO\OrderDTO;
+use App\Global\DTO\UserDTO;
+use App\Global\Service\Items\ItemRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
 {
@@ -26,8 +24,7 @@ class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
         private readonly ItemRepository         $itemRepository,
         private readonly Request2OrderDTO       $request2OrderDTO,
         private readonly OrderLogicHandling     $orderLogicHandling,
-        private readonly OrderDTO2Session $orderDTO2Session,
-        private readonly Session2OrderDTO $session2OrderDTO,
+        private readonly SessionManager         $sessionManager,
 
     )
     {
@@ -53,7 +50,7 @@ class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
         return $this->itemRepository->findItemsByArrayOfIds($array);
     }
 
-    public function createOrder(OrderDTO $orderDto, UserDTO $userDto): array
+    public function createOrder(OrderDTO $orderDto, UserDTO $userDto, Request $request): array
     {
         return $this->orderLogicHandling->createOrder($orderDto, $userDto);
     }
@@ -68,12 +65,19 @@ class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
         return $this->orderLogicHandling->validate($orderDTO);
     }
 
-    public function mapOrderDTO2Session(OrderDTO $orderDTO, Request $request) : void
+    public function addOrderToSession(OrderDTO $orderDTO, Request $request): void
     {
-        $this->orderDTO2Session->mapDtoToSession($orderDTO, $request);
+        $this->sessionManager->addOrderToSession($orderDTO, $request);
     }
-    public function mapSession2OrderDTO(Request $request) : OrderDTO
+
+    public function retrieveOrderFromSession(Request $request): OrderDTO
     {
-        return $this->session2OrderDTO->mapSessionToDto($request);
+        return $this->sessionManager->retrieveOrderFromSession($request);
     }
+
+    public function removeOrderFromSession(Request $request) : void
+    {
+        $this->sessionManager->removeOrderFromSession($request);
+    }
+
 }

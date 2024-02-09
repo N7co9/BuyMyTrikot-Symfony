@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Components\ShoppingCart\Business\Model;
 
-use App\Components\ShoppingCart\Dto\ShoppingCartExpensesDto;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartExpensesDto;
 
 class ShoppingCartCalculator
 {

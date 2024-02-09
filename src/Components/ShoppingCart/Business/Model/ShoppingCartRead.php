@@ -2,10 +2,10 @@
 
 namespace App\Components\ShoppingCart\Business\Model;
 
-use App\Components\ShoppingCart\Dto\ShoppingCartItemDto;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartItemDto;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\Items;
-use App\Global\Persistence\Repository\ItemRepository;
+use App\Global\Service\Items\ItemRepository;
 use Doctrine\ORM\NonUniqueResultException;
 
 class ShoppingCartRead

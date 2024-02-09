@@ -8,8 +8,8 @@ namespace App\Components\ShoppingCart\Business;
 use App\Components\ShoppingCart\Business\Model\CartWriteInterface;
 use App\Components\ShoppingCart\Business\Model\ShoppingCartCalculator;
 use App\Components\ShoppingCart\Business\Model\ShoppingCartRead;
-use App\Components\ShoppingCart\Dto\ShoppingCartExpensesDto;
-use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartExpensesDto;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 
 class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
 {

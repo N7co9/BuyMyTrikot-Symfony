@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Tests\EndToEnd\Components\Homepage\Communication;
 
+use App\Components\User\Persistence\UserRepository;
 use App\DataFixtures\ItemsFixture;
 use App\DataFixtures\UserFixture;
-use App\Global\Persistence\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

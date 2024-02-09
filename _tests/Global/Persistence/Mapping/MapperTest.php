@@ -2,9 +2,9 @@
 
 namespace App\Tests\Global\Persistence\Mapping;
 use App\Entity\User;
-use App\Global\Persistence\DTO\ItemDTO;
-use App\Global\Persistence\DTO\UserDTO;
-use App\Global\Persistence\Mapping\Mapper;
+use App\Global\DTO\ItemDTO;
+use App\Global\DTO\UserDTO;
+use App\Global\Service\Mapping\Mapper;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 

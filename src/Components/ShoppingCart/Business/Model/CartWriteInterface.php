@@ -2,7 +2,7 @@
 
 namespace App\Components\ShoppingCart\Business\Model;
 
-use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 
 interface CartWriteInterface
 {

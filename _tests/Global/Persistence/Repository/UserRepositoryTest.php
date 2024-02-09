@@ -3,11 +3,11 @@
 namespace App\Tests\Global\Persistence\Repository;
 
 use App\Components\Registration\Persistence\UserEntityManager;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Components\User\Persistence\UserRepository;
+use App\Entity\User;
+use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use App\Global\Persistence\Repository\UserRepository;
-use App\Entity\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 

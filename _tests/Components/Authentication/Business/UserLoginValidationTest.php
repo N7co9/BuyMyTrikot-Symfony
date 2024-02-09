@@ -3,9 +3,9 @@
 namespace App\Tests\Components\Authentication\Business;
 
 use App\Components\Authentication\Business\Model\UserLoginValidation;
+use App\Components\User\Persistence\UserRepository;
 use App\Entity\User;
-use App\Global\Persistence\DTO\ResponseDTO;
-use App\Global\Persistence\Repository\UserRepository;
+use App\Global\DTO\ResponseDTO;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Global\Persistence\Repository\UserRepository;
+use App\Components\User\Persistence\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -25,6 +25,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private array $roles = [];
+
+    #[ORM\Column]
+    private ?string $verificationToken = null;
+
+    #[ORM\Column]
+    private ?bool $isVerified = false;
+
 
     /**
      * @var string The hashed password
@@ -49,9 +56,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getVerificationToken(): ?string
+    {
+        return $this->verificationToken;
+    }
+
+    public function setVerificationToken(?string $verificationToken): void
+    {
+        $this->verificationToken = $verificationToken;
+    }
+
     public function getUsername(): ?string
     {
         return $this->username;
+    }
+
+    public function getIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(?bool $isVerified): void
+    {
+        $this->isVerified = $isVerified;
     }
 
     public function setUsername(string $username): static

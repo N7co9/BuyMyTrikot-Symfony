@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Components\ShoppingCart\Business;
 
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacade;
-use App\Components\ShoppingCart\Dto\ShoppingCartItemDto;
-use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartItemDto;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\DataFixtures\ItemsFixture;
 use App\DataFixtures\ShoppingCartFixture;

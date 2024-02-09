@@ -2,8 +2,8 @@
 
 namespace App\Components\Registration\Business\Model;
 
-use App\Global\Persistence\DTO\ResponseDTO;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Global\DTO\ResponseDTO;
+use App\Global\DTO\UserDTO;
 
 class UserRegistrationValidation
 {

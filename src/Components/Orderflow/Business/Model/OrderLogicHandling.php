@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace App\Components\Orderflow\Business\Model;
 
-use App\Components\Orderflow\Communication\Form\OrderFlowValidation;
+use App\Components\Orderflow\Communication\Form\OrderBillingValidation;
 use App\Components\Orderflow\Persistence\OrderFlowEntityManager;
-use App\Global\Persistence\DTO\OrderDTO;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Global\DTO\OrderDTO;
+use App\Global\DTO\UserDTO;
 
 class OrderLogicHandling
 {
     public function __construct
     (
         private readonly OrderFlowEntityManager $orderFlowEntityManager,
-        private readonly OrderFlowValidation    $orderFlowValidation,
+        private readonly OrderBillingValidation $orderFlowValidation,
     )
     {
     }

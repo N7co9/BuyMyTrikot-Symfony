@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Components\Homepage;
 
 use App\Components\Homepage\Business\HomepageBusinessFacade;
-use App\Global\Persistence\API\ItemsTransferService;
+use App\Global\Service\API\ItemsTransferService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

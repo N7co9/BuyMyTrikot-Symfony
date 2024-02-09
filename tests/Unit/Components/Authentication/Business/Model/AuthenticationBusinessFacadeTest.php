@@ -5,8 +5,8 @@ namespace App\Tests\Unit\Components\Authentication\Business\Model;
 
 use App\Components\Authentication\Business\AuthenticationBusinessFacade;
 use App\Components\Authentication\Business\Model\UserLoginValidation;
+use App\Components\User\Persistence\UserRepository;
 use App\Entity\User;
-use App\Global\Persistence\Repository\UserRepository;
 use Monolog\Test\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 

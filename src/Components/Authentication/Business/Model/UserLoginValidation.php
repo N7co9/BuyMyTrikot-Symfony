@@ -2,8 +2,8 @@
 
 namespace App\Components\Authentication\Business\Model;
 
-use App\Global\Persistence\DTO\ResponseDTO;
-use App\Global\Persistence\Repository\UserRepository;
+use App\Components\User\Persistence\UserRepository;
+use App\Global\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class UserLoginValidation

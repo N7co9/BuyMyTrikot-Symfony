@@ -5,9 +5,9 @@ namespace App\Tests\Components\ShoppingCart\Persistence;
 use App\Components\Registration\Persistence\UserEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
+use App\Components\User\Persistence\UserRepository;
 use App\Entity\ShoppingCart;
-use App\Global\Persistence\DTO\UserDTO;
-use App\Global\Persistence\Repository\UserRepository;
+use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

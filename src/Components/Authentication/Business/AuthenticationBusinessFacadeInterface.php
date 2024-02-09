@@ -2,7 +2,7 @@
 
 namespace App\Components\Authentication\Business;
 
-use App\Global\Persistence\DTO\ResponseDTO;
+use App\Global\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 interface AuthenticationBusinessFacadeInterface

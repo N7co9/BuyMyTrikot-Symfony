@@ -3,8 +3,8 @@
 namespace App\Symfony;
 
 use App\Entity\User as UserEntity;
-use App\Global\Persistence\DTO\UserDTO;
-use App\Global\Persistence\Mapping\UserMapper;
+use App\Global\DTO\UserDTO;
+use App\Global\Service\Mapping\UserMapper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 
 abstract class AbstractController extends SymfonyAbstractController

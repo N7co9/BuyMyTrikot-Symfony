@@ -3,7 +3,7 @@
 namespace App\Tests\Components\Registration\Business;
 
 use App\Components\Registration\Business\Model\UserRegistrationValidation;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Global\DTO\UserDTO;
 use PHPUnit\Framework\TestCase;
 
 class UserRegistrationValidationTest extends TestCase

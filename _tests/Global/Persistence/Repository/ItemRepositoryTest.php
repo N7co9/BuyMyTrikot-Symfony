@@ -4,7 +4,6 @@ namespace App\Tests\Global\Persistence\Repository;
 
 use App\Entity\Items;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use App\Global\Persistence\Repository\ItemRepository;
 
 class ItemRepositoryTest extends KernelTestCase
 {

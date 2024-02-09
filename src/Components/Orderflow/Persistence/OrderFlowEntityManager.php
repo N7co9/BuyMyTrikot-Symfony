@@ -5,8 +5,8 @@ namespace App\Components\Orderflow\Persistence;
 use App\Components\Orderflow\Persistence\Mapper\OrderDTO2OrderEntity;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
-use App\Global\Persistence\DTO\OrderDTO;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Global\DTO\OrderDTO;
+use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 
 class OrderFlowEntityManager

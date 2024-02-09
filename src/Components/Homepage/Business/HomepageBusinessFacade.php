@@ -2,7 +2,7 @@
 
 namespace App\Components\Homepage\Business;
 
-use App\Global\Persistence\API\ItemsTransferService;
+use App\Global\Service\API\ItemsTransferService;
 
 class HomepageBusinessFacade implements HomepageBusinessFacadeInterface
 {

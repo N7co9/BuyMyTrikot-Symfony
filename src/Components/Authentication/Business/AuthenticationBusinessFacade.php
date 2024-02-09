@@ -3,7 +3,7 @@
 namespace App\Components\Authentication\Business;
 
 use App\Components\Authentication\Business\Model\UserLoginValidation;
-use App\Global\Persistence\DTO\ResponseDTO;
+use App\Global\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AuthenticationBusinessFacade implements AuthenticationBusinessFacadeInterface

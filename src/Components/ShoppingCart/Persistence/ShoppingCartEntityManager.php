@@ -2,10 +2,10 @@
 
 namespace App\Components\ShoppingCart\Persistence;
 
-use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 use App\Components\ShoppingCart\Persistence\Mapping\ShoppingCartMapping;
+use App\Components\User\Persistence\UserRepository;
 use App\Entity\ShoppingCart;
-use App\Global\Persistence\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 

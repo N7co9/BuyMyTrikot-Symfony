@@ -2,7 +2,7 @@
 
 namespace App\Components\ShoppingCart\Persistence;
 
-use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 use App\Components\ShoppingCart\Persistence\Mapping\ShoppingCartMapping as ShoppingCartMapper;
 use App\Entity\ShoppingCart;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

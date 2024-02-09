@@ -1,0 +1,3 @@
+framework:
+    mailer:
+        dsn: 'smtp://nico.gruenewald%40cec.valantic.com:B6A41745468FA48F8DA182A92A957C722C8E@smtp.elasticemail.com:2525'

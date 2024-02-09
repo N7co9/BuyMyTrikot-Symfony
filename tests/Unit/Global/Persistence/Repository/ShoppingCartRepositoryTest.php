@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Global\Persistence\Repository;
 
-use App\Components\ShoppingCart\Dto\ShoppingCartSaveDTO;
+use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use Doctrine\ORM\EntityManagerInterface;

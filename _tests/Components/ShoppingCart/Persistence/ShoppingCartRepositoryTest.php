@@ -4,7 +4,7 @@ namespace App\Tests\Components\ShoppingCart\Persistence;
 
 use App\Components\Registration\Persistence\UserEntityManager;
 use App\Entity\ShoppingCart;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

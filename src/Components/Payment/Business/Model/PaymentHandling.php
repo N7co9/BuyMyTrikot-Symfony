@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Components\Payment\Business\Model;
 
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
-use App\Global\Persistence\DTO\UserDTO;
+use App\Global\DTO\UserDTO;
 use App\Global\Service\Stripe\StripeClient;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class PaymentHandling
@@ -39,7 +39,8 @@ class PaymentHandling
             ];
         }
 
-        $successUrl = $router->generate('app_order_flow_thankyou', [], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
+        $successUrl = $router->generate('app_order_flow_success', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $abortUrl = $router->generate('app_order_flow_abort', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $line_items[] = [
             'price_data' => [
@@ -57,7 +58,7 @@ class PaymentHandling
             'line_items' => $line_items,
             'mode' => 'payment',
             'success_url' => $successUrl,
-            'cancel_url' => 'https://www.example.com/cancel',
+            'cancel_url' => $abortUrl,
             'automatic_tax' => ['enabled' => true],
             'customer_email' => $userDTO->email,
         ];
