@@ -106,33 +106,58 @@
                     <input type="email" name="email" value="" required="required" placeholder="New Email">
                     <button type="submit">Update Email</button>
                 </form>
+                {% if sent is defined and sent%}
+                    <div>
+                        <p style="color: #2ca02c">Verification Email has been successfully sent! Check your Mailbox.</p>
+                    </div>
+                {% endif %}
+                {% if emailResponse is defined and emailResponse %}
+                    <div>
+                        <p style="color: #2ca02c">Yay! Your new Email was successfully verified. Thank you!</p>
+                    </div>
+                {% endif %}
             </div>
-            {% if sent is defined and sent%}
-                <div>
-                    <p style="color: #2ca02c">Verification Email has been successfully sent! Check your Mailbox.</p>
-                </div>
-            {% endif %}
             <div class="form-group">
-                <form method="post" action="">
+                <form method="post" action="{{ path('app_update_password') }}">
                     <h2 class="text-xl mb-2">Change Password</h2>
                     <input type="password" name="current_password" required="required" placeholder="Current Password">
                     <input type="password" name="new_password" required="required" placeholder="New Password">
                     <button type="submit">Change Password</button>
                 </form>
+                {% if passwordResponse is defined and passwordResponse.type == "OK" %}
+                    <div>
+                        <p style="color: #2ca02c">{{ passwordResponse.message }}</p>
+                    </div>
+                {% endif %}
+                {% if passwordResponse is defined and passwordResponse.type == "Exception" %}
+                    <div>
+                        <p style="color: red">{{ passwordResponse.message }}</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
         <div class="form-section">
             {# Update Username and Billing Address Forms #}
             <div class="form-group">
-                <form method="post" action="">
+                <form method="post" action="{{ path('app_update_username') }}">
                     <h2 class="text-xl mb-2">Change Username</h2>
-                    <input type="text" name="username" value="{{ user.username }}" required="required" placeholder="New Username">
+                    <input type="text" name="username" required="required" placeholder="New Username">
                     <button type="submit">Update Username</button>
                 </form>
+                {% if usernameResponse is defined and usernameResponse.type == "OK" %}
+                    <div>
+                        <p style="color: #2ca02c">{{ usernameResponse.message }}</p>
+                    </div>
+                {% endif %}
+                {% if usernameResponse is defined and usernameResponse.type == "Exception" %}
+                    <div>
+                        <p style="color: red">{{ usernameResponse.message }}</p>
+                    </div>
+                {% endif %}
             </div>
             <div class="form-group">
-                <form method="post" action="">
+                <form method="post" action="{{ path('app_update_billing') }}">
                     <h2 class="text-xl mb-2">Change Billing Address</h2>
                     <div class="grid">
                         <div>
@@ -180,6 +205,16 @@
                     </div>
                     <button type="submit">Update Address</button>
                 </form>
+                {% if response is defined and response %}
+                <div>
+                    <p style="color: red">That didn't work. Please try again.</p>
+                </div>
+                {% endif %}
+                {% if response is defined and response is empty%}
+                    <div>
+                        <p style="color: green">Your Billing Address was updated successfully!</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
 

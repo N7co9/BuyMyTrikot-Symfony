@@ -13,7 +13,8 @@ class UserMapper
             id: $user->getId(),
             email: $user->getEmail(),
             username: $user->getUsername(),
-            verificationToken:  $user->getVerificationToken()
+            password: $user->getPassword(),
+            verificationToken: $user->getVerificationToken()
         );
     }
 }

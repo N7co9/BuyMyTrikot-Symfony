@@ -9,7 +9,7 @@ use Symfony\Component\Mailer\MailerInterface;
 
 class MailService
 {
-    public function sendVerificationEmail(MailerInterface $mailer, UserDTO $user, string $verificationUrl) : void
+    public function sendVerificationEmail(MailerInterface $mailer, UserDTO $user, string $verificationUrl): void
     {
         $email = (new TemplatedEmail())
             ->from('nico.gruenewald@cec.valantic.com')

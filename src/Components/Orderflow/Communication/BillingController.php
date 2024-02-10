@@ -4,6 +4,7 @@ namespace App\Components\Orderflow\Communication;
 
 use App\Components\Orderflow\Business\OrderFlowBusinessFacade;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
+use App\Components\UserSettings\Business\UserSettingsBusinessFacade;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ class BillingController extends AbstractController
     public function __construct(
         private readonly OrderFlowBusinessFacade             $orderFlowBusinessFacade,
         private readonly ShoppingCartBusinessFacadeInterface $shoppingCartBusinessFacade,
+        private readonly UserSettingsBusinessFacade $userSettingsBusinessFacade,
         public ?array                                        $total = null,
     )
     {
@@ -24,6 +26,7 @@ class BillingController extends AbstractController
     public function index(Request $request): Response
     {
         $loginUserDto = $this->getLoggingUser();
+        $storedBillingInformation = $this->userSettingsBusinessFacade->retrieveBillingAddress($loginUserDto);
         $errors = [];
         if ($request->getMethod() === 'POST') {
             $orderDTO = $this->orderFlowBusinessFacade->mapRequestOrderToDto($request);
@@ -43,7 +46,8 @@ class BillingController extends AbstractController
             'email' => $loginUserDto->email,
             'items' => $cartDTOList,
             'costs' => $total,
-            'response' => $errors
+            'response' => $errors,
+            'storedBillingInformation' => $storedBillingInformation
         ]);
     }
 }

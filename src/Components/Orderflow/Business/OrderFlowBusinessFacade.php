@@ -75,7 +75,7 @@ class OrderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
         return $this->sessionManager->retrieveOrderFromSession($request);
     }
 
-    public function removeOrderFromSession(Request $request) : void
+    public function removeOrderFromSession(Request $request): void
     {
         $this->sessionManager->removeOrderFromSession($request);
     }

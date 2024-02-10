@@ -48,4 +48,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * Find a user by verification token.
+     *
+     * @param string $verificationToken
+     * @return User|null
+     */
+    public function findOneByVerificationToken(string $verificationToken): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.verificationToken = :token')
+            ->setParameter('token', $verificationToken)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

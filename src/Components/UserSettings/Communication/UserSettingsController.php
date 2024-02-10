@@ -10,8 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserSettingsController extends AbstractController
 {
     #[Route('/settings/', name: 'app_user_settings')]
-
-    public function indexSettings() : Response
+    public function indexSettings(): Response
     {
         $user = $this->getLoggingUser();
         return $this->render('user_settings/index.html.twig', ['user' => $user]);

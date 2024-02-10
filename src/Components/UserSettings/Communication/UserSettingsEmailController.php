@@ -19,16 +19,20 @@ class UserSettingsEmailController extends AbstractController
     }
 
     #[Route('/settings/update-email', name: 'app_email_verification')]
-    public function sendVerificationEmail(Request $request) : Response
+    public function sendVerificationEmail(Request $request): Response
     {
         $userDTO = $this->getLoggingUser();
         $userDTO->email = $request->get('email');
+        $this->userSettingsBusinessFacade->addUnverifiedEmailToSession($request);
         $this->userSettingsBusinessFacade->sendVerificationEmail($userDTO);
         return $this->render('user_settings/index.html.twig', ['sent' => true, 'user' => $userDTO]);
     }
-    #[Route('/settings/update-email/{verificationToken}', name: 'app_email_processing', defaults: ['verificationToken' => ''])]
-    public function handleVerificationEmail(string $verificationToken) : Response
-    {
 
+    #[Route('/settings/update-email/{verificationToken}', name: 'app_email_processing', defaults: ['verificationToken' => ''])]
+    public function handleVerificationEmail(string $verificationToken, Request $request): Response
+    {
+        $userDTO = $this->getLoggingUser();
+        $response = $this->userSettingsBusinessFacade->verifyToken($verificationToken, $request);
+        return $this->render('user_settings/index.html.twig', ['user' => $userDTO, 'emailResponse' => $response]);
     }
 }
