@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Components\UserSettings\Business\Model;
 
 use App\Components\Orderflow\Communication\Form\OrderBillingValidation;
+use App\Components\UserSettings\Communication\Form\BillingAddressValidation;
 use App\Components\UserSettings\Communication\Mapping\BillingDTO2BillingEntity;
 use App\Components\UserSettings\Communication\Mapping\BillingEntity2BillingDTO;
 use App\Components\UserSettings\Communication\Mapping\Request2BillingDTO;
@@ -19,7 +20,7 @@ class BillingAddressModificationHandling
     public function __construct
     (
         private readonly EntityManagerInterface   $entityManager,
-        private readonly OrderBillingValidation   $billingValidation,
+        private readonly BillingAddressValidation $billingAddressValidation,
         private readonly Request2BillingDTO       $request2BillingDTO,
         private readonly BillingDTO2BillingEntity $billingDTO2BillingEntity,
         private readonly BillingAddressRepository $billingAddressRepository,
@@ -31,7 +32,7 @@ class BillingAddressModificationHandling
     private function validateNewBillingAddress(Request $request): array
     {
         $BillingDTO = $this->getBillingDTOFromRequest($request);
-        return $this->billingValidation->validate($BillingDTO);
+        return $this->billingAddressValidation->validate($BillingDTO);
     }
 
     public function setNewBillingAddress(Request $request, UserDTO $userDTO): array

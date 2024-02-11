@@ -20,7 +20,6 @@ class HomepageController extends AbstractController
     #[Route('/home/', name: 'app_homepage')]
     public function index(): Response
     {
-        dd('YOU NEED TO UNFUCK THE BILLINGVALIDATION. YOU NEED SEPERATE VALIDATION METHODS SINCE YOU FUCKED THE NAMING UP BETWEEN ORDER AND BILLINGDTO.');
         return $this->render('base.html.twig', [
             'user' => $this->getUser()
         ]);

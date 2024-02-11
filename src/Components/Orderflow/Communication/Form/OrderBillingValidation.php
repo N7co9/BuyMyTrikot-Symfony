@@ -2,11 +2,12 @@
 
 namespace App\Components\Orderflow\Communication\Form;
 
+use App\Global\DTO\OrderDTO;
 use App\Global\DTO\ResponseDTO;
 
 class OrderBillingValidation
 {
-    public function validate($order): array
+    public function validate(OrderDTO $order): array
     {
         $errorCheck = [
             'firstName' => $this->validateFirstName($order->firstName),

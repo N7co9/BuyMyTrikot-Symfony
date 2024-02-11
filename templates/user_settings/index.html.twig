@@ -103,6 +103,7 @@
             <div class="form-group">
                 <form method="post" action="{{ path('app_email_verification') }}">
                     <h2 class="text-xl mb-2">Change Email</h2>
+                    <p style="color: dimgray">Current Email: {{ user.email }}</p>
                     <input type="email" name="email" value="" required="required" placeholder="New Email">
                     <button type="submit">Update Email</button>
                 </form>
@@ -142,6 +143,7 @@
             <div class="form-group">
                 <form method="post" action="{{ path('app_update_username') }}">
                     <h2 class="text-xl mb-2">Change Username</h2>
+                    <p style="color: dimgray">Current Username: {{ user.username }}</p>
                     <input type="text" name="username" required="required" placeholder="New Username">
                     <button type="submit">Update Username</button>
                 </form>
