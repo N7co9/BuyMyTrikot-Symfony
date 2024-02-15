@@ -6,7 +6,6 @@ namespace App\Components\UserSettings\Business\Model;
 use App\Components\User\Persistence\UserRepository;
 use App\Global\DTO\ResponseDTO;
 use App\Global\DTO\UserDTO;
-use App\Global\Service\Mapping\Mapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,7 +14,7 @@ class PasswordModificationHandling
     public function __construct
     (
         private readonly EntityManagerInterface $entityManager,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository         $userRepository
     )
     {
     }

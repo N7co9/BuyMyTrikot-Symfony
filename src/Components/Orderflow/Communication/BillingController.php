@@ -16,7 +16,7 @@ class BillingController extends AbstractController
     public function __construct(
         private readonly OrderFlowBusinessFacade             $orderFlowBusinessFacade,
         private readonly ShoppingCartBusinessFacadeInterface $shoppingCartBusinessFacade,
-        private readonly UserSettingsBusinessFacade $userSettingsBusinessFacade,
+        private readonly UserSettingsBusinessFacade          $userSettingsBusinessFacade,
         public ?array                                        $total = null,
     )
     {

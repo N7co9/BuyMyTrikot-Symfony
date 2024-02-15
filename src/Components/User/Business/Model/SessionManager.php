@@ -57,28 +57,11 @@ class SessionManager
         return $orderDto;
     }
 
-    public function addVerificationTokenToSession(Request $request, string $token): void
-    {
-        $session = $request->getSession();
-        $session->set('verificationToken', $token);
-    }
-
-    public function retrieveVerificationTokenFromSession(Request $request): string
-    {
-        $session = $request->getSession();
-        return $session->get('verificationToken');
-    }
-
     public function addNewEmailToSession(Request $request): void
     {
         $session = $request->getSession();
         $session->set('unverifiedEmail', $request->get('email'));
     }
 
-    public function retrieveUnverifiedEmailFromSession(Request $request): string
-    {
-        $session = $request->getSession();
-        return $session->get('unverifiedEmail');
-    }
 
 }

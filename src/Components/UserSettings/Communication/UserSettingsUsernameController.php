@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Communication;
 
-use App\Components\UserSettings\Business\UserSettingsBusinessFacade;
+use App\Components\UserSettings\Business\UserSettingsBusinessFacadeInterface;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,12 +13,13 @@ class UserSettingsUsernameController extends AbstractController
 {
     public function __construct
     (
-        private readonly UserSettingsBusinessFacade $userSettingsBusinessFacade
+        private readonly UserSettingsBusinessFacadeInterface $userSettingsBusinessFacade
     )
     {
     }
+
     #[Route('/settings/update-username', name: 'app_update_username')]
-    public function requestNewUsername(Request $request) : Response
+    public function requestNewUsername(Request $request): Response
     {
         $user = $this->getLoggingUser();
 

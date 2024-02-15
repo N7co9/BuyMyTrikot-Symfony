@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Business\Model;
 
-use App\Components\Orderflow\Communication\Form\OrderBillingValidation;
 use App\Components\UserSettings\Communication\Form\BillingAddressValidation;
 use App\Components\UserSettings\Communication\Mapping\BillingDTO2BillingEntity;
 use App\Components\UserSettings\Communication\Mapping\BillingEntity2BillingDTO;

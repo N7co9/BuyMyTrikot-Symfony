@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Communication;
 
-use App\Components\UserSettings\Business\UserSettingsBusinessFacade;
+use App\Components\UserSettings\Business\UserSettingsBusinessFacadeInterface;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ class UserSettingsBillingAddressController extends AbstractController
 {
     public function __construct
     (
-        private readonly UserSettingsBusinessFacade $userSettingsBusinessFacade
+        private readonly UserSettingsBusinessFacadeInterface $userSettingsBusinessFacade
     )
     {
     }

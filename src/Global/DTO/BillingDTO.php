@@ -5,14 +5,14 @@ namespace App\Global\DTO;
 class BillingDTO
 {
     public string $firstName;
-    public string  $lastName;
-    public string  $address;
-    public string  $city;
-    public string  $country;
-    public string  $region;
-    public string  $postalCode;
-    public string  $phone;
-    public int  $userId;
+    public string $lastName;
+    public string $address;
+    public string $city;
+    public string $country;
+    public string $region;
+    public string $postalCode;
+    public string $phone;
+    public int $userId;
 
     public function __construct($firstName, $lastName, $address, $city, $country, $region, $postalCode, $phone, $userId)
     {
