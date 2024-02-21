@@ -5,6 +5,7 @@ namespace App\Components\Homepage\Communication;
 use App\Components\Homepage\Business\HomepageBusinessFacadeInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,10 +35,12 @@ class HomepageController extends AbstractController
         } catch (Exception $e) {
             return $this->render('exceptions/404.html.twig');
         }
-        return $this->render('homepage/index.html.twig', [
-            'items' => $items,
-            'user' => $user
-        ]);
+        return new JsonResponse(
+            [
+                'items' => $items,
+                'user' => $user
+            ],
+        );
     }
 
     #[Route('/home/search', name: 'search_redirect')]

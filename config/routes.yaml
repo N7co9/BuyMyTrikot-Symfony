@@ -1,24 +1,26 @@
 Authentication_controllers:
-    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Communication'
-    type: annotation
+  resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Authentication/Communication'
+  type: annotation
 Homepage_controllers:
-    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Homepage/Communication'
-    type: annotation
+  resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Homepage/Communication'
+  type: annotation
 Orderflow_controllers:
-    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication'
-    type: annotation
+  resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Orderflow/Communication'
+  type: annotation
 Registration_controllers:
-    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Communication'
-    type: annotation
+  resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Registration/Communication'
+  type: annotation
 ShoppingCart_controllers:
-    resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Communication'
-    type: annotation
+  resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/ShoppingCart/Communication'
+  type: annotation
 Payment_Controllers:
-        resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Payment/Communication'
-        type: annotation
+  resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/Payment/Communication'
+  type: annotation
 UserSettings_Controllers:
   resource: '/home/nicogruenewald/Documents/BuyMyTrikots-Symfony/src/Components/UserSettings/Communication'
   type: annotation
 app_logout:
-    path: /logout
-    methods: GET
+  path: /logout
+  methods: GET
+api_login:
+  path: /api/login
