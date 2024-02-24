@@ -1,21 +1,34 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Components\Authentication\Business;
 
-use App\Components\Authentication\Business\Model\UserLoginValidation;
-use App\Global\DTO\ResponseDTO;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Components\Authentication\Business\Model\ApiTokenHandler;
+use App\Components\Authentication\Persistence\ApiTokenRepository;
+use App\Entity\User;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
-class AuthenticationBusinessFacade implements AuthenticationBusinessFacadeInterface
+class AuthenticationBusinessFacade
 {
-    public function __construct(
-        public UserLoginValidation $loginValidation
+    public function __construct
+    (
+        private readonly ApiTokenHandler $apiTokenHandler,
+        private readonly ApiTokenRepository $apiTokenRepository
     )
+    {}
+
+    public function getUserBadgeFromToken(#[\SensitiveParameter] string $accessToken) : UserBadge
     {
+        return $this->apiTokenHandler->getUserBadgeFrom($accessToken);
     }
 
-    public function authenticate(array $formData, SessionInterface $session): ?ResponseDTO
+    public function generateApiToken(User $user) : string
     {
-        return $this->loginValidation->authenticate($formData, $session);
+        return $this->apiTokenHandler->generateApiToken($user);
+    }
+
+    public function getUserFromToken(string $accessToken) : User
+    {
+        return $this->apiTokenRepository->findUserByToken($accessToken);
     }
 }

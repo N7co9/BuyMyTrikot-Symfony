@@ -4,11 +4,12 @@ namespace App\Components\Authentication\Communication;
 
 use App\Components\Authentication\Business\AuthenticationBusinessFacade;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-class ApiLoginController extends AbstractController
+class ApiCheckTokenController extends AbstractController
 {
     public function __construct
     (
@@ -16,14 +17,20 @@ class ApiLoginController extends AbstractController
     )
     {}
 
-    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
-    public function login(#[CurrentUser] $user = null): Response
+    #[Route('/api/check-token', name: 'api_check_token')]
+    public function checkToken(Request $request): Response
     {
-        $accessToken = $this->authenticationBusinessFacade->generateApiToken($user);
+        $user = null;
+        $accessToken = $request->headers->get('Authorization');
+
+        if ($accessToken !== null)
+        {
+            $user = $this->authenticationBusinessFacade->getUserFromToken($accessToken);
+        }
 
         return $this->json([
-            'user' => $user ? $user->getId() : null,
-            'token' => $accessToken
+            'valid' => true,
+            'user' => $user
         ]);
     }
 }
