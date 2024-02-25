@@ -59,8 +59,9 @@ class SessionManager
 
     public function addNewEmailToSession(Request $request): void
     {
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $session = $request->getSession();
-        $session->set('unverifiedEmail', $request->get('email'));
+        $session->set('unverifiedEmail', $data['email']);
     }
 
 

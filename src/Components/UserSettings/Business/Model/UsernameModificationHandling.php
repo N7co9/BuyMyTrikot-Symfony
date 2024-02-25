@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Business\Model;
 
-use App\Components\User\Persistence\UserRepository;
+use App\Components\Authentication\Persistence\ApiTokenRepository;
 use App\Global\DTO\ResponseDTO;
-use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,7 +12,7 @@ class UsernameModificationHandling
 {
     public function __construct
     (
-        private readonly UserRepository         $userRepository,
+        private readonly ApiTokenRepository     $apiTokenRepository,
         private readonly EntityManagerInterface $entityManager
     )
     {
@@ -32,14 +31,16 @@ class UsernameModificationHandling
         return new ResponseDTO('', 'OK');
     }
 
-    public function setNewUsername(Request $request, UserDTO $userDTO): ResponseDTO
+    public function setNewUsername(Request $request): ResponseDTO
     {
-        $newUsername = $request->request->get('username');
-        $res = $this->verifyNewUsername($newUsername);
-        $user = $this->userRepository->findOneByEmail($userDTO->email);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        $res = $this->verifyNewUsername($data['username']);
+
+        $user = $this->apiTokenRepository->findUserByToken($request->headers->get('Authorization'));
 
         if ($user !== null && $res->getType() === 'OK') {
-            $user->setUsername($newUsername);
+            $user->setUsername($data['username']);
             $this->entityManager->persist($user);
             $this->entityManager->flush();
             return new ResponseDTO('Username changed successfully.', 'OK');

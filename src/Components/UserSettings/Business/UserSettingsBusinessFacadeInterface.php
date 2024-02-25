@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface UserSettingsBusinessFacadeInterface
 {
-    public function sendVerificationEmail(UserDTO $userDTO): void;
+    public function sendVerificationEmail(Request $request): void;
 
     public function verifyToken(string $token, Request $request): bool;
 
@@ -18,7 +18,7 @@ interface UserSettingsBusinessFacadeInterface
 
     public function setNewPassword(UserDTO $userDTO, Request $request): ResponseDTO;
 
-    public function setNewUsername(Request $request, UserDTO $userDTO): ResponseDTO;
+    public function setNewUsername(Request $request): ResponseDTO;
 
     public function setNewBillingAddress(Request $request, UserDTO $userDTO): array;
 

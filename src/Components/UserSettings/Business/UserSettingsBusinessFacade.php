@@ -28,9 +28,9 @@ class UserSettingsBusinessFacade implements UserSettingsBusinessFacadeInterface
     {
     }
 
-    public function sendVerificationEmail(UserDTO $userDTO): void
+    public function sendVerificationEmail(Request $request): void
     {
-        $this->verificationMailHandling->sendVerificationEmail($this->router, $userDTO);
+        $this->verificationMailHandling->sendVerificationEmail($this->router, $request);
     }
 
     public function verifyToken(string $token, Request $request): bool
@@ -48,9 +48,9 @@ class UserSettingsBusinessFacade implements UserSettingsBusinessFacadeInterface
         return $this->passwordModificationHandling->setNewPassword($userDTO, $request);
     }
 
-    public function setNewUsername(Request $request, UserDTO $userDTO): ResponseDTO
+    public function setNewUsername(Request $request): ResponseDTO
     {
-        return $this->usernameModificationHandling->setNewUsername($request, $userDTO);
+        return $this->usernameModificationHandling->setNewUsername($request);
     }
 
     public function setNewBillingAddress(Request $request, UserDTO $userDTO): array

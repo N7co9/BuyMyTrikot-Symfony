@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Business\Model;
 
+use App\Components\Authentication\Persistence\ApiTokenRepository;
 use App\Components\User\Persistence\UserRepository;
 use App\Global\DTO\UserDTO;
 use App\Global\Service\MailerInterface\MailService;
+use App\Global\Service\Mapping\Mapper;
+use App\Global\Service\Mapping\UserMapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -19,6 +22,8 @@ class VerificationMailHandling
         private readonly MailerInterface        $symfonyMailer,
         private readonly MailService            $mailService,
         private readonly UserRepository         $userRepository,
+        private readonly UserMapper             $mapper,
+        private readonly ApiTokenRepository     $apiTokenRepository,
         private readonly EntityManagerInterface $entityManager
     )
     {
@@ -30,10 +35,16 @@ class VerificationMailHandling
         return $router->generate('app_email_processing', ['verificationToken' => $verificationToken], UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
-    public function sendVerificationEmail(RouterInterface $router, UserDTO $userDTO): void
+    public function sendVerificationEmail(RouterInterface $router, Request $request): void
     {
-        $verificationUrl = $this->generateUrl($router, $userDTO);
-        $this->mailService->sendVerificationEmail($this->symfonyMailer, $userDTO, $verificationUrl);
+        $user = $this->apiTokenRepository->findUserByToken($request->headers->get('Authorization'));
+        if ($user) {
+            $userDTO = $this->mapper->mapEntityToDto($user);
+        }
+        $verificationUrl = $this->generateUrl($router, $userDTO ?? null);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $userDTO->email = $data['email'];
+        $this->mailService->sendVerificationEmail($this->symfonyMailer, $userDTO ?? null, $verificationUrl);
     }
 
     public function verifyToken(Request $request, string $token): ?bool
