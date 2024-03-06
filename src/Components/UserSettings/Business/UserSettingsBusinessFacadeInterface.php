@@ -16,12 +16,12 @@ interface UserSettingsBusinessFacadeInterface
 
     public function addUnverifiedEmailToSession(Request $request): void;
 
-    public function setNewPassword(UserDTO $userDTO, Request $request): ResponseDTO;
+    public function setNewPassword(Request $request): ResponseDTO;
 
     public function setNewUsername(Request $request): ResponseDTO;
 
-    public function setNewBillingAddress(Request $request, UserDTO $userDTO): array;
+    public function setNewBillingAddress(Request $request): array;
 
-    public function retrieveBillingAddress(UserDTO $userDTO): ?BillingDTO;
+    public function retrieveBillingAddress(Request $request): ?BillingDTO;
 
 }

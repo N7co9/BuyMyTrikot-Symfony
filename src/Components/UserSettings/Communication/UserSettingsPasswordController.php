@@ -22,10 +22,12 @@ class UserSettingsPasswordController extends AbstractController
     #[Route('/settings/update-password', name: 'app_update_password')]
     public function requestNewPassword(Request $request): Response
     {
-        $user = $this->getLoggingUser();
+        $res = $this->userSettingsBusinessFacade->setNewPassword($request);
 
-        $res = $this->userSettingsBusinessFacade->setNewPassword($user, $request);
-
-        return $this->render('user_settings/index.html.twig', ['user' => $user, 'passwordResponse' => $res]);
+        return $this->json(
+            [
+                'response' => $res
+            ]
+        );
     }
 }

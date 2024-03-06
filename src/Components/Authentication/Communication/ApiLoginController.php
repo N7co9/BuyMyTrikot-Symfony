@@ -10,6 +10,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class ApiLoginController extends AbstractController
 {
+
     public function __construct
     (
         private readonly AuthenticationBusinessFacade $authenticationBusinessFacade

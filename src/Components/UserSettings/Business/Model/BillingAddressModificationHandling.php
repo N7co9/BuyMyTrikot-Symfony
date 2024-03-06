@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Business\Model;
 
+use App\Components\Authentication\Persistence\ApiTokenRepository;
 use App\Components\Orderflow\Persistence\BillingAddressRepository;
 use App\Components\UserSettings\Communication\Form\BillingAddressValidation;
 use App\Components\UserSettings\Communication\Mapping\BillingDTO2BillingEntity;
@@ -11,6 +12,7 @@ use App\Components\UserSettings\Communication\Mapping\Request2BillingDTO;
 use App\Entity\BillingAddress;
 use App\Global\DTO\BillingDTO;
 use App\Global\DTO\UserDTO;
+use App\Global\Service\Mapping\UserMapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,21 +25,25 @@ class BillingAddressModificationHandling
         private readonly Request2BillingDTO       $request2BillingDTO,
         private readonly BillingDTO2BillingEntity $billingDTO2BillingEntity,
         private readonly BillingAddressRepository $billingAddressRepository,
-        private readonly BillingEntity2BillingDTO $billingEntity2BillingDTO
+        private readonly BillingEntity2BillingDTO $billingEntity2BillingDTO,
+        private readonly UserMapper               $userMapper,
+        private readonly ApiTokenRepository       $apiTokenRepository,
     )
     {
     }
 
-    private function validateNewBillingAddress(Request $request): array
+    private function validateNewBillingAddress(Request $request, UserDTO $userDTO): array
     {
-        $BillingDTO = $this->getBillingDTOFromRequest($request);
+        $BillingDTO = $this->getBillingDTOFromRequest($request, $userDTO);
         return $this->billingAddressValidation->validate($BillingDTO);
     }
 
-    public function setNewBillingAddress(Request $request, UserDTO $userDTO): array
+    public function setNewBillingAddress(Request $request): array
     {
-        $res = $this->validateNewBillingAddress($request);
-        $BillingDTO = $this->getBillingDTOFromRequest($request);
+        $userDTO = $this->userMapper->mapEntityToDto($this->apiTokenRepository->findUserByToken($request->headers->get('Authorization')));
+
+        $res = $this->validateNewBillingAddress($request, $userDTO);
+        $BillingDTO = $this->getBillingDTOFromRequest($request, $userDTO);
 
         $currentBilling = $this->billingAddressRepository->findByUserId($userDTO->id);
         if (empty($res)) {
@@ -56,9 +62,9 @@ class BillingAddressModificationHandling
         return $res;
     }
 
-    private function getBillingDTOFromRequest(Request $request): BillingDTO
+    private function getBillingDTOFromRequest(Request $request, UserDTO $userDTO): BillingDTO
     {
-        return $this->request2BillingDTO->mapRequestToBillingDTO($request);
+        return $this->request2BillingDTO->mapRequestToBillingDTO($request, $userDTO);
     }
 
     private function updateOldBilling(BillingAddress $billingAddress, BillingDTO $billingDTO): BillingAddress
@@ -75,8 +81,9 @@ class BillingAddressModificationHandling
         return $billingAddress;
     }
 
-    public function retrieveBillingAddress(UserDTO $userDTO): ?BillingDTO
+    public function retrieveBillingAddress(Request $request): ?BillingDTO
     {
+        $userDTO = $this->userMapper->mapEntityToDto($this->apiTokenRepository->findUserByToken($request->headers->get('Authorization')));
         $billing = $this->billingAddressRepository->findByUserId($userDTO->id);
         if ($billing) {
             return $this->billingEntity2BillingDTO->map($billing);

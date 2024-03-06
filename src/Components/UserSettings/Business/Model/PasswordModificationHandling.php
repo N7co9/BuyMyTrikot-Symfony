@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Business\Model;
 
+use App\Components\Authentication\Persistence\ApiTokenRepository;
 use App\Components\User\Persistence\UserRepository;
 use App\Global\DTO\ResponseDTO;
 use App\Global\DTO\UserDTO;
+use App\Global\Service\Mapping\Mapper;
+use App\Global\Service\Mapping\UserMapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,7 +17,9 @@ class PasswordModificationHandling
     public function __construct
     (
         private readonly EntityManagerInterface $entityManager,
-        private readonly UserRepository         $userRepository
+        private readonly UserRepository         $userRepository,
+        private readonly UserMapper                 $userMapper,
+        private readonly ApiTokenRepository     $apiTokenRepository,
     )
     {
     }
@@ -25,10 +30,14 @@ class PasswordModificationHandling
         return password_verify($formInputOldPassword, $hashedPassword);
     }
 
-    public function setNewPassword(UserDTO $userDTO, Request $request): ResponseDTO
+    public function setNewPassword(Request $request): ResponseDTO
     {
-        $formInputOldPassword = $request->request->get('current_password');
-        $formInputNewPassword = $request->request->get('new_password');
+        $userDTO = $this->userMapper->mapEntityToDto($this->apiTokenRepository->findUserByToken($request->headers->get('Authorization')));
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        $formInputOldPassword = $data['old_password'];
+        $formInputNewPassword =  $data['new_password'];
+
         $isOldPasswordCorrect = $this->checkInputPassword($userDTO, $formInputOldPassword);
 
         $user = $this->userRepository->findOneByEmail($userDTO->email);

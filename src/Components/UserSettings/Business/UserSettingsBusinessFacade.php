@@ -43,9 +43,9 @@ class UserSettingsBusinessFacade implements UserSettingsBusinessFacadeInterface
         $this->sessionManager->addNewEmailToSession($request);
     }
 
-    public function setNewPassword(UserDTO $userDTO, Request $request): ResponseDTO
+    public function setNewPassword(Request $request): ResponseDTO
     {
-        return $this->passwordModificationHandling->setNewPassword($userDTO, $request);
+        return $this->passwordModificationHandling->setNewPassword($request);
     }
 
     public function setNewUsername(Request $request): ResponseDTO
@@ -53,14 +53,14 @@ class UserSettingsBusinessFacade implements UserSettingsBusinessFacadeInterface
         return $this->usernameModificationHandling->setNewUsername($request);
     }
 
-    public function setNewBillingAddress(Request $request, UserDTO $userDTO): array
+    public function setNewBillingAddress(Request $request): array
     {
-        return $this->billingAddressModificationHandling->setNewBillingAddress($request, $userDTO);
+        return $this->billingAddressModificationHandling->setNewBillingAddress($request);
     }
 
-    public function retrieveBillingAddress(UserDTO $userDTO): ?BillingDTO
+    public function retrieveBillingAddress(Request $request): ?BillingDTO
     {
-        return $this->billingAddressModificationHandling->retrieveBillingAddress($userDTO);
+        return $this->billingAddressModificationHandling->retrieveBillingAddress($request);
     }
 
 }

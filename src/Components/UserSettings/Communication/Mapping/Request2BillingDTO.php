@@ -4,22 +4,24 @@ declare(strict_types=1);
 namespace App\Components\UserSettings\Communication\Mapping;
 
 use App\Global\DTO\BillingDTO;
+use App\Global\DTO\UserDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 class Request2BillingDTO
 {
-    public function mapRequestToBillingDTO(Request $request): BillingDTO
+    public function mapRequestToBillingDTO(Request $request, UserDTO $userDTO): BillingDTO
     {
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         return new BillingDTO(
-            $request->get('first-name'),
-            $request->get('last-name'),
-            $request->get('address'),
-            $request->get('city'),
-            $request->get('country'),
-            $request->get('region'),
-            $request->get('postal-code'),
-            $request->get('phone'),
-            $request->get('userId' ?? 0)
+            $data['firstName'],
+            $data['lastName'],
+            $data['address'],
+            $data['city'],
+            $data['country'],
+            $data['region'],
+            $data['postalCode'],
+            $data['phoneNumber'],
+            $userDTO->id
         );
     }
 }

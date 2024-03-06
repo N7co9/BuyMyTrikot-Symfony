@@ -21,10 +21,22 @@ class UserSettingsBillingAddressController extends AbstractController
     #[Route('/settings/update-billing', name: 'app_update_billing')]
     public function requestNewBillingAddress(Request $request): Response
     {
-        $user = $this->getLoggingUser();
+        $res = $this->userSettingsBusinessFacade->setNewBillingAddress($request);
 
-        $res = $this->userSettingsBusinessFacade->setNewBillingAddress($request, $user);
-
-        return $this->render('user_settings/index.html.twig', ['user' => $user, 'response' => $res]);
+        return $this->json(
+            [
+                'response' => $res
+            ]
+        );
     }
-}
+
+    #[Route('/settings/fetch-billing', name: 'app_fetch_billing')]
+    public function fetchCurrentBillingAddress(Request $request): Response
+    {
+
+        $res = $this->userSettingsBusinessFacade->retrieveBillingAddress($request);
+
+        return $this->json(
+                $res
+        );
+    }}
