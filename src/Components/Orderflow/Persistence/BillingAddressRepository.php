@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Components\Orderflow\Persistence;
 
 use App\Entity\BillingAddress;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

@@ -12,7 +12,7 @@ interface UserSettingsBusinessFacadeInterface
 {
     public function sendVerificationEmail(Request $request): void;
 
-    public function verifyToken(string $token, Request $request): bool;
+    public function receiveAndPersistNewEmail(Request $request) : ResponseDTO;
 
     public function addUnverifiedEmailToSession(Request $request): void;
 

@@ -30,14 +30,14 @@ class UserSettingsBusinessFacade implements UserSettingsBusinessFacadeInterface
 
     public function sendVerificationEmail(Request $request): void
     {
-        $this->verificationMailHandling->sendVerificationEmail($this->router, $request);
+       $this->verificationMailHandling->sendVerificationEmail($this->router, $request);
     }
 
-    public function verifyToken(string $token, Request $request): bool
+
+    public function receiveAndPersistNewEmail(Request $request) : ResponseDTO
     {
-        return $this->verificationMailHandling->verifyToken($request, $token);
+        return $this->verificationMailHandling->receiveAndPersistNewEmail($request);
     }
-
     public function addUnverifiedEmailToSession(Request $request): void
     {
         $this->sessionManager->addNewEmailToSession($request);

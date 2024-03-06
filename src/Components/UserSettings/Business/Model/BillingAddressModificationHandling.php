@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Business\Model;
 
+use App\Components\Orderflow\Persistence\BillingAddressRepository;
 use App\Components\UserSettings\Communication\Form\BillingAddressValidation;
 use App\Components\UserSettings\Communication\Mapping\BillingDTO2BillingEntity;
 use App\Components\UserSettings\Communication\Mapping\BillingEntity2BillingDTO;
@@ -10,7 +11,6 @@ use App\Components\UserSettings\Communication\Mapping\Request2BillingDTO;
 use App\Entity\BillingAddress;
 use App\Global\DTO\BillingDTO;
 use App\Global\DTO\UserDTO;
-use App\Repository\BillingAddressRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 

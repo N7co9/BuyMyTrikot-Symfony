@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\BillingAddressRepository;
+use App\Components\Orderflow\Persistence\BillingAddressRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BillingAddressRepository::class)]

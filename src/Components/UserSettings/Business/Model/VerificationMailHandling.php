@@ -5,6 +5,11 @@ namespace App\Components\UserSettings\Business\Model;
 
 use App\Components\Authentication\Persistence\ApiTokenRepository;
 use App\Components\User\Persistence\UserRepository;
+use App\Components\UserSettings\Business\Model\Read\VerificationMailReader;
+use App\Components\UserSettings\Business\Model\Write\VerificationMailWriter;
+use App\Entity\TemporaryMails;
+use App\Entity\User;
+use App\Global\DTO\ResponseDTO;
 use App\Global\DTO\UserDTO;
 use App\Global\Service\MailerInterface\MailService;
 use App\Global\Service\Mapping\Mapper;
@@ -19,48 +24,38 @@ class VerificationMailHandling
 {
     public function __construct
     (
+        private readonly VerificationMailReader $verificationMailReader,
+        private readonly VerificationMailWriter $verificationMailWriter,
         private readonly MailerInterface        $symfonyMailer,
         private readonly MailService            $mailService,
-        private readonly UserRepository         $userRepository,
         private readonly UserMapper             $mapper,
-        private readonly ApiTokenRepository     $apiTokenRepository,
-        private readonly EntityManagerInterface $entityManager
     )
     {
     }
 
-    private function generateUrl(RouterInterface $router, UserDTO $userDTO): string
-    {
-        $verificationToken = $userDTO->verificationToken;
-        return $router->generate('app_email_processing', ['verificationToken' => $verificationToken], UrlGeneratorInterface::ABSOLUTE_URL);
-    }
 
     public function sendVerificationEmail(RouterInterface $router, Request $request): void
     {
-        $user = $this->apiTokenRepository->findUserByToken($request->headers->get('Authorization'));
-        if ($user) {
-            $userDTO = $this->mapper->mapEntityToDto($user);
-        }
-        $verificationUrl = $this->generateUrl($router, $userDTO ?? null);
-        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        $userDTO->email = $data['email'];
-        $this->mailService->sendVerificationEmail($this->symfonyMailer, $userDTO ?? null, $verificationUrl);
+        $user = $this->verificationMailReader->getUserFromToken($request);
+        $userDTO = $this->mapper->mapEntityToDto($user);
+
+        $verificationUrl = $this->verificationMailReader->generateUrl($router, $userDTO);
+        $unverifiedUserDTO = $this->verificationMailReader->addNewEmailToUserDTO($request, $userDTO);
+        $this->mailService->sendVerificationEmail($this->symfonyMailer, $unverifiedUserDTO ?? null, $verificationUrl);
+
+        $this->verificationMailWriter->saveTemporaryEmail($unverifiedUserDTO);
     }
 
-    public function verifyToken(Request $request, string $token): ?bool
+    public function receiveAndPersistNewEmail(Request $request) : ResponseDTO
     {
-        $user = $this->userRepository->findOneByVerificationToken($token);
-        $newEmail = $request->getSession()->get('unverifiedEmail');
-        $request->getSession()->remove('unverifiedEmail');
-
-        if ($user) {
-            $user?->setEmail($newEmail);
-            $user?->setIsVerified(true);
-            $user->setVerificationToken(bin2hex(random_bytes(16)));
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+        try {
+            $user = $this->verificationMailWriter->saveNewVerifiedEmail($request);
+            return new ResponseDTO($user->getUserIdentifier(), 'OK');
         }
-
-        return $user->getIsVerified();
+        catch (\Exception $exception)
+        {
+            return new ResponseDTO($exception->getMessage(), 'Exception');
+        }
     }
+
 }
