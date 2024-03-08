@@ -6,6 +6,7 @@ use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 use App\Components\ShoppingCart\Persistence\Mapping\ShoppingCartMapping;
 use App\Components\User\Persistence\UserRepository;
 use App\Entity\ShoppingCart;
+use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
 
 
@@ -48,14 +49,18 @@ class ShoppingCartEntityManager
         $this->entityManager->flush();
     }
 
-    public function removeItemByItemId(int $itemId): void
+    public function removeItemByItemId(int $itemId, UserDTO $userDTO): void
     {
+        $userId = $userDTO->id;
+
         $this->shoppingCartRepository->createQueryBuilder('sc')
             ->delete()
             ->where('sc.item_id = :item_id')
+            ->andWhere('sc.user_id = :user_id')
             ->setParameter('item_id', $itemId)
+            ->setParameter('user_id', $userId)
             ->getQuery()
             ->execute();
-
     }
+
 }

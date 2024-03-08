@@ -10,6 +10,7 @@ use App\Components\ShoppingCart\Business\Model\ShoppingCartCalculator;
 use App\Components\ShoppingCart\Business\Model\ShoppingCartRead;
 use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartExpensesDto;
 use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
+use Symfony\Component\HttpFoundation\Request;
 
 class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
 {
@@ -22,23 +23,25 @@ class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
     {
     }
 
-    public function getCart(int $userId): array
+    public function getCart(Request $request): array
     {
-        return $this->shoppingCartRead->getCart($userId);
+        return $this->shoppingCartRead->getCart($request);
     }
 
-    public function saveItemToCart(ShoppingCartSaveDTO $shoppingCartDto): void
+    public function saveItemToCart(Request $request): void
     {
-        $this->cartWrite->save($shoppingCartDto);
+        $this->cartWrite->save($request);
     }
+
 
     public function calculateExpenses(array $shoppingCartItemDtoList): ShoppingCartExpensesDto
     {
         return $this->shoppingCartCalculator->calculateExpenses($shoppingCartItemDtoList);
     }
 
-    public function remove(int $itemId): void
+    public function remove(Request $request): void
     {
-        $this->cartWrite->remove($itemId);
+        $this->cartWrite->remove($request);
+
     }
 }

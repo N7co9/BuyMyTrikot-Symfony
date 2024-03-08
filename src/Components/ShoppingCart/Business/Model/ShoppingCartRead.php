@@ -2,31 +2,37 @@
 
 namespace App\Components\ShoppingCart\Business\Model;
 
+use App\Components\Authentication\Persistence\ApiTokenRepository;
 use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartItemDto;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Entity\Items;
+use App\Global\DTO\UserDTO;
 use App\Global\Service\Items\ItemRepository;
+use App\Global\Service\Mapping\UserMapper;
 use Doctrine\ORM\NonUniqueResultException;
+use Symfony\Component\HttpFoundation\Request;
 
 class ShoppingCartRead
 {
     public function __construct(
         private readonly ShoppingCartRepository $shoppingCartRepository,
         private readonly ItemRepository         $itemRepository,
+        private readonly UserMapper             $userMapper,
+        private readonly ApiTokenRepository     $apiTokenRepository,
     )
     {
     }
 
     /**
      *
-     * @param int $userId
      * @return ShoppingCartItemDto[]
      * @throws NonUniqueResultException
      *
      */
-    public function getCart(int $userId): array
+    public function getCart(Request $request): array
     {
-        $shoppingCartSaveDTOArray = $this->shoppingCartRepository->findByUserId($userId);
+        $userDTO = $this->getUser($request);
+        $shoppingCartSaveDTOArray = $this->shoppingCartRepository->findByUserId($userDTO->id);
         $shoppingCartItemDtoList = [];
 
         foreach ($shoppingCartSaveDTOArray as $shoppingCartSaveDTO) {
@@ -46,5 +52,10 @@ class ShoppingCartRead
             }
         }
         return $shoppingCartItemDtoList;
+    }
+
+    public function getUser(Request $request): UserDTO
+    {
+        return $this->userMapper->mapEntityToDto($this->apiTokenRepository->findUserByToken($request->headers->get('Authorization')));
     }
 }

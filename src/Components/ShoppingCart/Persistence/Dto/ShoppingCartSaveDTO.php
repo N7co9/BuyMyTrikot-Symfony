@@ -9,7 +9,7 @@ class ShoppingCartSaveDTO
         public readonly int $quantity,
         public readonly int $itemId,
         public readonly int $userId,
-        public readonly int $id = 0,
+        public int $id = 0,
     )
     {
     }

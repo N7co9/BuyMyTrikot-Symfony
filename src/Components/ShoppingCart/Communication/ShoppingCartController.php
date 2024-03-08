@@ -5,6 +5,7 @@ namespace App\Components\ShoppingCart\Communication;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
 use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 use App\Symfony\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,11 +18,9 @@ class ShoppingCartController extends AbstractController
     }
 
     #[Route('/shopping/cart', name: 'app_shopping_cart')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $userID = $this->getLoggingUser()->id;
-        $shoppingCartItemDtoList = $this->facade->getCart($userID);
-
+        $shoppingCartItemDtoList = $this->facade->getCart($request);
         $items = [];
         $expenses = $this->facade->calculateExpenses($shoppingCartItemDtoList);
 
@@ -29,34 +28,32 @@ class ShoppingCartController extends AbstractController
             $items[] = $shoppingCartItemDto;
         }
 
-        return $this->render('shopping_cart/index.html.twig', ['controller_name' => 'ShoppingCartController',
-            'items' => $items,
-            'total' => $expenses
-        ]);
-    }
-
-
-    #[Route('/shopping/cart/add/{itemId}/{quantity?}', name: 'app_shopping_cart_save', requirements: ['quantity' => '\d+'], defaults: ['quantity' => 1])]
-    public function save(int $itemId, int $quantity): Response
-    {
-        $userDto = $this->getLoggingUser();
-
-        $shoppingCartDto = new ShoppingCartSaveDTO(
-            quantity: $quantity,
-            itemId: $itemId,
-            userId: $userDto->id
+        return $this->json(
+            [
+                'items' => $items,
+                'total' => $expenses
+            ]
         );
-
-        $this->facade->saveItemToCart($shoppingCartDto);
-
-        return $this->redirectToRoute('app_shopping_cart');
     }
 
-    #[Route('/shopping/cart/remove/{itemId}', name: 'app_shopping_cart_remove')]
-    public function remove(int $itemId): Response
+    #[Route('/shopping/cart/add/', name: 'app_shopping_cart_save')]
+    public function save(Request $request): Response
     {
-        $this->facade->remove($itemId);
+        $this->facade->saveItemToCart($request);
 
-        return $this->redirectToRoute('app_shopping_cart');
+        return $this->json(
+            'OK'
+        );
     }
+
+    #[Route('/shopping/cart/remove/', name: 'app_shopping_cart_remove')]
+    public function remove(Request $request): Response
+    {
+        $this->facade->remove($request);
+
+        return $this->json(
+            'OK'
+        );
+    }
+
 }
