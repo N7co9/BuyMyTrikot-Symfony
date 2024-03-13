@@ -58,4 +58,16 @@ class ShoppingCartRead
     {
         return $this->userMapper->mapEntityToDto($this->apiTokenRepository->findUserByToken($request->headers->get('Authorization')));
     }
+
+    public function fetchDeliveryMethod(Request $request) : string
+    {
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        return $data['deliveryMethod'];
+    }
+
+    public function fetchShippingCost(Request $request) : float
+    {
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        return $data['shippingCost'];
+    }
 }

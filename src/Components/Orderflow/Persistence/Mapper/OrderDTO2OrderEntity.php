@@ -12,6 +12,7 @@ class OrderDTO2OrderEntity
     {
         $order = new Orders();
         $order->setemail($orderDto->email);
+        $order->setItems($orderDto->items);
         $order->setfirstName($orderDto->firstName);
         $order->setlastName($orderDto->lastName);
         $order->setaddress($orderDto->address);

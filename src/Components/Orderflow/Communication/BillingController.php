@@ -32,11 +32,22 @@ class BillingController extends AbstractController
                     'cartInformation' => $cartInformation
                 ]
             );
-        }catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             return $this->json(
                 new ResponseDTO($exception, 'Exception')
             );
+        }
+    }
+
+
+    #[Route('/order/persist', name: 'app_billing_persist')]
+    public function persist(Request $request): Response
+    {
+        try {
+            $errors = $this->orderFlowBusinessFacade->persistOrder($request);
+            return $this->json($errors);
+        } catch (\Exception $exception) {
+            return $this->json($exception);
         }
     }
 }

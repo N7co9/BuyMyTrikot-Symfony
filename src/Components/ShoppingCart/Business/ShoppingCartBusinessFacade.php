@@ -34,14 +34,24 @@ class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
     }
 
 
-    public function calculateExpenses(array $shoppingCartItemDtoList): ShoppingCartExpensesDto
+    public function calculateExpenses(array $shoppingCartItemDtoList, string $deliveryMethod = 'Standard'): ShoppingCartExpensesDto
     {
-        return $this->shoppingCartCalculator->calculateExpenses($shoppingCartItemDtoList);
+        return $this->shoppingCartCalculator->calculateExpenses($shoppingCartItemDtoList, $deliveryMethod);
     }
 
     public function remove(Request $request): void
     {
         $this->cartWrite->remove($request);
 
+    }
+
+    public function fetchDeliveryMethod(Request $request) : string
+    {
+        return $this->shoppingCartRead->fetchDeliveryMethod($request);
+    }
+
+    public function fetchShippingCost(Request $request): float
+    {
+        return $this->shoppingCartRead->fetchShippingCost($request);
     }
 }

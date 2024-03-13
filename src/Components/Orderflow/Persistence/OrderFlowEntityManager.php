@@ -13,9 +13,7 @@ class OrderFlowEntityManager
 {
     public function __construct(
         private readonly EntityManagerInterface    $entityManager,
-        private readonly ShoppingCartEntityManager $shoppingCartEntityManager,
         private readonly OrderDTO2OrderEntity      $orderMapper,
-        private readonly ShoppingCartRepository    $shoppingCartRepository,
     )
     {
     }
@@ -24,13 +22,10 @@ class OrderFlowEntityManager
     {
         $order = $this->orderMapper->map($orderDto);
 
-        $items = $this->shoppingCartRepository->findCartItemsByUserId($userDto->id);
-
-        $order->setItems($items);
 
         $this->entityManager->persist($order);
         $this->entityManager->flush();
 
-        $this->shoppingCartEntityManager->removeAllAfterSuccessfulOrder($userDto->id);
+      //  $this->shoppingCartEntityManager->removeAllAfterSuccessfulOrder($userDto->id);
     }
 }

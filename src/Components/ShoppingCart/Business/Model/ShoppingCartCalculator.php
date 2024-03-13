@@ -9,10 +9,16 @@ class ShoppingCartCalculator
 {
     private const SHIPPING_COST = 4.95;
 
-    public function calculateExpenses(array $shoppingCartItemDtoList): ShoppingCartExpensesDto
+    public function calculateExpenses(array $shoppingCartItemDtoList, string $deliveryMethod): ShoppingCartExpensesDto
     {
         $tax = 0;
         $subTotal = 0;
+        $shippingCost = self::SHIPPING_COST;
+
+        if ($deliveryMethod === 'Express')
+        {
+            $shippingCost = self::SHIPPING_COST + 11.05;
+        }
 
         foreach ($shoppingCartItemDtoList as $shoppingCartItemDto) {
             $subTotal += $shoppingCartItemDto->price * $shoppingCartItemDto->quantity;
@@ -22,8 +28,8 @@ class ShoppingCartCalculator
         return new ShoppingCartExpensesDto(
             tax: $tax,
             subTotal: $subTotal,
-            shipping: self::SHIPPING_COST,
-            total: $subTotal + $tax + self::SHIPPING_COST
+            shipping: $shippingCost,
+            total: $subTotal + $tax + $shippingCost
         );
     }
 }

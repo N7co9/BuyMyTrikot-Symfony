@@ -10,4 +10,9 @@ interface ShoppingCartBusinessFacadeInterface
     public function saveItemToCart(Request $request): void;
 
     public function remove(Request $request): void;
+
+    public function fetchDeliveryMethod(Request $request) : string;
+
+    public function fetchShippingCost(Request $request) : float;
+
 }

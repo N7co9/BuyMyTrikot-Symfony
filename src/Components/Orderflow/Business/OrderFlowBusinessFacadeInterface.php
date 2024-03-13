@@ -11,4 +11,8 @@ interface OrderFlowBusinessFacadeInterface
     public function fetchShoppingCartInformation(Request $request) : ?array;
     public function fetchBillingInformation(Request $request) : ?BillingAddress;
 
+    public function persistOrder(Request $request): ?array;
+
+    public function removeMostRecentOrder(Request $request) : void;
+
 }

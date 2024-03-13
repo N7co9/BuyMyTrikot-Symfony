@@ -18,8 +18,10 @@ class Request2OrderDTO
         $orderDto->city = $data['city'];
         $orderDto->state = $data['region'];
         $orderDto->zip = $data['postalCode'];
-        $orderDto->phoneNumber = $data['phone'];
+        $orderDto->phoneNumber = $data['phoneNumber'];
+
         $orderDto->deliveryMethod = $data['deliveryMethod' ?? 'Standard'];
+
         $orderDto->shipping = $data['shippingCost'];
         $orderDto->due = $data['totalCost'];
 
