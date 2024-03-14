@@ -7,6 +7,7 @@ use App\Components\Orderflow\Business\Model\OrderFlowRead;
 use App\Components\Orderflow\Business\Model\OrderFlowWrite;
 use App\Entity\BillingAddress;
 use App\Entity\Orders;
+use App\Global\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 class OderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
@@ -19,23 +20,19 @@ class OderFlowBusinessFacade implements OrderFlowBusinessFacadeInterface
     {
     }
 
-    public function fetchBillingInformation(Request $request) : ?BillingAddress
+    public function fetchBillingInformation(Request $request) : ResponseDTO
     {
         return $this->orderFlowRead->fetchBillingInformation($request);
     }
 
-    public function fetchShoppingCartInformation(Request $request) :?array
-    {
-        return $this->orderFlowRead->fetchShoppingCartInformation($request);
-    }
-    public function persistOrder(Request $request): ?array
+    public function persistOrder(Request $request): ResponseDTO
     {
         return $this->flowWrite->persistOrder($request);
     }
 
     public function removeMostRecentOrder(Request $request): void
     {
-        $this->flowWrite->removeOrder($request);
+        $this->flowWrite->removeMostRecentOrder($request);
     }
 
     public function setOrderSuccessful(Request $request): void

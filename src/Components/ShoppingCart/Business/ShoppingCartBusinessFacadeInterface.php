@@ -20,4 +20,6 @@ interface ShoppingCartBusinessFacadeInterface
     public function calculateExpenses(array $shoppingCartItemDtoList, string $deliveryMethod = 'Standard'): ShoppingCartExpensesDto;
     public function getCart(Request $request): array;
 
+    public function fetchShoppingCartInformation(Request $request): ?array;
+
 }

@@ -3,81 +3,61 @@ declare(strict_types=1);
 
 namespace App\Components\Orderflow\Business\Model;
 
-use App\Components\Authentication\Persistence\ApiTokenRepository;
 use App\Components\Orderflow\Communication\Mapping\Request2OrderDTO;
 use App\Components\Orderflow\Persistence\BillingAddressRepository;
 use App\Components\Orderflow\Persistence\OrdersRepository;
-use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacade;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
-use App\Entity\BillingAddress;
+use App\Components\User\Business\UserBusinessFacadeInterface;
 use App\Entity\Orders;
-use App\Global\DTO\OrderDTO;
-use App\Global\DTO\UserDTO;
-use App\Global\Service\Mapping\UserMapper;
+use App\Global\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 class OrderFlowRead
 {
     public function __construct
     (
-        private readonly ApiTokenRepository         $apiTokenRepository,
-        private readonly UserMapper                 $userMapper,
-        private readonly ShoppingCartBusinessFacade $shoppingCartBusinessFacade,
-        private readonly BillingAddressRepository   $billingAddressRepository,
-        private readonly ShoppingCartRepository     $shoppingCartRepository,
-        private readonly Request2OrderDTO           $request2OrderDTO,
-        private readonly OrdersRepository           $ordersRepository
+        private readonly UserBusinessFacadeInterface $userBusinessFacade,
+        private readonly BillingAddressRepository    $billingAddressRepository,
+        private readonly ShoppingCartRepository      $shoppingCartRepository,
+        private readonly Request2OrderDTO            $request2OrderDTO,
+        private readonly OrdersRepository            $ordersRepository
     )
     {
     }
 
-    public function fetchShoppingCartInformation(Request $request): ?array
+
+    public function fetchBillingInformation(Request $request): ResponseDTO
     {
-        $userDTO = $this->fetchUserInformationFromAuthentication($request);
+        try {
+            $user = $this->userBusinessFacade->fetchUserInformationFromAuthentication($request)->content;
+            $billingAddress = $this->billingAddressRepository->findByUserId($user->id);
+            return new ResponseDTO($billingAddress, true);
+        } catch (\Exception $exception) {
+            return new ResponseDTO($exception, false);
+        }
+    }
 
-        $deliveryMethod = $this->shoppingCartBusinessFacade->fetchDeliveryMethod($request);
+    public function buildOrderDTO(Request $request): ResponseDTO
+    {
+        $userDTO = $this->userBusinessFacade->fetchUserInformationFromAuthentication($request)->content;
 
+        try {
+            $orderDTO = $this->request2OrderDTO->mapRequestOrderToDto($request);
+        } catch (\JsonException $e) {
+            return new ResponseDTO($e, false);
+        }
         if ($userDTO) {
-            $cart = $this->shoppingCartBusinessFacade->getCart($request);
-            $expenses = $this->shoppingCartBusinessFacade->calculateExpenses($cart, $deliveryMethod);
+            $orderDTO->email = $userDTO->email;
+            $orderDTO->items = $this->shoppingCartRepository->findCartItemsByUserId($userDTO->id);
+
+            return new ResponseDTO($orderDTO, true);
         }
-
-        return
-            [
-                'cart' => $cart ?? null,
-                'expenses' => $expenses ?? null
-            ];
-    }
-
-    private function fetchUserInformationFromAuthentication(Request $request): ?UserDTO
-    {
-        $user = $this->apiTokenRepository->findUserByToken($request->headers->get('Authorization'));
-        if ($user) {
-            return $this->userMapper->mapEntityToDto($user);
-
-        }
-        return null;
-    }
-
-    public function fetchBillingInformation(Request $request): ?BillingAddress
-    {
-        return $this->billingAddressRepository->findByUserId($this->fetchUserInformationFromAuthentication($request)->id);
-    }
-
-    public function buildOrderDTO(Request $request): mixed
-    {
-        $userDTO = $this->fetchUserInformationFromAuthentication($request);
-        $orderDTO = $this->request2OrderDTO->mapRequestOrderToDto($request);
-
-        $orderDTO->email = $userDTO->email;
-        $orderDTO->items = $this->shoppingCartRepository->findCartItemsByUserId($userDTO->id);
-
-        return $orderDTO;
+        return new ResponseDTO('An error occurred while building the OrderDTO', false);
     }
 
     public function fetchMostRecentOrder(Request $request): Orders
     {
-        $userDTO = $this->fetchUserInformationFromAuthentication($request);
+        $userDTO = $this->userBusinessFacade->fetchUserInformationFromAuthentication($request)->content;
         return $this->ordersRepository->findMostRecentOrderByEmail($userDTO->email);
     }
 }

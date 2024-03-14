@@ -14,8 +14,6 @@ interface UserSettingsBusinessFacadeInterface
 
     public function receiveAndPersistNewEmail(Request $request) : ResponseDTO;
 
-    public function addUnverifiedEmailToSession(Request $request): void;
-
     public function setNewPassword(Request $request): ResponseDTO;
 
     public function setNewUsername(Request $request): ResponseDTO;

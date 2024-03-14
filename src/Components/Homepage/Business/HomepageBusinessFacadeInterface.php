@@ -2,6 +2,8 @@
 
 namespace App\Components\Homepage\Business;
 
+use App\Global\DTO\ResponseDTO;
+
 interface HomepageBusinessFacadeInterface
 {
     /**
@@ -10,5 +12,5 @@ interface HomepageBusinessFacadeInterface
      * @param string $slug
      * @return array|null
      */
-    public function itemTransfer(string $slug): ?array;
+    public function itemTransfer(string $slug): ?ResponseDTO;
 }

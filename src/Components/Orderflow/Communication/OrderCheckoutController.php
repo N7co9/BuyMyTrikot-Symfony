@@ -3,18 +3,21 @@
 namespace App\Components\Orderflow\Communication;
 
 use App\Components\Orderflow\Business\OrderFlowBusinessFacadeInterface;
+use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
 use App\Global\DTO\ResponseDTO;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function PHPUnit\Framework\isEmpty;
 
 
-class BillingController extends AbstractController
+class OrderCheckoutController extends AbstractController
 {
     public function __construct
     (
-        public readonly OrderFlowBusinessFacadeInterface $orderFlowBusinessFacade
+        public readonly OrderFlowBusinessFacadeInterface     $orderFlowBusinessFacade,
+        private readonly ShoppingCartBusinessFacadeInterface $shoppingCartBusinessFacade,
     )
     {
     }
@@ -23,21 +26,18 @@ class BillingController extends AbstractController
     public function index(Request $request): Response
     {
         try {
-            $billingInformation = $this->orderFlowBusinessFacade->fetchBillingInformation($request);
-            $cartInformation = $this->orderFlowBusinessFacade->fetchShoppingCartInformation($request);
+            $billingInformation = $this->orderFlowBusinessFacade->fetchBillingInformation($request)->content;
+            $cartInformation = $this->shoppingCartBusinessFacade->fetchShoppingCartInformation($request);
+            $content = ['cartInformation' => $cartInformation, 'billingInformation' => $billingInformation];
             return $this->json(
-                [
-                    'billingInformation' => $billingInformation,
-                    'cartInformation' => $cartInformation
-                ]
+                new ResponseDTO($content, false)
             );
         } catch (\Exception $exception) {
             return $this->json(
-                new ResponseDTO($exception, 'Exception')
+                new ResponseDTO($exception, false)
             );
         }
     }
-
 
     #[Route('/order/persist', name: 'app_billing_persist')]
     public function persist(Request $request): Response

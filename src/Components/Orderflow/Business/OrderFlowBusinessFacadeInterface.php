@@ -5,15 +5,14 @@ namespace App\Components\Orderflow\Business;
 
 use App\Entity\BillingAddress;
 use App\Entity\Orders;
+use App\Global\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 interface OrderFlowBusinessFacadeInterface
 {
-    public function fetchShoppingCartInformation(Request $request): ?array;
+    public function fetchBillingInformation(Request $request): ResponseDTO;
 
-    public function fetchBillingInformation(Request $request): ?BillingAddress;
-
-    public function persistOrder(Request $request): ?array;
+    public function persistOrder(Request $request): ResponseDTO;
 
     public function removeMostRecentOrder(Request $request): void;
 

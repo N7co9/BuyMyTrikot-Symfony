@@ -3,6 +3,7 @@
 namespace App\Global\Service\API;
 
 use App\Entity\Items;
+use App\Global\DTO\ResponseDTO;
 use App\Global\Service\Items\ItemEntityToDTOMapper;
 use App\Global\Service\Items\ItemRepository;
 use App\Global\Service\Mapping\Mapper;
@@ -39,16 +40,14 @@ class ItemsTransferService
         return $response->toArray();
     }
 
-    public function itemTransfer(string $clubName): array
+    public function itemTransfer(string $clubName): ResponseDTO
     {
         $item = $this->itemRepository->findOneByExternalId($clubName);
         if (!$item) {
             $itemData = $this->fetchFromFootballApi($clubName, 'teams');
-
-            return $this->createAndPersistHomepageItems($itemData);
+            return new ResponseDTO($this->createAndPersistHomepageItems($itemData), true);
         }
-        return $this->itemEntityToDTOMapper->mapItemsToDTO($item);
-    }
+        return new ResponseDTO($this->itemEntityToDTOMapper->mapItemsToDTO($item), true);}
 
     private function createAndPersistHomepageItems($itemData): array
     {

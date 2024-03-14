@@ -2,6 +2,7 @@
 
 namespace App\Components\Homepage\Business;
 
+use App\Global\DTO\ResponseDTO;
 use App\Global\Service\API\ItemsTransferService;
 
 class HomepageBusinessFacade implements HomepageBusinessFacadeInterface
@@ -11,7 +12,7 @@ class HomepageBusinessFacade implements HomepageBusinessFacadeInterface
     {
     }
 
-    public function itemTransfer(string $slug): ?array
+    public function itemTransfer(string $slug): ?ResponseDTO
     {
         return $this->itemsTransferService->itemTransfer($slug);
     }

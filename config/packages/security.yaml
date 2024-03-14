@@ -15,7 +15,7 @@ security:
       json_login:
         check_path: api_login
       access_token:
-        token_handler: App\Components\Authentication\Business\Model\ApiTokenHandler
+        token_handler: App\Components\Authentication\Business\Model\AuthenticationWrite
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#firewalls-authentication

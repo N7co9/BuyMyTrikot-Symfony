@@ -5,19 +5,9 @@ namespace App\Global\DTO;
 class ResponseDTO
 {
     public function __construct(
-        public readonly object $message,
-        public readonly string $type
+        public readonly mixed $content,
+        public readonly bool $success,
     )
     {
-    }
-
-    public function getMessage(): string
-    {
-        return $this->message;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
     }
 }

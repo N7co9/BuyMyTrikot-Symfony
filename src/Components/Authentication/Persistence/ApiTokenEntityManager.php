@@ -14,7 +14,8 @@ class ApiTokenEntityManager
     )
     {
     }
-    public function saveApiToken(ApiToken $token) : void
+
+    public function saveApiToken(ApiToken $token): void
     {
         $this->entityManager->persist($token);
         $this->entityManager->flush();

@@ -18,36 +18,12 @@ class HomepageController extends AbstractController
     {
     }
 
-    #[Route('/home/', name: 'app_homepage')]
-    public function index(): Response
-    {
-        return $this->render('base.html.twig', [
-            'user' => $this->getUser()
-        ]);
-    }
-
     #[Route('/home/browse/{slug}', name: 'app_browse')]
     public function browse(string $slug): Response
     {
-        $user = $this->getUser();
-        try {
-            $items = $this->facade->itemTransfer($slug);
-        } catch (Exception $e) {
-            return $this->render('exceptions/404.html.twig');
-        }
+        $response = $this->facade->itemTransfer($slug);
         return new JsonResponse(
-            [
-                'items' => $items,
-                'user' => $user
-            ],
+            $response
         );
     }
-
-    #[Route('/home/search', name: 'search_redirect')]
-    public function searchRedirect(Request $request): Response
-    {
-        $searchQuery = $request->query->get('query');
-        return $this->redirectToRoute('app_browse', ['slug' => $searchQuery]);
-    }
-
 }
