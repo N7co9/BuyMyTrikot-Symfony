@@ -5,7 +5,7 @@ namespace App\Global\DTO;
 class ResponseDTO
 {
     public function __construct(
-        public readonly string $message,
+        public readonly object $message,
         public readonly string $type
     )
     {

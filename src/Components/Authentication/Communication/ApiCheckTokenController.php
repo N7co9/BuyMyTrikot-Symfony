@@ -15,16 +15,16 @@ class ApiCheckTokenController extends AbstractController
     (
         private readonly AuthenticationBusinessFacade $authenticationBusinessFacade
     )
-    {}
+    {
+    }
 
     #[Route('/api/check-token', name: 'api_check_token')]
-    public function checkToken(Request $request): Response
+    public function verifyAuthorization(Request $request): Response
     {
         $user = null;
         $accessToken = $request->headers->get('Authorization');
 
-        if ($accessToken !== null)
-        {
+        if ($accessToken !== null) {
             $user = $this->authenticationBusinessFacade->getUserFromToken($accessToken);
         }
 

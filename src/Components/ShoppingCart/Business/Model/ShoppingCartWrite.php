@@ -63,4 +63,9 @@ class ShoppingCartWrite implements CartWriteInterface
         $this->shoppingCartEntityManager->removeItemByItemId($itemId, $userDTO);
     }
 
+    public function removeAllAfterOrderSuccess(Request $request) : void
+    {
+        $userDTO = $this->shoppingCartRead->getUser($request);
+        $this->shoppingCartEntityManager->removeAllAfterSuccessfulOrder($userDTO->id);
+    }
 }

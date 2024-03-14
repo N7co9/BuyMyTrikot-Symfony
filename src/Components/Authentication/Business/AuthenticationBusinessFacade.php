@@ -8,7 +8,7 @@ use App\Components\Authentication\Persistence\ApiTokenRepository;
 use App\Entity\User;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
-class AuthenticationBusinessFacade
+class AuthenticationBusinessFacade implements AuthenticationBusinessFacadeInterface
 {
     public function __construct
     (

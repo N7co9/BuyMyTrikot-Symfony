@@ -15,11 +15,12 @@ class ApiTokenHandler implements AccessTokenHandlerInterface
 {
     public function __construct
     (
-        private readonly ApiTokenRepository $apiTokenRepository,
+        private readonly ApiTokenRepository    $apiTokenRepository,
         private readonly ApiTokenEntityManager $tokenEntityManager
     )
     {
     }
+
     public function getUserBadgeFrom(#[\SensitiveParameter] string $accessToken): UserBadge
     {
         $token = $this->apiTokenRepository->findOneBy(['token' => $accessToken]);
@@ -40,18 +41,13 @@ class ApiTokenHandler implements AccessTokenHandlerInterface
     }
 
 
-    public function generateApiToken(User $user) : string
+    public function generateApiToken(User $user): string
     {
         $alreadyExistingApiToken = $this->apiTokenRepository->findMostRecentEntityByUserId($user->getId());
-
-
-        if($alreadyExistingApiToken)
-        {
+        if ($alreadyExistingApiToken) {
             try {
                 $this->validateToken($alreadyExistingApiToken);
-            }
-            catch (BadCredentialsException)
-            {
+            } catch (BadCredentialsException) {
                 $apiToken = new ApiToken();
                 $apiToken->setOwnedBy($user);
                 $this->tokenEntityManager->saveApiToken($apiToken);

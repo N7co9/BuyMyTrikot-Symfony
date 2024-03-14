@@ -25,7 +25,6 @@ class BillingController extends AbstractController
         try {
             $billingInformation = $this->orderFlowBusinessFacade->fetchBillingInformation($request);
             $cartInformation = $this->orderFlowBusinessFacade->fetchShoppingCartInformation($request);
-
             return $this->json(
                 [
                     'billingInformation' => $billingInformation,

@@ -45,4 +45,14 @@ class OrderFlowWrite
         $this->entityManagerInterface->flush();
     }
 
+    public function setOrderSuccessful(Request $request) : void
+    {
+        $order = $this->orderFlowRead->fetchMostRecentOrder($request);
+
+        $order->setPaid(true);
+        $this->entityManagerInterface->persist($order);
+        $this->entityManagerInterface->flush();
+
+    }
+
 }

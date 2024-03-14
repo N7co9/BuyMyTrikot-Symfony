@@ -45,7 +45,7 @@ class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
 
     }
 
-    public function fetchDeliveryMethod(Request $request) : string
+    public function fetchDeliveryMethod(Request $request): string
     {
         return $this->shoppingCartRead->fetchDeliveryMethod($request);
     }
@@ -53,5 +53,10 @@ class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
     public function fetchShippingCost(Request $request): float
     {
         return $this->shoppingCartRead->fetchShippingCost($request);
+    }
+
+    public function removeAllAfterOrderSuccess(Request $request): void
+    {
+        $this->cartWrite->removeAllAfterOrderSuccess($request);
     }
 }

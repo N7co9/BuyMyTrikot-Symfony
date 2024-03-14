@@ -12,4 +12,6 @@ interface CartWriteInterface
     public function remove(Request $request): void;
 
     public function buildShoppingCartSaveDTO(Request $request): ShoppingCartSaveDTO;
+
+    public function removeAllAfterOrderSuccess(Request $request) : void;
 }
