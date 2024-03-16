@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Components\Settings\Business;
 
-use App\Components\Settings\Business\Model\EmailAddressModification\VerificationMailHandling;
 use App\Components\Settings\Business\Model\BillingAddressModification\BillingAddressModificationHandling;
+use App\Components\Settings\Business\Model\EmailAddressModification\VerificationMailWrite;
 use App\Components\Settings\Business\Model\PasswordModification\PasswordModificationHandling;
 use App\Components\Settings\Business\Model\UsernameModification\UsernameModificationWrite;
 use App\Global\DTO\BillingDTO;
@@ -16,24 +16,24 @@ class UserSettingsBusinessFacade implements UserSettingsBusinessFacadeInterface
 {
     public function __construct
     (
-        private readonly VerificationMailHandling           $verificationMailHandling,
         private readonly RouterInterface                    $router,
         private readonly PasswordModificationHandling       $passwordModificationHandling,
         private readonly UsernameModificationWrite          $usernameModificationWrite,
-        private readonly BillingAddressModificationHandling $billingAddressModificationHandling
+        private readonly BillingAddressModificationHandling $billingAddressModificationHandling,
+        private readonly VerificationMailWrite              $verificationMailWrite,
     )
     {
     }
 
     public function sendVerificationEmail(Request $request): void
     {
-        $this->verificationMailHandling->sendVerificationEmail($this->router, $request);
+        $this->verificationMailWrite->sendVerificationEmail($this->router, $request);
     }
 
 
     public function receiveAndPersistNewEmail(Request $request): ResponseDTO
     {
-        return $this->verificationMailHandling->receiveAndPersistNewEmail($request);
+        return $this->verificationMailWrite->receiveAndPersistNewEmail($request);
     }
 
     public function setNewPassword(Request $request): ResponseDTO

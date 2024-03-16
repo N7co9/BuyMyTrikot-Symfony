@@ -1,0 +1,17 @@
+{# templates/email/verification.html.twig #}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+</head>
+<body>
+<p>Dear, {{ user.username }}</p>
+<p>Thank you for signing up for our service! To complete your registration and start enjoying all the benefits of our platform, please verify your email address by clicking the link below:</p>
+<p><a href="{{ verificationUrl }}">Verify Email Address</a></p>
+<p>If you did not sign up for our service, please ignore this email.</p>
+<p>Thank you<br> </p>
+</body>
+</html>
