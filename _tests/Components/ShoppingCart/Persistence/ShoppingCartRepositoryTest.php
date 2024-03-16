@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\ShoppingCart\Persistence;
 
-use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\Registration\Persistence\RegistrationEntityManager;
 use App\Entity\ShoppingCart;
 use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +15,7 @@ class ShoppingCartRepositoryTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $this->entityManager = self::getContainer()->get(UserEntityManager::class);
+        $this->entityManager = self::getContainer()->get(RegistrationEntityManager::class);
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';
         $userDTO->username = 'test';

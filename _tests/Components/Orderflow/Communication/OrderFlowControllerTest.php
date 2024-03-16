@@ -5,7 +5,7 @@ namespace App\Tests\Components\Orderflow\Communication;
 use App\Components\Orderflow\Business\OrderFlowValidation;
 use App\Components\Orderflow\Persistence\OrderFlowEntityManager;
 use App\Components\Orderflow\Persistence\OrdersRepository;
-use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\Registration\Persistence\RegistrationEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Components\User\Persistence\UserRepository;
@@ -28,7 +28,7 @@ class OrderFlowControllerTest extends WebTestCase
     {
         $this->client = self::createClient();
 
-        $this->UserEntityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $this->UserEntityManager = $this->client->getContainer()->get(RegistrationEntityManager::class);
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';
         $userDTO->username = 'test';

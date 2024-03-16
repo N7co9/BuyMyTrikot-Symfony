@@ -4,7 +4,7 @@ namespace App\Tests\Components\ShoppingCart\Communication;
 namespace App\Tests\Components\ShoppingCart\Communication;
 
 
-use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\Registration\Persistence\RegistrationEntityManager;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacade;
 use App\Components\ShoppingCart\Communication\ShoppingCartController;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
@@ -38,7 +38,7 @@ class ShoppingCartControllerTest extends WebTestCase
 
     public function testIndexUserLoggedInNoItemsInCart(): void
     {
-        $entityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $entityManager = $this->client->getContainer()->get(RegistrationEntityManager::class);
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';
         $userDTO->username = 'test';
@@ -60,7 +60,7 @@ class ShoppingCartControllerTest extends WebTestCase
 
     public function testManage(): void
     {
-        $entityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $entityManager = $this->client->getContainer()->get(RegistrationEntityManager::class);
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';
         $userDTO->username = 'test';
@@ -86,7 +86,7 @@ class ShoppingCartControllerTest extends WebTestCase
 
     public function testManageRuntimeExceptionWhenCartObjectIsNull(): void
     {
-        $entityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $entityManager = $this->client->getContainer()->get(RegistrationEntityManager::class);
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';
         $userDTO->username = 'test';

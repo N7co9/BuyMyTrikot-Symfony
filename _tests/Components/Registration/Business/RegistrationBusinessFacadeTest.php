@@ -4,7 +4,7 @@ namespace App\Tests\Components\Registration\Business;
 
 use App\Components\Registration\Business\Model\UserRegistrationValidation;
 use App\Components\Registration\Business\RegistrationBusinessFacade;
-use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\Registration\Persistence\RegistrationEntityManager;
 use App\Global\DTO\ResponseDTO;
 use App\Global\DTO\UserDTO;
 use App\Global\Service\Mapping\Mapper;
@@ -17,7 +17,7 @@ class RegistrationBusinessFacadeTest extends WebTestCase
     private RegistrationBusinessFacade $registrationBusinessFacade;
     private UserRegistrationValidation $registrationValidation;
     private Mapper $mapper;
-    private UserEntityManager $entityManager;
+    private RegistrationEntityManager $entityManager;
 
     /**
      * @throws Exception
@@ -25,7 +25,7 @@ class RegistrationBusinessFacadeTest extends WebTestCase
     protected function setUp(): void
     {
         $this->mapper = $this->createMock(Mapper::class);
-        $this->entityManager = self::getContainer()->get(UserEntityManager::class);
+        $this->entityManager = self::getContainer()->get(RegistrationEntityManager::class);
         $this->registrationValidation = $this->createMock(UserRegistrationValidation::class);
         $this->registrationBusinessFacade = new RegistrationBusinessFacade($this->registrationValidation, $this->mapper, $this->entityManager);
         parent::setUp();

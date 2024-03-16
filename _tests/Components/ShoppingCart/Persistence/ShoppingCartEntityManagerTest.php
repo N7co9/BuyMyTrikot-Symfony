@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\ShoppingCart\Persistence;
 
-use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\Registration\Persistence\RegistrationEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
 use App\Components\ShoppingCart\Persistence\ShoppingCartRepository;
 use App\Components\User\Persistence\UserRepository;
@@ -21,7 +21,7 @@ class ShoppingCartEntityManagerTest extends WebTestCase
     {
         $this->client = static::createClient();
 
-        $this->entityManager = self::getContainer()->get(UserEntityManager::class);
+        $this->entityManager = self::getContainer()->get(RegistrationEntityManager::class);
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';
         $userDTO->username = 'test';

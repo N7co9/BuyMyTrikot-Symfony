@@ -2,7 +2,7 @@
 
 namespace App\Tests\Global\Persistence\Repository;
 
-use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\Registration\Persistence\RegistrationEntityManager;
 use App\Components\User\Persistence\UserRepository;
 use App\Entity\User;
 use App\Global\DTO\UserDTO;
@@ -18,7 +18,7 @@ class UserRepositoryTest extends KernelTestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = self::getContainer()->get(UserEntityManager::class);
+        $this->entityManager = self::getContainer()->get(RegistrationEntityManager::class);
 
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';

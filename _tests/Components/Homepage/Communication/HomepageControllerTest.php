@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\Homepage\Communication;
 
-use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\Registration\Persistence\RegistrationEntityManager;
 use App\Components\User\Persistence\UserRepository;
 use App\Global\DTO\UserDTO;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +15,7 @@ class HomepageControllerTest extends WebTestCase
     public function setUp() : void
     {
         $this->client = self::createClient();
-        $this->entityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $this->entityManager = $this->client->getContainer()->get(RegistrationEntityManager::class);
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';
         $userDTO->username = 'test';

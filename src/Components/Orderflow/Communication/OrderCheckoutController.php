@@ -30,7 +30,7 @@ class OrderCheckoutController extends AbstractController
             $cartInformation = $this->shoppingCartBusinessFacade->fetchShoppingCartInformation($request);
             $content = ['cartInformation' => $cartInformation, 'billingInformation' => $billingInformation];
             return $this->json(
-                new ResponseDTO($content, false)
+                new ResponseDTO($content, true)
             );
         } catch (\Exception $exception) {
             return $this->json(
@@ -43,8 +43,8 @@ class OrderCheckoutController extends AbstractController
     public function persist(Request $request): Response
     {
         try {
-            $errors = $this->orderFlowBusinessFacade->persistOrder($request);
-            return $this->json($errors);
+            $response = $this->orderFlowBusinessFacade->persistOrder($request);
+            return $this->json($response); /* The Status of the Response is handled within 'persistOrder' itself */
         } catch (\Exception $exception) {
             return $this->json($exception);
         }

@@ -6,7 +6,7 @@ class ResponseDTO
 {
     public function __construct(
         public readonly mixed $content,
-        public readonly bool $success,
+        public bool $success,
     )
     {
     }

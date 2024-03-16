@@ -3,6 +3,7 @@
 namespace App\Components\Registration\Business;
 
 use App\Components\Registration\Business\Model\UserRegistrationHandling;
+use App\Global\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 class RegistrationBusinessFacade implements RegistrationBusinessFacadeInterface
@@ -13,7 +14,7 @@ class RegistrationBusinessFacade implements RegistrationBusinessFacadeInterface
     {
     }
 
-    public function register(Request $request): array
+    public function register(Request $request): ResponseDTO
     {
         return $this->userRegistrationHandling->register($request);
     }

@@ -3,6 +3,7 @@
 namespace App\Components\Registration\Communication;
 
 use App\Components\Registration\Business\RegistrationBusinessFacadeInterface;
+use App\Global\DTO\ResponseDTO;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,21 +16,12 @@ class RegistrationController extends AbstractController
     )
     {
     }
+
     #[Route('/api/register', name: 'api_register')]
     public function register(Request $request): Response
     {
-        $errors = $this->facade->register($request);
+        $response = $this->facade->register($request);
 
-        if(!$errors)
-        {
-            $response = 'successful';
-        }
-
-        return $this->json(
-            [
-                'errors' => $errors,
-                'response' => $response ?? null
-            ]
-        );
+        return $this->json($response);
     }
 }

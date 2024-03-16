@@ -3,25 +3,29 @@ declare(strict_types=1);
 
 namespace App\Components\Payment\Business\Model;
 
-use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
 use App\Global\Service\Stripe\StripeClient;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class PaymentHandling
+/*
+ * This Class is exclusively designed to handle the Checkout Session Creation Process from Stripe, our Payment Gateway.
+ */
+
+class PaymentSessionHandling
 {
     public function __construct
     (
-        private readonly ShoppingCartBusinessFacadeInterface $shoppingCartBusinessFacade,
+        private readonly PaymentRead $paymentRead,
     )
     {
     }
 
     public function createCheckoutSession(Request $request, StripeClient $stripeClient, RouterInterface $router): string
     {
-        $shoppingCartItemDTOList = $this->shoppingCartBusinessFacade->getCart($request);
-        $shipping = $this->shoppingCartBusinessFacade->fetchShippingCost($request);
+        $checkoutInformationContent = $this->paymentRead->fetchCheckoutSessionInformation($request)->content;
+
+        $shoppingCartItemDTOList = $checkoutInformationContent['shoppingCartItemDTOList'];
+        $shipping = $checkoutInformationContent['shipping'];
 
 
         $stripe = $stripeClient->getStripeClient();
@@ -58,7 +62,7 @@ class PaymentHandling
         $query = [
             'line_items' => $line_items,
             'mode' => 'payment',
-            'success_url' => 'http://localhost:3000/payment/success',
+            'success_url' => 'http://localhost:3000/payment/success',  /* That's far from clean code but probably sufficient for the time being, since it will never go into a live environment */
             'cancel_url' => 'http://localhost:3000/payment/abort',
             'automatic_tax' => ['enabled' => true],
         ];

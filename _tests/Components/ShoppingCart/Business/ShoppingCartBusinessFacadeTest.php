@@ -2,7 +2,7 @@
 
 namespace App\Tests\Components\ShoppingCart\Business;
 
-use App\Components\Registration\Persistence\UserEntityManager;
+use App\Components\Registration\Persistence\RegistrationEntityManager;
 use App\Components\ShoppingCart\Business\Model\ShoppingCartLogic;
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacade;
 use App\Components\ShoppingCart\Persistence\ShoppingCartEntityManager;
@@ -20,7 +20,7 @@ class ShoppingCartBusinessFacadeTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = self::createClient();
-        $this->entityManager = $this->client->getContainer()->get(UserEntityManager::class);
+        $this->entityManager = $this->client->getContainer()->get(RegistrationEntityManager::class);
         $userDTO = new UserDTO();
         $userDTO->email = 'test@lol.com';
         $this->entityManager->register($userDTO);
