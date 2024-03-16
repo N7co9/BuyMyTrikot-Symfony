@@ -3,7 +3,6 @@
 namespace App\Components\ShoppingCart\Communication;
 
 use App\Components\ShoppingCart\Business\ShoppingCartBusinessFacadeInterface;
-use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

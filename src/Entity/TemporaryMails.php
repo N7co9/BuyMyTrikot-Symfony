@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Components\UserSettings\Persistence\TemporaryMailsRepository;
+use App\Components\Settings\Persistence\TemporaryMailsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TemporaryMailsRepository::class)]

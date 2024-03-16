@@ -31,4 +31,12 @@ class UserRead
         }
         return new ResponseDTO('An error occurred while fetching the User', false);
     }
+    public function fetchUserEntityFromAuthentication(Request $request) : ResponseDTO
+    {
+        $user = $this->apiTokenRepository->findUserByToken($request->headers->get('Authorization'));
+        if ($user) {
+            return new ResponseDTO($user, true);
+        }
+        return new ResponseDTO('An error occurred while fetching the User', false);
+    }
 }

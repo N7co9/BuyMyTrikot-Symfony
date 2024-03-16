@@ -24,4 +24,8 @@ class UserBusinessFacade implements UserBusinessFacadeInterface
     {
         return $this->userRead->fetchUserInformationFromAuthentication($request);
     }
+    public function fetchUserEntityFromAuthentication(Request $request) : ResponseDTO
+    {
+        return $this->userRead->fetchUserEntityFromAuthentication($request);
+    }
 }

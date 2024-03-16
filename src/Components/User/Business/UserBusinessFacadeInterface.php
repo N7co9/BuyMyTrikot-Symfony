@@ -9,5 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 interface UserBusinessFacadeInterface
 {
     public function fetchUserInformationFromAuthentication(Request $request): ResponseDTO;
+    public function fetchUserEntityFromAuthentication(Request $request) : ResponseDTO;
 
 }
