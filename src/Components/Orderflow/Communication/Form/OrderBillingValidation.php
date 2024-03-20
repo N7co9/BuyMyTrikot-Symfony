@@ -9,116 +9,60 @@ class OrderBillingValidation
 {
     public function validate(OrderDTO $order): array
     {
-        $errorCheck = [
-            'firstName' => $this->validateFirstName($order->firstName),
-            'lastName' => $this->validateLastName($order->lastName),
-            'city' => $this->validateCity($order->city),
-            'zip' => $this->validateZip($order->zip),
-            'address' => $this->validateAddress($order->address),
-            'region' => $this->validateState($order->state),
+        return array_filter([
+            'firstName' => $this->validateName($order->firstName, 'First name'),
+            'lastName' => $this->validateName($order->lastName, 'Last name'),
+            'city' => $this->validateLocation($order->city, 'City'),
+            'state' => $this->validateLocation($order->state, 'State'),
             'phoneNumber' => $this->validatePhoneNumber($order->phoneNumber),
-        ];
-
-        return array_filter($errorCheck);
+            'zip' => $this->validateZip($order->zip),
+            'region' => $this->validateRegion($order->state),
+            'address' => $this->validateAddress($order->address),
+        ]);
     }
 
-    private function validateFirstName($firstName): ?ResponseDTO
+    private function validateName($value, $fieldName): ?ResponseDTO
     {
-        if (empty($firstName) || !is_string($firstName)) {
-            return new ResponseDTO('First name cannot be empty and must be a string.', 'Error');
-        }
-
-        $firstName = $this->trim($firstName);
-        if (strlen($firstName) >= 30 || strlen($firstName) <= 2 ||
-            !preg_match('/^[\p{L}\s-]+$/u', $firstName)) {
-            return new ResponseDTO('Oops, your first name doesn\'t look right!', 'Error');
-        }
-        return null;
+        return $this->validateField($value, $fieldName, 2, 30, '/^[\p{L}\s-]+$/u', "$fieldName doesn't look right!");
     }
 
-    private function validateLastName($lastName): ?ResponseDTO
+    private function validateLocation($value, $fieldName): ?ResponseDTO
     {
-        if (empty($lastName) || !is_string($lastName)) {
-            return new ResponseDTO('Last name cannot be empty and must be a string.', 'Error');
-        }
-
-        $lastName = $this->trim($lastName);
-        if (strlen($lastName) >= 30 || strlen($lastName) <= 2 ||
-            !preg_match('/^[\p{L}\s-]+$/u', $lastName)) {
-            return new ResponseDTO('Oops, your last name doesn\'t look right!', 'Error');
-        }
-        return null;
-    }
-
-    private function validateCity($city): ?ResponseDTO
-    {
-        if (empty($city) || !is_string($city)) {
-            return new ResponseDTO('City cannot be empty and must be a string.', 'Error');
-        }
-
-        $city = $this->trim($city);
-        if (strlen($city) >= 20 || strlen($city) <= 2 ||
-            !preg_match('/^[a-zA-Z\s-]+$/', $city)) {
-            return new ResponseDTO('Oops, your City doesn\'t look right!', 'Error');
-        }
-        return null;
-    }
-
-    private function validateState($state): ?ResponseDTO
-    {
-        if (empty($state) || !is_string($state)) {
-            return new ResponseDTO('State cannot be empty and must be a string.', 'Error');
-        }
-
-        $state = $this->trim($state);
-        if (strlen($state) >= 20 || strlen($state) <= 2 ||
-            !preg_match('/^[a-zA-Z\s-]+$/', $state)) {
-            return new ResponseDTO('Oops, your State doesn\'t look right!', 'Error');
-        }
-        return null;
+        return $this->validateField($value, $fieldName, 2, 20, '/^[a-zA-Z\s-]+$/', "$fieldName doesn't look right!");
     }
 
     private function validatePhoneNumber($phoneNumber): ?ResponseDTO
     {
-        if (empty($phoneNumber) || !is_string($phoneNumber)) {
-            return new ResponseDTO('Phone number cannot be empty and must be a string.', 'Error');
-        }
-
-        $phoneNumber = $this->trim($phoneNumber);
-
-        // Basic international phone number format (e.g., +1234567890, 00441234567890)
-        $phonePattern = '/^\+?[0-9]{1,4}?[0-9]{6,14}$/';
-
-        if (!preg_match($phonePattern, $phoneNumber)) {
-            return new ResponseDTO('Oops, your phone number doesn\'t look right!', 'Error');
-        }
-        return null;
+        return $this->validateField($phoneNumber, 'Phone number', 6, 14, '/^\+?[0-9]{1,4}?[0-9]{6,14}$/', "Phone number doesn't look right!");
     }
 
     private function validateZip($zip): ?ResponseDTO
     {
-        if (empty($zip) || !is_string($zip)) {
-            return new ResponseDTO('Zip code cannot be empty and must be a string.', 'Error');
-        }
-
-        $zip = $this->trim($zip);
-        if (!preg_match('/^\d{4,6}$/', $zip)) {
-            return new ResponseDTO('Oops, your Postcode doesn\'t look right!', 'Error');
-        }
-        return null;
+        return $this->validateField($zip, 'Zip code', 4, 6, '/^\d{4,6}$/', "Postcode doesn't look right!", false);
     }
 
     private function validateAddress($address): ?ResponseDTO
     {
-        if (empty($address) || !is_string($address)) {
-            return new ResponseDTO('Address cannot be empty and must be a string.', 'Error');
+        return $this->validateField($address, 'Address', 2, 100, '/^[a-zA-Z0-9\s.-]+$/', "Address doesn't look right!");
+    }
+
+    private function validateRegion($region): ?ResponseDTO
+    {
+        return $this->validateField($region, 'Region', 2, 100, '/^[a-zA-Z0-9\s.-]+$/', "Region doesn't look right!");
+    }
+
+    private function validateField($value, $fieldName, $minLength, $maxLength, $pattern, $errorMessage, $checkLength = true): ?ResponseDTO
+    {
+        if (empty($value) || !is_string($value)) {
+            return new ResponseDTO("$fieldName cannot be empty and must be a string.", false);
         }
 
-        $address = $this->trim($address);
-        if (strlen($address) >= 20 || strlen($address) <= 2 ||
-            !preg_match('/^[a-zA-Z0-9\s.-]+$/', $address)) {
-            return new ResponseDTO('Oops, your Address doesn\'t look right!', 'Error');
+        $value = $this->trim($value);
+
+        if (($checkLength && (strlen($value) < $minLength || strlen($value) > $maxLength)) || !preg_match($pattern, $value)) {
+            return new ResponseDTO($errorMessage, false);
         }
+
         return null;
     }
 

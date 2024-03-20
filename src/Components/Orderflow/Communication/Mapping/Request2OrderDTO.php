@@ -10,17 +10,20 @@ class Request2OrderDTO
     public function mapRequestOrderToDto(Request $request): OrderDTO
     {
         $orderDto = new OrderDTO();
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        $orderDto->firstName = $request->get('first-name');
-        $orderDto->lastName = $request->get('last-name');
-        $orderDto->address = $request->get('address');
-        $orderDto->city = $request->get('city');
-        $orderDto->state = $request->get('region');
-        $orderDto->zip = $request->get('postal-code');
-        $orderDto->phoneNumber = $request->get('phone');
-        $orderDto->deliveryMethod = $request->get('delivery-method', 'Standard');
-        $orderDto->shipping = $request->get('shippingCost');
-        $orderDto->due = $request->get('totalCost');
+        $orderDto->firstName = $data['firstName'];
+        $orderDto->lastName = $data['lastName'];
+        $orderDto->address = $data['address'];
+        $orderDto->city = $data['city'];
+        $orderDto->state = $data['region'];
+        $orderDto->zip = $data['postalCode'];
+        $orderDto->phoneNumber = $data['phoneNumber'];
+
+        $orderDto->deliveryMethod = $data['deliveryMethod' ?? 'Standard'];
+
+        $orderDto->shipping = $data['shippingCost'];
+        $orderDto->due = $data['totalCost'];
 
         return $orderDto;
     }

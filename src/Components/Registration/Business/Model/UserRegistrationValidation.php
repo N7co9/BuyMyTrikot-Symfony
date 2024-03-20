@@ -20,14 +20,14 @@ class UserRegistrationValidation
     private function validateName($clientDTO, &$errorDTOList): void
     {
         if (empty($clientDTO->username) || !preg_match("/^[a-zA-Z-' ]*$/", $clientDTO->username)) {
-            $errorDTOList[] = new ResponseDTO('Oops, your name doesn\'t look right', 'Exception');
+            $errorDTOList[] = new ResponseDTO('Oops, your name doesn\'t look right', false);
         }
     }
 
     private function validateEmail($clientDTO, &$errorDTOList): void
     {
         if (empty($clientDTO->email) || !filter_var($clientDTO->email, FILTER_VALIDATE_EMAIL)) {
-            $errorDTOList[] = new ResponseDTO('Oops, your email doesn\'t look right', 'Exception');
+            $errorDTOList[] = new ResponseDTO('Oops, your email doesn\'t look right', false);
         }
     }
 
@@ -41,7 +41,7 @@ class UserRegistrationValidation
             !preg_match('@\W@', $clientDTO->password) ||
             (strlen($clientDTO->password) <= 6)
         ) {
-            $errorDTOList[] = new ResponseDTO('Oops, your password doesn\'t look right!', 'Exception');
+            $errorDTOList[] = new ResponseDTO('Oops, your password doesn\'t look right!', false);
         }
     }
 }

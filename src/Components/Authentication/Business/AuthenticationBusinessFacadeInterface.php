@@ -1,18 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Components\Authentication\Business;
 
+use App\Entity\User;
 use App\Global\DTO\ResponseDTO;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use SensitiveParameter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
 interface AuthenticationBusinessFacadeInterface
 {
-    /**
-     * Authenticate a user.
-     *
-     * @param array $formData
-     * @param SessionInterface $session
-     * @return ResponseDTO|null
-     */
-    public function authenticate(array $formData, SessionInterface $session): ?ResponseDTO;
+    public function getUserBadgeFromToken(#[SensitiveParameter] string $accessToken): UserBadge;
+
+    public function generateApiToken(User $user): string;
+
+    public function getUserFromToken(Request $request): ResponseDTO;
 }

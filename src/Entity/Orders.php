@@ -47,6 +47,19 @@ class Orders
     #[ORM\Column]
     private ?array $items = [];
 
+    #[ORM\Column]
+    private ?bool $paid = false;
+
+    public function getPaid(): ?bool
+    {
+        return $this->paid;
+    }
+
+    public function setPaid(?bool $paid): void
+    {
+        $this->paid = $paid;
+    }
+
     public function getItems(): ?array
     {
         return $this->items;
@@ -180,15 +193,4 @@ class Orders
         return $this;
     }
 
-    public function getPaymentMethod(): ?string
-    {
-        return $this->paymentMethod;
-    }
-
-    public function setPaymentMethod(?string $paymentMethod): static
-    {
-        $this->paymentMethod = $paymentMethod;
-
-        return $this;
-    }
 }

@@ -3,6 +3,8 @@
 namespace App\Global\Service\API;
 
 use App\Entity\Items;
+use App\Global\DTO\ResponseDTO;
+use App\Global\Service\Items\ItemEntityToDTOMapper;
 use App\Global\Service\Items\ItemRepository;
 use App\Global\Service\Mapping\Mapper;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +19,7 @@ class ItemsTransferService
 
     public function __construct(
         ItemRepository      $itemRepository, EntityManagerInterface $entityManager,
-        HttpClientInterface $client, Mapper $mapper,
+        HttpClientInterface $client, Mapper $mapper, private ItemEntityToDTOMapper $itemEntityToDTOMapper
     )
     {
         $this->itemRepository = $itemRepository;
@@ -38,21 +40,16 @@ class ItemsTransferService
         return $response->toArray();
     }
 
-    public function itemTransfer(string $clubName): array
+    public function itemTransfer(string $clubName): ResponseDTO
     {
         $item = $this->itemRepository->findOneByExternalId($clubName);
-
         if (!$item) {
-            // Fetch from external API
             $itemData = $this->fetchFromFootballApi($clubName, 'teams');
-
-            // Create and persist new item
-            return $this->createAndPersistHomepageItems($itemData);
+            return new ResponseDTO($this->createAndPersistHomepageItems($itemData), true);
         }
-        return $this->itemRepository->findOneByExternalId($clubName);
-    }
+        return new ResponseDTO($this->itemEntityToDTOMapper->mapItemsToDTO($item), true);}
 
-    private function createAndPersistHomepageItems($itemData)
+    private function createAndPersistHomepageItems($itemData): array
     {
         $images = $this->fetchFromPexelApi();
         $items = $this->mapper->mapItems($images, $itemData);

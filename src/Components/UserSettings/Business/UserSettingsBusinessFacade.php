@@ -3,65 +3,60 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Business;
 
-use App\Components\User\Business\Model\SessionManager;
-use App\Components\UserSettings\Business\Model\BillingAddressModificationHandling;
-use App\Components\UserSettings\Business\Model\PasswordModificationHandling;
-use App\Components\UserSettings\Business\Model\UsernameModificationHandling;
-use App\Components\UserSettings\Business\Model\VerificationMailHandling;
-use App\Entity\User;
+use App\Components\UserSettings\Business\Model\BillingAddressModification\BillingAddressModificationRead;
+use App\Components\UserSettings\Business\Model\BillingAddressModification\BillingAddressModificationWrite;
+use App\Components\UserSettings\Business\Model\EmailAddressModification\EmailModificationWrite;
+use App\Components\UserSettings\Business\Model\PasswordModification\PasswordModificationWrite;
+use App\Components\UserSettings\Business\Model\UsernameModification\UsernameModificationWrite;
 use App\Global\DTO\BillingDTO;
 use App\Global\DTO\ResponseDTO;
-use App\Global\DTO\UserDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
-class UserSettingsBusinessFacade
+class UserSettingsBusinessFacade implements UserSettingsBusinessFacadeInterface
 {
     public function __construct
     (
-        private readonly VerificationMailHandling $verificationMailHandling,
-        private readonly RouterInterface          $router,
-        private readonly SessionManager           $sessionManager,
-        private readonly PasswordModificationHandling $passwordModificationHandling,
-        private readonly UsernameModificationHandling $usernameModificationHandling,
-        private readonly BillingAddressModificationHandling $billingAddressModificationHandling
+        private readonly RouterInterface                 $router,
+        private readonly PasswordModificationWrite       $passwordModificationWrite,
+        private readonly UsernameModificationWrite       $usernameModificationWrite,
+        private readonly BillingAddressModificationWrite $billingAddressModificationWrite,
+        private readonly EmailModificationWrite          $verificationMailWrite,
+        private readonly BillingAddressModificationRead  $billingAddressModificationRead,
     )
     {
     }
 
-    public function sendVerificationEmail(UserDTO $userDTO): void
+    public function sendVerificationEmail(Request $request): void
     {
-        $this->verificationMailHandling->sendVerificationEmail($this->router, $userDTO);
+        $this->verificationMailWrite->sendVerificationEmail($this->router, $request);
     }
 
-    public function verifyToken(string $token, Request $request): bool
+
+    public function receiveAndPersistNewEmail(Request $request): ResponseDTO
     {
-        return $this->verificationMailHandling->verifyToken($request, $token);
+        return $this->verificationMailWrite->receiveAndPersistNewEmail($request);
     }
 
-    public function addUnverifiedEmailToSession(Request $request): void
+    public function setNewPassword(Request $request): ResponseDTO
     {
-        $this->sessionManager->addNewEmailToSession($request);
+        return $this->passwordModificationWrite->setNewPassword($request);
     }
 
-    public function setNewPassword(UserDTO $userDTO, Request $request) : ResponseDTO
+    public function setNewUsername(Request $request): ResponseDTO
     {
-        return $this->passwordModificationHandling->setNewPassword($userDTO, $request);
+        return $this->usernameModificationWrite->setNewUsername($request);
     }
 
-    public function setNewUsername(Request $request, UserDTO $userDTO) : ResponseDTO
+    public function setNewBillingAddress(Request $request): ResponseDTO
     {
-        return $this->usernameModificationHandling->setNewUsername($request, $userDTO);
+        return $this->billingAddressModificationWrite->setNewBillingAddress($request);
     }
 
-    public function setNewBillingAddress(Request $request, UserDTO $userDTO) : array
+    public function retrieveBillingAddress(Request $request): ?BillingDTO
     {
-        return $this->billingAddressModificationHandling->setNewBillingAddress($request, $userDTO);
+        return $this->billingAddressModificationRead->retrieveBillingAddress($request);
     }
 
-    public function retrieveBillingAddress(UserDTO $userDTO) : ?BillingDTO
-    {
-        return $this->billingAddressModificationHandling->retrieveBillingAddress($userDTO);
-    }
 
 }

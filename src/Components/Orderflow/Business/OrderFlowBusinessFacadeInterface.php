@@ -1,48 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Components\Orderflow\Business;
 
+use App\Entity\BillingAddress;
 use App\Entity\Orders;
-use App\Entity\User;
-use App\Global\DTO\OrderDTO;
-use App\Global\DTO\UserDTO;
+use App\Global\DTO\ResponseDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 interface OrderFlowBusinessFacadeInterface
 {
-    /**
-     * Find a user by email.
-     *
-     * @param string $email
-     * @return User
-     */
-    public function findOneByEmail(string $email): User;
+    public function fetchBillingInformation(Request $request): ResponseDTO;
 
-    /**
-     * Get items in the user's cart.
-     *
-     * @param int $userID
-     * @return array
-     */
-    public function getItemsInCart(int $userID): array;
+    public function persistOrder(Request $request): ResponseDTO;
 
-    /**
-     * Get the most recent order for a user by email.
-     *
-     * @param string $email
-     * @return ?Orders
-     */
-    public function getMostRecentOrder(string $email): ?Orders;
+    public function removeMostRecentOrder(Request $request): void;
 
-    /**
-     * Find items by an array of IDs.
-     *
-     * @param array $array
-     * @return array
-     */
-    public function findItemsByArrayOfIds(array $array): array;
+    public function setOrderSuccessful(Request $request): void;
 
-
-    public function createOrder(OrderDTO $orderDto, UserDTO $userDto, Request $request): array;
+    public function fetchMostRecentOrder(Request $request): Orders;
 
 }

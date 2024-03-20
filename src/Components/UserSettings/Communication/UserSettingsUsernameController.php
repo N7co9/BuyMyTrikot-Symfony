@@ -3,28 +3,29 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Communication;
 
-use App\Components\UserSettings\Business\UserSettingsBusinessFacade;
+use App\Components\UserSettings\Business\UserSettingsBusinessFacadeInterface;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UserSettingsUsernameController extends AbstractController
 {
     public function __construct
     (
-        private readonly UserSettingsBusinessFacade $userSettingsBusinessFacade
+        private readonly UserSettingsBusinessFacadeInterface $userSettingsBusinessFacade
     )
     {
     }
-    #[Route('/settings/update-username', name: 'app_update_username')]
-    public function requestNewUsername(Request $request) : Response
+
+    #[Route('/settings/update-username', name: 'app_update_username', methods: 'POST')]
+    public function requestNewUsername(Request $request): Response
     {
-        $user = $this->getLoggingUser();
+        $res = $this->userSettingsBusinessFacade->setNewUsername($request);
 
-        $res = $this->userSettingsBusinessFacade->setNewUsername($request, $user);
-
-        return $this->render('user_settings/index.html.twig', ['user' => $user, 'usernameResponse' => $res]);
-
+        return $this->json(
+            $res
+        );
     }
 }

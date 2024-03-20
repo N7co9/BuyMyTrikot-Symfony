@@ -5,40 +5,65 @@ namespace App\Components\ShoppingCart\Business;
 namespace App\Components\ShoppingCart\Business;
 
 
-use App\Components\ShoppingCart\Business\Model\CartWriteInterface;
-use App\Components\ShoppingCart\Business\Model\ShoppingCartCalculator;
 use App\Components\ShoppingCart\Business\Model\ShoppingCartRead;
+use App\Components\ShoppingCart\Business\Model\ShoppingCartWrite;
 use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartExpensesDto;
-use App\Components\ShoppingCart\Persistence\Dto\ShoppingCartSaveDTO;
+use Doctrine\ORM\NonUniqueResultException;
+use Symfony\Component\HttpFoundation\Request;
 
 class ShoppingCartBusinessFacade implements ShoppingCartBusinessFacadeInterface
 {
 
     public function __construct(
-        private readonly CartWriteInterface     $cartWrite,
-        private readonly ShoppingCartRead       $shoppingCartRead,
-        private readonly ShoppingCartCalculator $shoppingCartCalculator,
+        private readonly ShoppingCartWrite $cartWrite,
+        private readonly ShoppingCartRead  $shoppingCartRead,
     )
     {
     }
 
-    public function getCart(int $userId): array
+    public function getCart(Request $request): array
     {
-        return $this->shoppingCartRead->getCart($userId);
+        return $this->shoppingCartRead->getCart($request);
     }
 
-    public function saveItemToCart(ShoppingCartSaveDTO $shoppingCartDto): void
+    public function saveItemToCart(Request $request): void
     {
-        $this->cartWrite->save($shoppingCartDto);
+        $this->cartWrite->save($request);
     }
 
-    public function calculateExpenses(array $shoppingCartItemDtoList): ShoppingCartExpensesDto
+
+    public function calculateExpenses(array $shoppingCartItemDtoList, string $deliveryMethod = 'Standard'): ShoppingCartExpensesDto
     {
-        return $this->shoppingCartCalculator->calculateExpenses($shoppingCartItemDtoList);
+        return $this->shoppingCartRead->calculateExpenses($shoppingCartItemDtoList, $deliveryMethod);
     }
 
-    public function remove(int $itemId): void
+    public function remove(Request $request): void
     {
-        $this->cartWrite->remove($itemId);
+        $this->cartWrite->remove($request);
+
+    }
+
+    public function fetchDeliveryMethod(Request $request): string
+    {
+        return $this->shoppingCartRead->fetchDeliveryMethod($request);
+    }
+
+    public function fetchShippingCost(Request $request): float
+    {
+        return $this->shoppingCartRead->fetchShippingCost($request);
+    }
+
+    public function removeAllAfterOrderSuccess(Request $request): void
+    {
+        $this->cartWrite->removeAllAfterOrderSuccess($request);
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws \JsonException
+     */
+    public function fetchShoppingCartInformation(Request $request): ?array
+    {
+        return $this->shoppingCartRead->fetchShoppingCartInformation($request);
     }
 }

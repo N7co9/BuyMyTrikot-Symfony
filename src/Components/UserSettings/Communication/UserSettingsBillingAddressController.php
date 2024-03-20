@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Components\UserSettings\Communication;
 
-use App\Components\UserSettings\Business\UserSettingsBusinessFacade;
+use App\Components\UserSettings\Business\UserSettingsBusinessFacadeInterface;
 use App\Symfony\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,7 @@ class UserSettingsBillingAddressController extends AbstractController
 {
     public function __construct
     (
-        private readonly UserSettingsBusinessFacade $userSettingsBusinessFacade
+        private readonly UserSettingsBusinessFacadeInterface $userSettingsBusinessFacade
     )
     {
     }
@@ -21,10 +21,14 @@ class UserSettingsBillingAddressController extends AbstractController
     #[Route('/settings/update-billing', name: 'app_update_billing')]
     public function requestNewBillingAddress(Request $request): Response
     {
-        $user = $this->getLoggingUser();
+        $res = $this->userSettingsBusinessFacade->setNewBillingAddress($request);
+        return $this->json($res);
+    }
 
-        $res = $this->userSettingsBusinessFacade->setNewBillingAddress($request, $user);
-
-        return $this->render('user_settings/index.html.twig', ['user' => $user, 'response' => $res]);
+    #[Route('/settings/fetch-billing', name: 'app_fetch_billing')]
+    public function fetchCurrentBillingAddress(Request $request): Response
+    {
+        $res = $this->userSettingsBusinessFacade->retrieveBillingAddress($request);
+        return $this->json($res);
     }
 }
