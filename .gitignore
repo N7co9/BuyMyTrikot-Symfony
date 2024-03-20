@@ -12,6 +12,7 @@ node_modules/
 var/
 /vendor/
 /.idea/
+/coverage/
 
 ###< symfony/framework-bundle ###
 
